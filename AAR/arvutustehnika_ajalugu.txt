@@ -1,0 +1,41 @@
+Shickard leiutas esimese mehaanilise arvutusmasinab 1623
+Pascal leiutas sama asja 1642
+
+leibniz pakkus valja binary
+
+1728 loi falcon esimese programmeeritava masina 
+Babbage loi idee esimesest kompuutrist 1822, mis kasutas perfokaarte
+
+1886 loi Hollerith esimese elektromehhaanilise loendusmasina
+
+1943 loodi esimesed elektromehaanilised arvutid natside decryptioniks
+
+1946 konstrueeriti Pennsylvania ülikoolis maailma esimene elektronarvuti aka mehaanilisi komponente arvutusprotsessis ei kasutatud
+
+1946 esimene bug 
+1947 voeti kasutusele RAM 
+1947 esimene transistor
+
+1955 valmistatakse Massachusetts'i Tehnoloogiaistituudis esimene täielikult pooljuhtkomponentidel põhinev arvuti
+1956 vottis IBM kasutusele esimese nn kovaketta
+1957 tuli valja fortran
+
+CPU voimsus 2x iga 18-24 kuu tagant - Moore seadus
+
+1964 loodi proge keel BASIC
+1971 tuli Intel myygile esimese CPU-ga
+
+1971 loodi esimene UNIX versioon B keeles 
+
+1969 - 1973 arendatakse välja uus programmeerimiskeel C. Loojaks Belli labori töötaja Dennis Ritchie.
+1972 kirjutatakse ka UNIX operatsioonisüsteem täielikult ringi C keeles
+
+1985 loodi C++ ja Win 1.0 ning Intel toob turule 32 bit CPU
+
+1991 loob Torvalds Linux kerneli 
+leiutati WWW ja html
+MIPS ja DEC toodavad esimesed 64 bit CPU
+
+1995 Win 95 nyyd juba eraldi eksisteriv OS enne lih shell
+js ja java loomine
+1998 tuleb valja Linux 2.2.0
