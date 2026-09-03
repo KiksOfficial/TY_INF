@@ -1,0 +1,88 @@
+
+decimal sys
+----------------- 
+
+D = d(n-1) + ... +d2 + d1 +d0
+N: 531 = 5 x 10**2 + 3 x 10**1 + 1 x 10**0
+
+komade Puhul Negatiivsed astendused
+N: 3.14 = 3 x 10**0 + 1 x 10**(-1) + 4 x 10**(-2)
+
+vahemik = 0 .. 10**n-1
+
+Binary
+----------------- 
+
+sama loogika
+
+N: 101 101 = 1 x 2**5; 0 x 2**4; 1 x 2**3; 1 x 2**2; 0 x 2**1; 1 x 2**0; = 45
+vahemik = 0 .. 2**n-1
+
+komade puhul negatiivsed astmed
+2**n ja n < 0
+
+EHK NR = digit x x**y 
+x = base 
+y = num of digits 
+
+TEISENDAMINE: base 10 -> base 2 / base 16
+
+TÄISARV (Jagamise meetod):
+1. Jaga arv alusega (2 või 16).
+2. Kirjuta täisarvuline JÄÄK üles.
+   - Base 2 puhul: jääk on 0 või 1.
+   - Base 16 puhul: jääk 10-15 asenda tähtedega A-F.
+3. Korda jagatise täisosaga, kuni täisosa on 0.
+4. Tulemus: Kirjuta jäägid ALT ÜLES (esimene jääk läheb Paremale, viimane Vasakule).
+
+MURDOSA (Korrutamise meetod):
+1. Korruta murdosa alusega (2 või 16).
+2. Tulemuse TÄISOSA kirjutad komakoha taha (vasakult paremale).
+   - Base 16 puhul: täisosa 10-15 asenda tähtedega A-F.
+3. Võta järgmisesse sammu edasi AINULT uus murdosa (lahuta tulemusest täisosa).
+4. Korda, kuni murdosa on 0 või saavutad nõutud täpsuse.
+
+
+MÄRGIGA KAHENDARVUD
+
+Märgi ja väärtuse sys
+Ühe taiend 
+Kahe taiend 
+Nihkega sys 
+
+esimese 3 puhul koige vasakpoolsem bit 0 positive puhul ja 1 negative puhul
+esimeses 3 positive arvud yhte moodi kirja pandud 
+negatiivsed koigis systeemides erinevad 
+
+MARGI JA VAARTUSE SYSTEEM 
++5 -> 0101
+-5 -> 1101
+
+ÜHE täiend 
++5 -> 0101
+-5 -> 1010 (iga digit puhul 1 ja 0 vahetuvad)
+
+Kahe taiend
+vota positive inverteeri bitid ja liida 1 
++5 -> 0101
+-5 -> 1010 + 1 ->1011
+
+Nihkega esitus
+kui nihe 8
++5 -> 5 + 8 -> 13 -> 1101
+-5 -> -5 + 8 -> 3 -> 0011
+-8 -> -8 + 8 -> 0 -> 0000
+
+Kahendarvude liitmine 
+0 + 0 = 0
+1 + 0 = 1 
+1 + 1 = 0 ja ylekanne 1 
+negatiivsete arvude liitmisel kasutada ringi meetod
+
+2 arvu liitmisel tuleks liita n bittised versioonid ja ignoda yleliigset biti 
+lahutamisel tuleb leida lahutatava arvu 2-taiend liida n-bitised ja igno koige suuremat
+
+kui tahad rohkem bitte lisada ss lisa positiivse arvu ette nulle ja negatiivse ette yhtesid 
++5 -> 0101 -> 0000 0101
+-5 -> 1011 -> 1111 1011
+aka kopeeri koige vasemat bitti vasakule nii mitu korda on tarvis 

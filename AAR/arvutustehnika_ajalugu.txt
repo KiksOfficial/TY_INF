@@ -30,6 +30,8 @@ CPU voimsus 2x iga 18-24 kuu tagant - Moore seadus
 1969 - 1973 arendatakse välja uus programmeerimiskeel C. Loojaks Belli labori töötaja Dennis Ritchie.
 1972 kirjutatakse ka UNIX operatsioonisüsteem täielikult ringi C keeles
 
+
+Esimesna loi 32 bitise CPU National semiconductor
 1985 loodi C++ ja Win 1.0 ning Intel toob turule 32 bit CPU
 
 1991 loob Torvalds Linux kerneli 
@@ -39,3 +41,12 @@ MIPS ja DEC toodavad esimesed 64 bit CPU
 1995 Win 95 nyyd juba eraldi eksisteriv OS enne lih shell
 js ja java loomine
 1998 tuleb valja Linux 2.2.0
+
+
+Bill Gates "640K mälu piisab"
+Xerox loi esimesena icons n mouse 
+Visicalc esimene tabelarvutus programm 
+mikroskeemide aluspõhjad tehakse liivast 
+C was created by Dennis Ritchie
+WYSIWYG - Xerox
+
