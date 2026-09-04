@@ -73,6 +73,10 @@ kui nihe 8
 -5 -> -5 + 8 -> 3 -> 0011
 -8 -> -8 + 8 -> 0 -> 0000
 
+sign and magnitude
+esimene bit 0 ss positive
+esimene bit 1 ss negative
+
 Kahendarvude liitmine 
 0 + 0 = 0
 1 + 0 = 1 
@@ -85,4 +89,10 @@ lahutamisel tuleb leida lahutatava arvu 2-taiend liida n-bitised ja igno koige s
 kui tahad rohkem bitte lisada ss lisa positiivse arvu ette nulle ja negatiivse ette yhtesid 
 +5 -> 0101 -> 0000 0101
 -5 -> 1011 -> 1111 1011
-aka kopeeri koige vasemat bitti vasakule nii mitu korda on tarvis 
+aka kopeeri koige vasemat bitti vasakule nii mitu korda on tarvis
+
+liitmine yhetaiend arvude puhul tuleb vastusele liita ylekande signaal aka arv mis ei mahu bitidesse
+kui vahemik n=4 ss vastus peab jaama -8 kuni 7
+yletaitumine saab tekkida aind samamargiliste arvude liitmisel
+
+kui liidetavad on samamargilised ss vastus peab ka olema sama margiline
