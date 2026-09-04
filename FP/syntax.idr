@@ -6,3 +6,6 @@ b = 30.0
 
 c: Double
 c = sqrt(a*a + b*b)
+
+badMath : Nat
+badMath = "Hello"
