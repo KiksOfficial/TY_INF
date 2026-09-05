@@ -1,4 +1,52 @@
-# Peatükk 1: Funktsioonid
+## Peatükk 1: Funktsioonid (Lühikonspekt)
+
+See spikker käsitleb funktsioonide põhiomadusi, määramis- ja muutumispiirkondi ning graafikute teisendusi.
+
+---
+
+## 1. Määramis- ja muutumispiirkonna teisenduste tabel
+
+Olgu algse funktsiooni $f(x)$ määramispiirkond $X = [x_1, x_2]$ ja muutumispiirkond $Y = [y_1, y_2]$[cite: 1].
+
+| Tehe / Avaldis | Uus määramispiirkond ($X_{\text{uus}}$) | Uus muutumispiirkond ($Y_{\text{uus}}$) | Selgitus / Graafiku efekt |
+| :--- | :--- | :--- | :--- |
+| **$f(x \pm a)$** | $[x_1 \mp a, x_2 \mp a]$[cite: 1] | $[y_1, y_2]$[cite: 1] | Nihkub horisontaalselt ($+a$ vasakule, $-a$ paremale)[cite: 1]. |
+| **$f(-x)$** | $[-x_2, -x_1]$ | $[y_1, y_2]$[cite: 1] | Peegeldub $y$-telje suhtes[cite: 1]. |
+| **$f(bx)$** | $\left[\frac{x_1}{b}, \frac{x_2}{b}\right]$ | $[y_1, y_2]$[cite: 1] | Surutakse horisontaalselt kokku $b$ korda[cite: 1]. |
+| **$f\left(\frac{x}{b}\right)$** | $[b \cdot x_1, b \cdot x_2]$ | $[y_1, y_2]$[cite: 1] | Venitatakse horisontaalselt $b$ korda laiemaks[cite: 1]. |
+| **$f(x) \pm a$** | $[x_1, x_2]$[cite: 1] | $[y_1 \pm a, y_2 \pm a]$[cite: 1] | Nihkub vertikaalselt ($+a$ üles, $-a$ alla)[cite: 1]. |
+| **$-f(x)$** | $[x_1, x_2]$[cite: 1] | $[-y_2, -y_1]$ | Peegeldub $x$-telje suhtes[cite: 1]. |
+| **$b \cdot f(x)$** | $[x_1, x_2]$[cite: 1] | $[b \cdot y_1, b \cdot y_2]$[cite: 1] | Venitatakse vertikaalselt $b$ korda[cite: 1]. |
+| **$\|f(x)\|$** | $[x_1, x_2]$[cite: 1] | $[\max(0, y_1), \max(\|y_1\|, \|y_2\|)]$ | Negatiivsed $y$-väärtused peegeldatakse üles[cite: 1]. |
+
+---
+
+## 2. Sümmeetria ja omadused
+
+* **Paarisfunktsioon:** $f(-x) = f(x) \implies$ graafik on sümmeetriline **$y$-telje suhtes**[cite: 1].
+* **Paaritu funktsioon:** $f(-x) = -f(x) \implies$ graafik on sümmeetriline **nullpunkti suhtes**[cite: 1].
+* **Pöördfunktsioon $f^{-1}(x)$:** Olemas vaid **üksüheste (injektiivsete)** funktsioonide korral ($f(x_1) \neq f(x_2)$, kui $x_1 \neq x_2$)[cite: 1]. Graafik on sümmeetriline sirge **$y = x$** suhtes[cite: 1].
+
+---
+
+## 3. Praktilised tehed ja tüüpülesanded
+
+### 3.1 Naturaalalusele viimine
+Eksponentfunktsiooni $a^x$ analüütiliseks teisendamiseks või arvutamiseks viiakse see alati naturaalalusele[cite: 1]:
+$$a^x = e^{x \ln a} \quad (\text{nt } 2^x = e^{x \ln 2})$$[cite: 1]
+
+### 3.2 Mitme teisenduse koosmõju leidu näide
+Olgu antud funktsioon $g(x) = 1 - 2 \arcsin(x + 1)$[cite: 1].  
+Algse funktsiooni $f(t) = \arcsin(t)$ piirkonnad on $X_f = [-1, 1]$ ja $Y_f = \left[-\frac{\pi}{2}, \frac{\pi}{2}\right]$[cite: 1].
+
+1. **Määramispiirkond ($X_g$):**  
+   Argument $x + 1$ peab mahtuma piiridesse $[-1, 1]$[cite: 1]:
+   $$-1 \le x + 1 \le 1 \implies -2 \le x \le 0 \implies X_g = [-2, 0]$$[cite: 1]
+
+2. **Muutumispiirkond ($Y_g$):**  
+   Alustades vahemikust $-\frac{\pi}{2} \le \arcsin(x+1) \le \frac{\pi}{2}$[cite: 1]:
+   * Korrutades $-2$-ga (märkide pöördumine ja venitus): $[-\pi, \pi]$[cite: 1]
+   * Liites $1$ (nihutus üles): $[1 - \pi, 1 + \pi] \implies Y_g \approx [-2.14, 4.14]$[cite: 1] Peatükk 1: Funktsioonid
 
 Erinevates teaduse ja tehnika valdkondades esineb sageli sõltuvusi kahe või enama suuruse vahel nende koosmuutumisel[cite: 1]. Näiteks sõltub ringi pindala raadiusest, läbitud teepikkus ajast ning algoritmi tööaeg sisendi suurusest[cite: 1]. Selliste sõltuvuste kirjeldamiseks kasutatakse funktsioone[cite: 1]. Kõige üldisemalt võib muutujaks olla mistahes hulga element, näiteks arv, punkt, vektor või muu objekt[cite: 1]. Selles peatükis käsitleme ühe reaalarvulise muutuja reaalarvulisi funktsioone[cite: 1].
 
