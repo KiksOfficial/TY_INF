@@ -68,3 +68,35 @@ ndiv x y = f x 0
       if n < y 
          then z
       else f (n - y) (z + 1)
+
+korda : Int -> (Int -> Int) -> Int -> Int
+korda 0 f x = x
+korda n f x = f (korda (n - 1) f x)
+ 
+inc : Int -> Int
+inc x = x + 1
+
+add : Int -> Int -> Int
+add x y = 
+  korda y inc x
+
+mul : Int -> Int -> Int
+mul x y = 
+  korda y (add x) 0
+
+--LISAYLESANDED
+
+mc : Int -> Int
+mc n = 
+  if n > 100
+     then n - 10
+  else
+    mc (mc (n + 11))
+
+c : Int -> Int -> Int
+c n k = 
+  if n == k || k == 0
+     then 1
+  else if 1 <= k && k <= n - 1
+    then c (n-1) (k-1) + c (n - 1) k
+  else 0

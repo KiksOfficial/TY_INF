@@ -35,7 +35,7 @@ Esimesna loi 32 bitise CPU National semiconductor
 1985 loodi C++ ja Win 1.0 ning Intel toob turule 32 bit CPU
 
 1991 loob Torvalds Linux kerneli 
-leiutati WWW ja html
+leiutati WWW (CERN tegi seda) ja html
 MIPS ja DEC toodavad esimesed 64 bit CPU
 
 1995 Win 95 nyyd juba eraldi eksisteriv OS enne lih shell
@@ -50,3 +50,6 @@ mikroskeemide aluspõhjad tehakse liivast
 C was created by Dennis Ritchie
 WYSIWYG - Xerox
 
+Brittid kasutasid Colossus et murda koode 
+ENIAC -Electronic Numerical Integrator and Computer
+esimene kommercial cpu - 4004
