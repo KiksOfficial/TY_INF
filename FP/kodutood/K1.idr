@@ -1,11 +1,23 @@
 module K1
+-- displayb faili nime
+-- rlwrap lubab kasutada nooli terminalis
 
 sumInt : Int -> Int
-sumInt n = if n == 0 then 0 else sumInt(n - 1) + n
+sumInt n = 
+  if n == 0 
+     then 0 
+  else 
+    sumInt(n - 1) + n
 
 
 fib : Int -> Int 
-fib x = if x == 0 then 0 else if x == 1 then 1 else fib(x-1) + fib(x-2)
+fib x = 
+  if x == 0
+     then 0
+  else if x == 1
+    then 1
+  else fib(x-1) + fib(x-2)
+
 {-
 fib 5
 fib(4) + fib(3)
@@ -16,20 +28,38 @@ fib(4) + fib(3)
 -}
 
 modulo : Int -> Int -> Int
-modulo x y = if x < y then x else lahuta x y
+modulo x y =
+  if x < y
+     then x 
+    else 
+      lahuta x y
+
   where
     lahuta : Int -> Int -> Int
-    lahuta x y = if x >= y then lahuta(x-y) y else x
+    lahuta x y =
+      if x >= y
+         then lahuta(x-y) y
+      else x
+
+    {-
+    -f n = case n < y of
+                True => n
+                false f (n - y)
+    - -}
 
 syt : Int -> Int -> Int 
-syt x y = if y == 0 then x else syt y (mod x y)
+syt x y = 
+  if y == 0
+     then x
+  else
+    syt y (mod x y)
 
 hanoi : Int -> Int
 hanoi x = 
   if x == 1
      then 1 
   else if x > 1
-    then 2 *hanoi(x-1) + 1 
+    then 2 * hanoi(x-1) + 1 
   else 0
 
 ack : Int -> Int -> Int
@@ -51,9 +81,12 @@ aste x n =
 
 qaste : Int -> Int -> Int 
 qaste x n =
-  if n == 0 then 1
-  else if n `mod` 2 == 0 then y * y 
-  else x * y * y
+  if n == 0
+     then 1
+  else if 
+    n `mod` 2 == 0 then y * y 
+  else
+    x * y * y
   where
     y : Int
     y = qaste x (n `div` 2)
