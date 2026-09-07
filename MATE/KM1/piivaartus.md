@@ -1,8 +1,9 @@
 # Peatükk 2: Funktsiooni piirväärtus ja pidevus
 
 ## 2.1 Funktsiooni piirväärtuse mõiste
-Piirväärtus kirjeldab funktsiooni $f(x)$ käitumist punkti $a$ läheduses (mitte funktsiooni väärtust punktis $a$ eneses).
+Piirväärtus kirjeldab funktsiooni $f(x)$ käitumist punkti $a$ läheduses (mitte funktsiooni väärtust punktis $a$ eneses). 
 
+* **NB!** Piirväärtuse eksisteerimiseks ei pea punkt $a$ kuuluma funktsiooni määramispiirkonda (graafikul võib olla "auk").
 * **Ametlik definitsioon ($\varepsilon-\delta$ keeles):**
   Arv $A$ on funktsiooni $f$ piirväärtus punktis $a$ ($\lim_{x \to a} f(x) = A$), kui iga $\varepsilon > 0$ korral leidub selline $\delta > 0$, et kui $x \in X$ ja $x \in (a-\delta, a+\delta) \setminus \{a\}$, siis $f(x) \in (A-\varepsilon, A+\varepsilon)$.
 * **Lõpmatu piirväärtus ($\lim_{x \to a} f(x) = \infty$):**
@@ -16,15 +17,18 @@ Piirväärtus kirjeldab funktsiooni $f(x)$ käitumist punkti $a$ läheduses (mit
 * **Vasakpoolne piirväärtus:** $\lim_{x \to a-} f(x) = A$, kui $x \in (a-\delta, a) \Rightarrow f(x) \in (A-\varepsilon, A+\varepsilon)$.
 * **Teoreem:** Piirväärtus $\lim_{x \to a} f(x)$ eksisteerib parajasti siis, kui mõlemad ühepoolsed piirväärtused eksisteerivad ja on võrdsed:
   $$\lim_{x \to a-} f(x) = \lim_{x \to a+} f(x) = \lim_{x \to a} f(x)$$
-* **Piirväärtus lõpmatuses ($\lim_{x \to \infty} f(x) = A$):**
-  Iga $\varepsilon > 0$ korral leidub $D > 0$ selliselt, et kui $x > D$, siis $f(x) \in (A-\varepsilon, A+\varepsilon)$.
+  *Kui vasak- ja parempoolne piirväärtus on erinevad (graafikul on hüpe), siis piirväärtust punktis $a$ ei eksisteeri.*
+* **Piirväärtus lõpmatuses ($\lim_{x \to \pm\infty} f(x)$):**
+  Kui $x \to \pm\infty$, võib piirväärtus olla lõplik arv $A$, lõpmatus $\pm\infty$ või puududa (nt ostsilleeruvad funktsioonid nagu $\sin x$).
 
 ---
 
 ## 2.3 Pidevad funktsioonid
 
 * **Pidevuse definitsioon punktis:** Funktsioon $f$ on pidev punktis $a$, kui:
-  $$\lim_{x \to a} f(x) = f(a)$$
+  1. Funktsioon on määratud punktis $a$ (leidub $f(a)$).
+  2. Eksisteerib piirväärtus $\lim_{x \to a} f(x)$.
+  3. $\lim_{x \to a} f(x) = f(a)$.
 * **Teoreem (tehted pidevate funktsioonidega):** Kui $f$ ja $g$ on pidevad punktis $x=a$, siis on punktis $a$ pidevad ka $f \pm g$, $fg$ ja $\frac{f}{g}$ (kui $g(a) \neq 0$).
 * **Pidevus hulgal:** Funktsioon on pidev hulgal $X$, kui ta on pidev selle hulga igas punktis.
 * **Põhiteoreem:** Kõik elementaarfunktsioonid on pidevad oma määramispiirkonnas.
