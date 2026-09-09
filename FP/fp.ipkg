@@ -2,7 +2,7 @@ package fp
 
 sourcedir = "."
 
-modules = Konspektid.Cycles
+modules = Kodutood.K1
+        , Konspektid.Cycles
         , Konspektid.Syntax
         , Konspektid.Andmestruktuurid
-        , Kodutood.K1

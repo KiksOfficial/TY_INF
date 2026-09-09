@@ -1,4 +1,4 @@
-module K1
+module Kodutood.K1
 -- displayb faili nime
 -- rlwrap lubab kasutada nooli terminalis
 

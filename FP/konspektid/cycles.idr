@@ -1,8 +1,8 @@
 --funktsionaliseerimine ja rekursioon
 
 --TSYKLITTE ASEME TULEB KASUTADA REKURSIOONI
-
-f 10 0 where
+sum100 : Int
+sum100 = f 10 0 where
   f : Int -> Int -> Int
   f i s = if i <= 100 then f (i + 1) (i + s) else s
 {-
