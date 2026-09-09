@@ -77,6 +77,7 @@ swap:
     sw    $16, 0($2)   ; Kirjutatakse v[k+1] väärtus kohale v[k]
     sw    $15, 4($2)   ; Kirjutatakse temp ($15) kohale v[k+1]
     jr    $31          ; Tagasipöördumine funktsioonist
+```
 
 ## 5. Arvuti üldine töötsükkel ja CPU tööpõhimõte
 
