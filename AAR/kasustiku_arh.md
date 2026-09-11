@@ -191,4 +191,54 @@ Pildil on kujutatud mälumuutujate ja registrite kasutamine, et liita kokku mass
    * `#j` või `#4` – **Vahetu adresseerimine** (*immediate addressing*, väärtus on otse käsus).
    * `(R3)` – **Kaudne registreeriaddresseerimine** (*register indirect addressing*, register sisaldab mäluaadressi).
 
+# Adresseerimisviisid RISC protsessorites
+
+---
+
+## Võrdlustabel
+
+| Ingliskeelne nimi | Assembler süntaks | Aadressi kujunemine |
+| :--- | :--- | :--- |
+| **Immediate** | `#väärtus` | $\text{operand} = \text{väärtus}$ |
+| **Register** | $R_i$ | $EA = R_i$ |
+| **Absolute** | $\text{LOC}$ | $EA = \text{LOC}$ |
+| **Register indirect** | $(R_i)$ | $EA = [R_i]$ |
+| **Index** | $X(R_i)$ | $EA = [R_i] + X$ |
+| **Base with index** | $(R_i, R_j)$ | $EA = [R_i] + [R_j]$ |
+
+---
+
+## Mõisted ja tähistused
+
+* **$EA$ (Effective Address):** Efektiivne aadress (tegelik mäluaadress, kust andmeid loetakse või kuhu kirjutatakse).
+* **$X$:** Indeksi väärtus (konstantne nihe / offset).
+* **$[R_i]$:** Registris $R_i$ sisalduv väärtus.
+
+Muutujate kirjeldamine
+
+registri mood -operandiks on cpu registri sisu, kasus antakse registri aadress (nimi)
+abs (otsene) mood -operandiks on malupesa sisu, kasus antakse selle aadress
+N:
+int arv1,arv2; C - keeles taisarvulised muutujad, neile vastavad konkreetsed malupesad/registrid, millele saab moodis viidata
+Kasus Load R5,LOC on esimene operand esitatud registri moodis, teine aga aabs moodis
+esimese operand vaartuseks registri R5 sisu, teise operandi vaartuseks malupesa LOC sisu
+
+Konstantide kirjeldamine
+immediate mode -operandi vaartus antakse kasus endas
+N: kasus Move R5,#500, esimese operandi vaartus registri R5 sisu, teine operandi vaartus 500
+
+N: arv1 = arv2 + 8
+
+Load R1, arv2
+Add R1, R1,#8
+Store R1,arv1
+
+suunamine ja pointerid argumentidele
+kaudne mood - operandi efektiivne aadress antakse registri adressile kus operand kirjas on
+Load R1, B,
+Load R2,(R1)
+Store R,A
+sama, mis int *pR1 = &R1
+
+register, kus effective aadress kirjas = pointer
 
