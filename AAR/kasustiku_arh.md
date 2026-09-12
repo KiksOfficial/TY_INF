@@ -93,7 +93,7 @@ sisend/valjund operatioonid
 Register transfer notation
 R0 <-[malupesa_1]
 R0 <-[M1]
-R1 <-[DATAIIN]
+R1 <-[DATAIN]
 R4 <- [R0] + [R2]
 
 ASM 

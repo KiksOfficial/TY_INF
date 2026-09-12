@@ -6,3 +6,4 @@ modules = Kodutood.K1
         , Konspektid.Cycles
         , Konspektid.Syntax
         , Konspektid.Andmestruktuurid
+        , Konspektid.Substitutsioon
