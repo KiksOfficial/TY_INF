@@ -1,0 +1,9 @@
+
+Translate to ASM
+https://godbolt.org/
+
+Proton mail
+https://account.proton.me/apps
+
+Teams
+https://teams.cloud.microsoft/
