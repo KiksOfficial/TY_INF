@@ -105,7 +105,7 @@ ndiv x y = f x 0
 korda : Int -> (Int -> Int) -> Int -> Int
 korda 0 f x = x
 korda n f x = f (korda (n - 1) f x)
- 
+
 inc : Int -> Int
 inc x = x + 1
 
