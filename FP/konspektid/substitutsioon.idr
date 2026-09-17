@@ -52,4 +52,6 @@
        else 
          λz. (e1[y -> z][x -> e])         -- Juhtum C: vangistamise oht!
                                           -- (kus z on täiesti uus muutuja / fresh variable)
+
+  
 -}

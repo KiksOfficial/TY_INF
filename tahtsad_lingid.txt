@@ -7,3 +7,6 @@ https://account.proton.me/apps
 
 Teams
 https://teams.cloud.microsoft/
+
+Nextcloud
+port = 8080

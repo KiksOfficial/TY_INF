@@ -19,4 +19,18 @@ FV(λx. e)   = FV(e) \ {x}
 ilma vabade muutujateta on kinnised terminid
 
 N: lambda (x y). x y 
-N2: FV(λx. (λy. x) (λz. y) y on vaba 
+N2: FV(λx. (λy. x) (λz. y) y on vaba
+
+vaba muutuja - globaalne muutuja
+seotud muutuja - func parameeter
+
+vabade muutujate leidmiseks liigu paremalt vasakule
+scope loppeb sulgudega
+
+seotud muutujate nimed ei oma tahtsust
+lmbda x.x = lambda y.y
+kambda x.f x = lambda z. f z
+sotud muutujate nimed ei oma tahtsust
+
+lambda x y. x +y != lambda y y. y + y
+

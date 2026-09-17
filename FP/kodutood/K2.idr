@@ -80,3 +80,36 @@ pikkus(x::xs) = 1 + pikkus xs
 tagurpidi : List a -> List a
 tagurpidi [] = []
 tagurpidi (x :: xs) = tagurpidi xs ++ [x]
+
+viimane : List a -> Maybe a
+viimane [] = Nothing
+viimane (x::[]) = Just x
+viimane (x::xs) = viimane xs
+
+igaTeine : List a -> List a
+igaTeine [] = []
+igaTeine [x] = []
+igaTeine (x::y::ys) = y :: igaTeine ys
+
+zip' : List a -> List b -> List (a, b)
+zip' [] _ = []
+zip' _ [] = []
+zip' (x::xs) (y::ys) = (x,y) :: zip' xs ys
+
+loenda : Integer -> List Integer -> Nat
+loenda _ [] = 0
+loenda n (x::xs) =
+  if n == x then 1 + loenda n xs
+  else loenda n xs
+
+asenda : Char -> Char -> String -> String
+asenda vana uus sona = pack (lisa_s (unpack sona)) where
+  lisa_s : List Char -> List Char
+  lisa_s [] = []
+  lisa_s (x::xs) = if x == vana then uus :: lisa_s xs
+    else x :: lisa_s xs
+
+paarid : List a -> List (a,a)
+paarid [] = []
+paarid [x] = []
+paarid (x::y::xs) = (x,y) :: paarid (y::xs)
