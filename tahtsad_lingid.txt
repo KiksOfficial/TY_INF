@@ -9,4 +9,4 @@ Teams
 https://teams.cloud.microsoft/
 
 Nextcloud
-port = 8080
+http://192.168.1.167:8080/apps/dashboard/
