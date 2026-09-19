@@ -143,9 +143,13 @@ Binaarloogika algebra
 Aksioomid
 
 kommutatiivsus x + y = y + x | xy = yx (argumentide jarjekorda voib tehtes muuta)
+
 distibutiivsus x + yz = (x + y)(x + z) | x(y + z) = xy + xz
-identsus 0 + x = x | 1x = x 
+
+identsus 0 + x = x | 1x = x
+
 täiend x + not x = 1 | x * not x = 0
+
 
 Sulgude puudumisel tuleb tehteid teha selles jarjestuses
 1. NOT
@@ -154,9 +158,15 @@ Sulgude puudumisel tuleb tehteid teha selles jarjestuses
 
 Binaarloogika seadused
 Domineerimine 1 + x + y = 1 | 0xy = 0
+
 Samaväärsus x + x = x | xx = x
+
 Assotsiatiivsus (x + y) + z = x + (y + z) | (xy)z = x(yz)
-Eituse eitamine NOT (NOT x) = x 
+
+Eituse eitamine NOT (NOT x) = x
+
 De Morgani seadus NOT ( x + y) = (NOT x)(NOT y) | NOT (xy) = NOT x + NOT y
+
 Kleepimisseadus: (x + y)(x̄ + z)(y + z) = (x + y)(x̄ + z) | xy + x̄z + yz = xy + x̄z
+
 Neelduvus: x + xy = x | x(x + y) = x
