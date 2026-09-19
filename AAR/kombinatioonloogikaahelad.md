@@ -1,16 +1,15 @@
-loofika pohifuncs
+loogika pohifuncs
 
 
 ```mermaid
 graph LR
-    graph TD
     subgraph "JA-elemendid (AND)"
         A1[L1]
     end
 
-    subgraph VÕI-element (OR)
-        AND1 --> OR[OR / VÕI]
-        OR --> F[Väljund f]
+    subgraph "VÕI-element (OR)"
+        AND1 --> OR["OR / VÕI"]
+        OR --> F["Väljund f"]
     end
 ```
 
