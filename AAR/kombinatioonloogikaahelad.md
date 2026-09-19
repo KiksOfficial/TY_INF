@@ -21,7 +21,7 @@ graph LR
 | 1 | 1 | 0 | 1 | 0 | 1 | 0 | 1 | 0 | 1 | 0 | 1 | 0 | 1 | 0 | 0 | 0 | 1 |
 
 OR (V,+)
-AND (punkt, tagurpidi V)
+AND (korrutamine, tagurpidi V)
 XOR (+ ringi sees)
 XNOR (punkt ringi sees)
 Puhver f = L

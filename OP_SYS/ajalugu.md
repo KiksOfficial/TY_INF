@@ -1,89 +1,115 @@
-MS DOS
+# Operatsioonisüsteemide ajalugu ja arhitektuur
 
-- moeldud aind 1 kasutaja jaoks
-- puudub yldine ennetatav multitegumtöö
-- OS eraldab malu, kuid puudub riistvaraline malukaitse
-- puuduvad failide kasutajapohised omanikud ja ligipaasuoigused
+---
 
-Linux
+## 1. Operatsioonisüsteemide võrdlus: MS-DOS vs. Linux
 
-- toetab mitme kasutaja samaaegset tood
-- protsessidel on eraldatud virtuaalsed aadressiruumid ja malukaitse
-- ext4: omanik, ryhm ja ligipaasuoigused; tuum kontrollib ligipaasu
-- OS jagab CPU aega tootavate protsesside vahel
+### MS-DOS
+* Mõeldud ainult ühe kasutaja jaoks.
+* Puudub üldine ennetav multitegumtöö (tavaliselt töötab korraga üks esiplaanil olev ülesanne).
+* Operatsioonisüsteem eraldab mälu, kuid puudub riistvaraline mälukaitse.
+* Puuduvad failide kasutajapõhised omanikud ja ligipääsuõigused (FAT12/FAT16 failisüsteem).
 
+### Linux
+* Toetab mitme kasutaja samaaegset tööd.
+* Operatsioonisüsteem jagab protsessori (CPU) aega töötavate protsesside vahel.
+* Protsessidel on eraldatud virtuaalsed aadressiruumid ja riistvaraline mälukaitse.
+* Failisüsteemis (nt ext4) on määratud omanik, rühm ja ligipääsuõigused; tuum kontrollib rangelt ligipääsu.
 
-Charles Babbage
-1820-1940
-differentsiaalmasin:arvutustabelite automatne koostamine
-analyytiline masin: malu arvutusosaha programmiga juhtiav too
+---
 
-Konrad Zuse
-programm juhib tootavat masinat
-Z1 - mehaaniline binary arvuti, piiratud tookindlusega
-Z3 - elektronmehaanilised releed, automaatne arvutus ja ujukomaarvud
-Programm loeti perfokaartidelt
+## 2. Varajane arvutustehnika ajalugu
 
-ENIAC
-Elektronlambid asendasid aeglasemaid elektronmehaanilisi lyliteid
-enIAC oli elektrooniline yldotstarbeline arvuti
-Algne programmeerimine noudis kaablite yhendamist ja lylitite seadmist
+### Charles Babbage (1820–1840. aastad)
+* **Diferentsiaalmasin:** luua mehaaniline seade arvutustabelite automaatseks koostamiseks.
+* **Analüütiline masin:** kontseptsioon, mis sisaldas mälu, arvutusosa ja programmiga juhitavat tööd.
+* Programmi ja arvutusmasina eristamise idee oli olemas juba enne elektroonika ajastut.
 
-PERFOKAARDID
-olemasolevad andmetootlustehnika joudis arvutitesse
-aukude muster kodeeris andmeid v programmi teksti
+### Konrad Zuse
+* Eesmärk: luua mehaaniline/elektromehaaniline masin, kus programm juhib töötavat seadet.
+* **Z1 (1938):** mehaaniline kahendsüsteemis (*binary*) arvuti, mis oli piiratud töökindlusega.
+* **Z3 (1941):** elektromehaanilistel releedel põhinev arvuti, mis toetas automaatset arvutust ja ujukomaarvusid.
+* Programm loeti sisse perforeeritud lintidelt või perfokaartidelt.
 
-Mallu salvestatud programm
+### ENIAC (1946)
+* Esimene elektrooniline üldotstarbeline arvuti.
+* Elektronlambid asendasid aeglasemaid elektromehaanilisi lüliteid.
+* Algne programmeerimine nõudis füüsiliste kaablite ühendamist ja lülitite manuaalset seadmist.
 
-1940 lopp 1950 algus
-arvuti loeb kaske malust
-uue programmi saab laadida ilma arvutusosa ymber juhtmestamata
-programmid vajavad korduvaid toiminguid: laadimin, i/o
-neid toiminguid saab koondada yhisesse tarkvarasse
-tekib voimalus automatiseerida programmide kaivitamist
+---
 
-1956 leituati esimene I/O
-operaator kogub programmid ja andmed roodeks
-monitor kaivitab 1 too ning liigub lopetamisel jargmise juurde
-yhised I/O rutiinid vahendavad korduvat tood
+## 3. Perfokaardid ja mällu salvestatud programm
 
-FORTRAN muudab programmi kirjutamist
+### Perfokaardid
+* Olemasolev andmetöötlustehnika kohandati arvutite jaoks.
+* Aukude muster kaardil kodeeris andmeid või programmi teksti.
+* Kaardipaki sai ette valmistada arvutist eraldi (võrguväliselt/offline).
 
-arvutuskaiku saab kirjeldada valemite ja korgema taseme kaskudega
-kompilaator teisendab lahtekoodi masinkoodiks
-programmeerija ei pea igat masinakasku kasitsi kirjutama 
-too kaivitamine ja ressursside haldamine jaavad systeemi ylesandeks
+### Mällu salvestatud programm (1940. aastate lõpp – 1950. aastate algus)
+* Arvuti loeb käske otse mälust ja täidab neid järjestikku.
+* Uue programmi saab laadida ilma arvutusosa ümber juhtmestamata.
+* Kuna programmid vajavad korduvaid toiminguid (laadimine, sisend/väljund ehk I/O), koondatakse need funktsioonid ühisesse süsteemitarkvarasse.
+* Tekib võimalus automatiseerida programmide käivitamist ja täitmist.
 
-multiprogrammeerimine kasutab ooteaega
+---
 
-programm A ootab sisend valjund loppu
-OS annab cpu sel ajal programmile B
-malus tleb hoida ja eristada mitme programmi olekut
+## 4. Pakktöötlus ja esimesed monitorid
 
-jooksvad programmid istuvad malus
-OS Kernel haldab protsesse 
+### GM-NAA I/O (1956)
+* Esimene primitiivne I/O-süsteem / operatsioonisüsteemi eelkäija.
+* Operaator kogub programmid ja andmed kokku nn tööde paketiks (*batch processing*).
+* Monitor-programm käivitab ühe töö ning liigub selle lõpetamisel automaatselt järgmise juurde.
+* Ühised I/O-rutiinid vähendavad korduvat koodi kirjutamist ja tööd.
 
-Terminal
-Klaviatuur saatis margid yhebnuse kaudu keskarvutisse valjund ilmus paberile v kasutaja ekraanile programm tootas keskarvutis (mainframe)
+---
 
-UNIX JA C
-Ken Thompson alustas UNIX 196 aastal
-Dennis Ritchie arendas C keelr 1973 kirjutatis UNIX C keeles suures osas ymber korgema taseme lahtekood lihtsustas systeemi arendamist
-hilisemad pordid naitasid et os ei pea kuuluma aind 1 masinamudelile
-riistvaraspetsiifiline kood jai vajalikuks ka c pohilises systeemis
+## 5. Kõrgema taseme keeled ja multiprogrammeerimine
 
-UNIX-i tegi mojukaks
-protsesside ja failide hierarhiline keskkond
-shell tootab kasutajaprogrammina
-vaiksed tooriistu saab pipeda
-lahtekood joudis liitsentside alusel ylikoolidesse ja uurimisasutustesse
+### FORTRAN (1957)
+* Arvutuskäiku saab kirjeldada matemaatiliste valemite ja kõrgema taseme käskudega.
+* Kompilaator teisendab lähtekoodi automaatselt masinkoodiks.
+* Programmeerija ei pea igat masinakäsku käsitsi kirjutama.
+* Töö käivitamine ja ressursihaldus jäävad operatsioonisüsteemi ülesandeks.
 
-UNIXi harud
-BSD System V ja Sun
+### Multiprogrammeerimine ja protsesside haldus
+* Eesmärk on kasutada ära protsessori ooteaega: kui programm A ootab sisend-väljundi lõppu, annab OS CPU sel ajal programmile B.
+* Operatsioonisüsteem peab mälus hoidma ja eristama mitme programmi olekut.
+* Jooksvad programmid paiknevad koos mälus ning OS-i tuum (*kernel*) haldab protsesse ja nende ressursse.
 
-Mikroprotsessorid voimaldasid personaalrvuteid
+---
 
-CP/M - OS mikroarvutile
-korraldas failide, ketta ja programmide kasutamist
+## 6. Terminalid, UNIX ja C-keel
 
+### Terminalid
+* Klaviatuur saatis märgid ühenduse kaudu keskarvutisse (*mainframe*).
+* Väljund ilmus paberile või kasutaja ekraanile.
+* Tegelik programm töötas ja teostas arvutusi keskarvutis.
 
+### UNIX ja C-keel
+* **1969:** Ken Thompson alustas UNIX-i arendamist.
+* **1973:** Dennis Ritchie arendas C-keele; UNIX kirjutati suures osas C-keeles ümber.
+* Kõrgema taseme lähtekood lihtsustas süsteemi arendamist ja selle portimist eri riistvaraplatvormidele.
+* Riistvaraspetsiifiline kood jäi vajalikuks vaid süsteemi madalatasemelises põhiosas.
+
+### UNIX-i mõjukuse põhjused
+* Protsesside ja failide ühtne, selge hierarhiline keskkond.
+* Käsukest (*shell*) töötab tavalise kasutajaprogrammina, mitte OS-i staatilise osana.
+* Väikseid, spetsialiseeritud tööriistu saab konveieritega (*pipe*) kokku liita võimsateks ahelateks.
+* Lähtekood jõudis litsentside alusel ülikoolidesse ja uurimisasutustesse, tekitades kiire laienemise.
+
+### UNIX-i peamised harud
+* BSD (Berkeley Software Distribution)
+* System V
+* SunOS / Solaris
+
+---
+
+## 7. Mikroprotsessorid ja personaalarvutid
+
+### CP/M (1974)
+* Gary Kildalli loodud operatsioonisüsteem 8-bitistele mikroarvutitele.
+* Korraldas failide, ketta ja programmide kasutamist piiratud ressurssidega seadmetes.
+
+### QDOS / 86-DOS / MS-DOS
+* Tim Paterson lõi 1980. aastal QDOS-i (*Quick and Dirty Operating System*), hilisema nimega 86-DOS.
+* Microsoft hankis süsteemi õigused ja arendas sellest IBM PC jaoks MS-DOS-i, millest sai personaalarvutite ajastu üks populaarsemaid operatsioonisüsteeme.
