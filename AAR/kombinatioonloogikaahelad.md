@@ -3,8 +3,9 @@ loofika pohifuncs
 
 ```mermaid
 graph LR
-    subgraph JA-elemendid (AND)
-        A1[L1] & A2[W1] & A3[W2] --> AND1[AND / JA]
+    graph TD
+    subgraph "JA-elemendid (AND)"
+        A1[L1]
     end
 
     subgraph VÕI-element (OR)
