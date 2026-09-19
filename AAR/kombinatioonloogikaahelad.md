@@ -1,18 +1,5 @@
 loogika pohifuncs
 
-
-```mermaid
-graph LR
-    subgraph "JA-elemendid (AND)"
-        A1[L1]
-    end
-
-    subgraph "VÕI-element (OR)"
-        AND1 --> OR["OR / VÕI"]
-        OR --> F["Väljund f"]
-    end
-```
-
 | L1 | L2 | False | AND | L1·L2̄ | L1 | L1̄·L2 | L2 | XOR | OR | NOR | XNOR | L2̄ | L1̄+L2 | L1̄ | L1+L2̄ | NAND | True |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
