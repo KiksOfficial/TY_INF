@@ -166,4 +166,4 @@ $$f = \bar{x}_1 \bar{x}_2 + x_2 x_3$$
 
 AND OR NOT - nende elementidega saab disainida koik loogika func
 AND NOT teevad sama
-OR NOR teevad ka sama
+NOT NOR teevad ka sama

@@ -211,3 +211,19 @@ Preset sisend aktiivses olekus 0 kui sisendi vaartuseks on 0 ss Q = 1 ja not Q =
 Triggerites saab salvestada 1 bitti korraga 
 Triggeritest koosnevaid seadmeid kus saab infot salvestada on registrid
 Nihke register - nihutab vastavalt vasakule v paremale
+
+
+D TRIGGER MULLIGA LOEB A VAARTUSE KUI 1->0
+D TRIGGER MULLITA LOEB A VARTUSE KUI 0->1
+
+T TRIGGER PANEB f0 EELMISE VAARTUSE KUI T = 0
+T TRIGGER PANEB NOT f0 EELMISE VAARTUSE KUI T = 1
+NEED MOLEMAD AIND SS KUI ALL VASAKUL 1
+
+Paralleellaadimisel (a1=1): Võtad viimase takti kohalt otse numbrid a2, a3, a4, a5 rea pealt.
+a kui a1=0 ss flipid
+
+Lih vota viimane bit
+
+Moodle viimane ylesanne kui ring ees ss f muidu e
+
