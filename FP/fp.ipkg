@@ -4,6 +4,7 @@ sourcedir = "."
 
 modules = Kodutood.K1
         , Kodutood.K2
+        , Kodutood.K3
         , Konspektid.Cycles
         , Konspektid.Syntax
         , Konspektid.Andmestruktuurid
