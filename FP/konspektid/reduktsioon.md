@@ -48,3 +48,41 @@ Termide lihtsustamine (väärtustamine) toimub reduktsiooni reeglite kaudu. Kuna
 
 ### Normaalkuju saavutatavus
 * Kui termil on üldse olemas normaalkuju, siis **normaaljärjekorras redutseerimine tagab alati selle leidmise** lõpliku arvu sammude järel.
+
+# $\delta$-reduktsioon
+
+$\delta$-reduktsioon määrab sisseehitatud konstantide ja funktsioonide ($C$) käitumise ning lihtsustamise reeglid.
+
+---
+
+## 1. Tõeväärtused ja tingimusavaldised
+$$\{\text{true}, \text{false}, \text{cond}\} \in C$$
+
+* **Tõese tingimuse valik:**
+  $$\text{cond } \text{true } e_1 \, e_2 \to_\delta e_1$$
+* **Väära tingimuse valik:**
+  $$\text{cond } \text{false } e_1 \, e_2 \to_\delta e_2$$
+
+---
+
+## 2. Paarid ehk ennikud
+$$\{\text{pair}, \text{fst}, \text{snd}\} \in C$$
+
+* **Esimese elemendi võtmine (`fst`):**
+  $$\text{fst } (\text{pair } e_1 \, e_2) \to_\delta e_1$$
+* **Teise elemendi võtmine (`snd`):**
+  $$\text{snd } (\text{pair } e_1 \, e_2) \to_\delta e_2$$
+
+---
+
+## 3. Loendid
+$$\{\text{nil}, \text{cons}, \text{null}, \text{hd}, \text{tl}\} \in C$$
+
+* **Tühja loendi kontroll (`null`):**
+  $$\text{null } \text{nil} \to_\delta \text{true}$$
+  $$\text{null } (\text{cons } e_1 \, e_2) \to_\delta \text{false}$$
+* **Loendi esimene element / pea (`hd`):**
+  $$\text{hd } (\text{cons } e_1 \, e_2) \to_\delta e_1$$
+* **Loendi ülejäänud osa / saba (`tl`):**
+  $$\text{tl } \text{nil} \to_\delta \text{nil}$$
+  $$\text{tl } (\text{cons } e_1 \, e_2) \to_\delta e_2$$
