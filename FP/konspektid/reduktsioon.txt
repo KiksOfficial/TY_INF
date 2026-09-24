@@ -1,0 +1,78 @@
+LAMBDA-ARVUTUS: ETA-REDUKTSIOON, DELTA-REDUKTSIOON JA REDUKTSIOONIJÄRJEKORRAD
+
+1. ETA-REDUKTSIOON (eta-reduction)
+
+Mõiste ja ekstensionaalsus:
+- Ekstensionaalsus: Loogikas tähendab see seda, et kaks funktsiooni f ja g on võrdsed, kui nad annavad võrdse sisendi ehk iga argumendi puhul sama tulemuse.
+- Vajadus: beta-delta-normaalkujul olevad termid (nt add ja \x y. add x y) ei ole alpha-ekvivalentsed, kuid käituvad väliselt identselt. eta-reduktsioon võimaldab tuvastada selliste funktsioonide võrdsuse (beta-eta-delta-võrdsus).
+
+Reegel:
+(\x. e x) ->_eta e, kui x ei kuulu e vabade muutujate hulka (x \notin FV(e))
+- Tähendus: Kui term on kujul (\x. e x) ja alamterm e ei sisalda x-i vaba muutujana, saab ümbritseva lambda ja rakenduse (application) ära jätta.
+- Näide: 
+(\x y. add x y) = (\x. \y. (add x) y) ->_eta (\x. add x) ->_eta add
+
+
+2. REDUKTSIOONIJÄRJEKORRAD
+
+Termide lihtsustamine (väärtustamine) toimub reduktsiooni reeglite kaudu. Kuna termis võib olla mitu kohalikku teisendust (reekssi), on oluline valitud reduktsioonijärjekord.
+
+Standardsejärjekorra tüübid:
+1. Normaaljärjekord (Normal order):
+- Redutseerib alati välimise vasakpoolse alamtermi (väljast-sisse).
+- Eelis: Garanteerib normaalkuju saavutamise, kui see üldse eksisteerib.
+- Puudus: Võib tekitada dubleerivat tööd, kui parameetrit kasutatakse abstraktsiooni kehas mitu korda.
+
+2. Aplikatiivjärjekord (Applicative order):
+- Redutseerib alati sisemise vasakpoolse alamtermi (seest-välja) - enne funktsioonile andmist arvutatakse argumentide väärtused.
+- Eelis: Kui argumenti kasutatakse funktsioonis mitu korda, võib see olla kiirem, sest argument arvutatakse läbi vaid üks kord.
+- Puudus: Võib jääda lõpmatusse tsüklisse ega leia normaalkuju, kui argument ei koondu (isegi kui funktsioon seda argumenti ei kasuta).
+
+Normaalkuju leiduvus ja lõputud tsüklid:
+- Redutseerimisel ei ole normaalkuju leidumine garanteeritud iga termi puhul (nt suured oomega = väike oomega rakendatud väikesele oomegale: \Omega = \omega \omega = (\x. x x)(\x. x x) jääb lõpmatusse beta-reduktsiooni tsüklisse).
+- Mõnel termil eksisteerib normaalkuju, kuid selle saavutamine sõltub järjekorrast:
+Term (\x. 1) (\omega \omega):
+- Normaaljärjekord: ->_beta 1 (saavutab normaalkuju 1 sammuga, sest eirab argumenti (\omega \omega)).
+- Aplikatiivjärjekord: üritab enne välimist sammu väärtustada (\omega \omega), tekitades lõputu tsükli.
+
+
+3. OLULISED TEOREEMID JA OMADUSED
+
+Church-Rosseri teoreem:
+- Sisu: Kui termist t saab redutseerida termid u ja v (t ->>*_beta_eta u ja t ->>*_beta_eta v), siis leidub kindlasti selline term k, kuhu mõlemad lõpuks jõuavad (u ->>*_beta_eta k ja v ->>*_beta_eta k).
+- Järeldus: Reduktsiooni järjekorra valik võib teha lisatööd, kuid ei saa viia umbtänavasse, kust õige tulemus oleks kättesaamatu.
+
+Normaalkuju unikaalsus:
+- Kui termil t leidub beta-eta-normaalkuju, siis on see ainulaadne (unikaalne).
+
+Normaalkuju saavutatavus:
+- Kui termil on üldse olemas normaalkuju, siis normaaljärjekorras redutseerimine tagab alati selle leidmise lõpliku arvu sammude järel.
+
+
+4. DELTA-REDUKTSIOON (delta-reduction)
+
+delta-reduktsioon määrab sisseehitatud konstantide ja funktsioonide (C) käitumise ning lihtsustamise reeglid (konstantidega reduktsioon, nt add x y = x + y).
+
+Tõeväärtused ja tingimusavaldised:
+{true, false, cond} \in C
+- Tõese tingimuse valik: cond true e1 e2 ->_delta e1
+- Väära tingimuse valik: cond false e1 e2 ->_delta e2
+
+Paarid ehk ennikud:
+{pair, fst, snd} \in C
+- Esimese elemendi võtmine (fst): fst (pair e1 e2) ->_delta e1
+- Teise elemendi võtmine (snd): snd (pair e1 e2) ->_delta e2
+
+Loendid:
+{nil, cons, null, hd, tl} \in C
+- Tühja loendi kontroll (null): null nil ->_delta true
+- Mittetühja loendi kontroll (null): null (cons e1 e2) ->_delta false
+- Loendi esimene element / pea (hd): hd (cons e1 e2) ->_delta e1
+- Loendi ülejäänud osa / saba (tl): tl nil ->_delta nil
+- Loendi ülejäänud osa / saba (tl): tl (cons e1 e2) ->_delta e2
+
+
+5. LISAPÕHISTED MÕISTED
+
+- Konversioon: Muutujate ümbernimetamine või teisendamine, kus keerulisem funktsioon lihtsustatakse lihtsamaks (või vastupidi).
+- Ekspansioon: Reduktsiooni vastandprotsess ehk teisendus lihtsamalt kujult keerulisemale (nt e ->_eta \x. e x).
