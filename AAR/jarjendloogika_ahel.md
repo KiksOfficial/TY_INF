@@ -223,7 +223,6 @@ NEED MOLEMAD AIND SS KUI ALL VASAKUL 1
 Paralleellaadimisel (a1=1): Võtad viimase takti kohalt otse numbrid a2, a3, a4, a5 rea pealt.
 a kui a1=0 ss flipid
 
-Lih vota viimane bit
 
 Moodle viimane ylesanne kui ring ees ss f muidu e
 

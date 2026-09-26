@@ -6,3 +6,4 @@ modules = Konspektid.Cycles
         , Konspektid.Syntax
         , Konspektid.Andmestruktuurid
         , Kodutood.K1
+        , Konspektid.Andmestruktuurid_idrises
