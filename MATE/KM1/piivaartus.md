@@ -64,3 +64,28 @@ Tavalised määramatuste tüübid: $\left[\frac{0}{0}\right], \left[\frac{\infty
    * Too nii lugejas kui ka nimetajas sulgude ette $x$ kõige kõrgemas astmes ja taanda.
 4. **Määramatus $[\infty - \infty]$:**
    * Teisenda avaldis ühisele nimetajale või korruta/jaga kaaskohatisega, et viia see kujule $\left[\frac{0}{0}\right]$ või $\left[\frac{\infty}{\infty}\right]$.
+
+## 2.6. Katkevuspunktide liigitus
+
+Kui funktsioon $f$ ei ole pidev punktis $a$, siis nimetatakse punkti $a$ funktsiooni **katkevuspunktiks**. Katkevuspunktid jaotatakse kaheks peamiseks liigiks:
+
+### I liiki katkevuspunkt
+Punkt $a$ on I liiki katkevuspunkt, kui mõlemad ühepoolsed piirväärtused $\lim_{x \to a^-} f(x)$ ja $\lim_{x \to a^+} f(x)$ eksisteerivad ning on **lõplikud reaalarvud**.
+
+* **Kõrvaldatav katkevuspunkt:**
+  Vasak- ja parempoolne piirväärtus on võrdsed, kuid funktsiooni väärtus kohal $a$ kas puudub või erineb piirväärtusest:
+  $$\lim_{x \to a^-} f(x) = \lim_{x \to a^+} f(x) \neq f(a)$$
+  *(Graafikul on selles punktis "auk", mida saab "kõrvaldada", defineerides $f(a) = \lim_{x \to a} f(x)$).*
+
+* **Hüpe (mittekõrvaldatav I liiki katkevus):**
+  Vasak- ja parempoolne piirväärtus on olemas, kuid need **ei ole võrdsed**:
+  $$\lim_{x \to a^-} f(x) \neq \lim_{x \to a^+} f(x)$$
+  *(Graafikus tekib hüpe; piirväärtust $\lim_{x \to a} f(x)$ sel kohal ei eksisteeri).*
+
+---
+
+### II liiki katkevuspunkt
+Punkt $a$ on II liiki katkevuspunkt, kui **vähemalt üks** ühepoolsetest piirväärtustest on lõpmatu ($\pm\infty$) või seda **ei eksisteeri üldse**.
+
+* **Tüüpiline näide (vertikaalassümptoot):**
+  Kui $\lim_{x \to a^-} f(x) = \pm\infty$ või $\lim_{x \to a^+} f(x) = \pm\infty$.
