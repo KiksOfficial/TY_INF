@@ -65,3 +65,27 @@ $$(f(g(x)))' = f'(g(x)) \cdot g'(x)$$
   $$f''(x) = (f'(x))'$$
 * **$n$-ndat järku tuletis:** $(n-1)$-ndat järku tuletise tuletis:
   $$f^{(n)}(x) = (f^{(n-1)}(x))'$$
+
+## 3.5 Funktsiooni diferentsiaal
+
+### Diferentsiaali mõiste ja valem
+Funktsiooni $y = f(x)$ **diferentsiaaliks** (tähis $\mathrm{d}y$) nimetatakse funktsiooni tuletise ja argumendi muudu (diferentsiaali) $\mathrm{d}x$ korrutist.
+
+$$\mathrm{d}y = f'(x) \, \mathrm{d}x$$
+
+* **$\mathrm{d}x$** — argumendi diferentsiaal ($\mathrm{d}x = \Delta x$)
+* **$\mathrm{d}y$** — funktsiooni diferentsiaal (funktsiooni muutus piki puutujat)
+
+### Seos tuletisega
+Tuletist saab esitada kahe diferentsiaali jagatisena:
+$$\frac{\mathrm{d}y}{\mathrm{d}x} = f'(x)$$
+
+### Geomeetriline tähendus
+* **$\Delta y$ (funktsiooni tegelik muut):** $f(x + \Delta x) - f(x)$ graafikut pidi.
+* **$\mathrm{d}y$ (diferentsiaal):** funktsiooni muut piki graafiku puutujat.
+* Kui $\Delta x \to 0$, siis $\Delta y \approx \mathrm{d}y$.
+
+### Näide
+Leida funktsiooni $y = 3x^2 + 5x$ diferentsiaal.
+1. Leiame tuletise: $y' = 6x + 5$
+2. Kirjutame diferentsiaali: $\mathrm{d}y = (6x + 5) \, \mathrm{d}x$

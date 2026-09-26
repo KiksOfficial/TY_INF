@@ -9,3 +9,4 @@ modules = Kodutood.K1
         , Konspektid.Syntax
         , Konspektid.Andmestruktuurid
         , Konspektid.Substitutsioon
+        , Konspektid.Andmestruktuurid_Idrised
