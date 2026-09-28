@@ -1,0 +1,43 @@
+1.
+  1. λa (b. b a)λz.z ei ole lambda term
+  2. f(λx (λy. (g x) y) z)
+  3. f(λz. (z λx. (λy. g x )y)
+  4. λλ2 1 ei ole lambda term
+  5. (λa (λb. b a (λz. z)))
+
+2. 
+  1. λf. (λg. g x) (λx. f x) kinnised: f g x (parem) vabad: x (vasak)
+  2. (λx. (λg. g x)) x kinnised: g x (vasak) vabad: x (parem)
+  3. λg. (λf. f x) (λx. g x) kinnised: g f x (parem) vabad: x (vasak)
+  4. z (λh x. (λf. h f) x) kinnised: h f x vabad: z
+  5. λh x. cond h (add 1 x) k kinnised: h x vabad: k
+
+3.
+  1. (λf. f y(λx.x))[y→λx y. f x] => (λf. f (λx y. f x)(λx.x))
+  2. (λx. f (x x))(λx. f (x x))[f→λx y. y] => (λx. (λx y. y) (x x))(λx. (λx y. y) (x x))
+  3. (λx g y.x g y)[g→x g y] => (λx g y.x g y)
+  4. ((λx y. y) y)[y→λx. y] => ((λx y'. y') λx. y)
+
+4.
+  1.
+    a. (λx. add x) (add 1 2) (mul 2 2) => add (add 1 2) (mul 2 2) => add 3 4 => 7
+    b. (λx. add x) (add 1 2) (mul 2 2) => (λx. add x) 3 4 => add 3 4 => 7
+  2. 
+    a. (λf. f f) ((λx. b) (λx. x)) => ((λx. b) (λx. x)) ((λx. b) (λx. x)) => b ((λx. b) (λx. x)) => b b
+    b. (λf. f f) ((λx. b) (λx. x)) => (λf. f f) b => b b
+  3.
+    a. (λf. (λg. f) f) ((λx. b) (λx. x)) => (λg. ((λx. b) (λx. x))) ((λx. b) (λx. x)) => (λx. b) (λx. x)) => b (λx. x) => b
+    b. (λf. (λg. f) f) ((λx. b) (λx. x)) => (λf. (λg. f) f) b => (λg. b) b) => b
+  4.
+    a. ((λy. (λx. y)) 1 ((λx. x x) (λx. x x))) => (λx. 1) ((λx. x x) (λx. x x)) => 1
+    b. ((λy. (λx. y)) 1 ((λx. x x) (λx. x x))) ei lõpe
+  5.
+    a. ((λx. x)(λx. (λy. x w) r) (λx. y)) => (λx. (λy. x w) r) (λx. y) => (λy'. (λx. y) w) r => (λx. y) w => y
+    b. ((λx. x)(λx. (λy. x w) r) (λx. y)) => (λx. x w) (λx. y) w = (λx. y) w = y 
+  6.
+    a. (λx. cond (iszero x) (add x) (mul x)) 1 (add 1 2) => cond (iszero 1) (add 1) (mul 1) (add 1 2) => cond False (add 1) (mul 1) (add 1 2) => 
+      => (cond False (add 1) (mul 1)) 3 => mul 1 3 => 3
+    b.
+      (λx. cond (iszero x) (add x) (mul x)) 1 (add 1 2) => (λx. cond (iszero x) (add x) (mul x)) 1 3 => cond (iszero 1) (add 1) (mul 1) 3 =>
+      => (cond False (add 1) (mul 1)) 3 => mul 1 3 => 3
+

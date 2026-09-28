@@ -1,0 +1,58 @@
+andmete esitamine lambda arvutuses
+
+termid peavad olema normaalkujul ilma vabade muutujateta 
+
+koik lambda arvutuse termid saab esitada aplikatsiooni ning S ja K kombinaatorite abil
+
+I = lambda x. x
+K = lambda x y. x
+S = lambda f g x. f x (g x)
+
+cond true e1 e2 = e1
+cond false e1 e2 = e2
+
+cond = lambda t x y. t x y (votab funcile 2 argumenti)
+
+func on staatiline sisend peab ise teadma, mis teeb nende harudega
+
+E**0 E' = E'
+E**n E' = E funktsiooni rakendatakse n korda E'-le 
+
+E**n(E E') = E**(n+1) E'= E (E**n E')
+
+================================================================================
+PAARID JA ENNIKUD (Lambda-arvutus)
+================================================================================
+
+1. PAARID (PAIRS)
+--------------------------------------------------------------------------------
+fst  ≡  λp. p true
+snd  ≡  λp. p false
+pair ≡  λx y f. f x y
+
+2. ENNIKUD (TUPLES)
+--------------------------------------------------------------------------------
+(E_1, ..., E_n)  ≡  pair E_1 (pair ... (pair E_{n-1} E_n) ...)
+
+E ↓^n 1          ≡  fst E
+E ↓^n 2          ≡  fst (snd E)
+...
+E ↓^n i          ≡  fst (snd^{i-1} E)
+...
+E ↓^n n          ≡  snd^{n-1} E
+
+================================================================================
+
+================================================================================
+NATURAALARVUD (Standardnumbrid Lambda-arvutuses)
+================================================================================
+
+┌0┐      ≡  λx. x                        (≡  I)
+┌n + 1┐  ≡  pair false ┌n┐
+succ     ≡  λn. pair false n
+pred     ≡  λn. n false                  (≡  snd)
+iszero   ≡  λn. n true                   (≡  fst)
+
+================================================================================
+
+REKURSIOONI KASUTADA EI TOHI
