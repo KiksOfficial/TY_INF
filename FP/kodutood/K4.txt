@@ -1,22 +1,22 @@
 1.
   1. λa (b. b a)λz.z ei ole lambda term
-  2. f(λx (λy. (g x) y) z)
-  3. f(λz. (z λx. (λy. g x )y)
+  2. ((f (λx. (λy. (((g x) y) z)))))
+  3. (f (λz. (z (λx. (λy. (g x))))))
   4. λλ2 1 ei ole lambda term
-  5. (λa (λb. b a (λz. z)))
+  5. (λa. (λb. ((b a) (λz. z))))
 
 2. 
   1. λf. (λg. g x) (λx. f x) kinnised: f g x (parem) vabad: x (vasak)
   2. (λx. (λg. g x)) x kinnised: g x (vasak) vabad: x (parem)
   3. λg. (λf. f x) (λx. g x) kinnised: g f x (parem) vabad: x (vasak)
   4. z (λh x. (λf. h f) x) kinnised: h f x vabad: z
-  5. λh x. cond h (add 1 x) k kinnised: h x vabad: k
+  5. λh x. cond h (add 1 x) k kinnised: h x vabad: cond add 1 k
 
 3.
-  1. (λf. f y(λx.x))[y→λx y. f x] => (λf. f (λx y. f x)(λx.x))
-  2. (λx. f (x x))(λx. f (x x))[f→λx y. y] => (λx. (λx y. y) (x x))(λx. (λx y. y) (x x))
-  3. (λx g y.x g y)[g→x g y] => (λx g y.x g y)
-  4. ((λx y. y) y)[y→λx. y] => ((λx y'. y') λx. y)
+  1. (λf. f y(λx.x))[y→λx y. f x] => (λf'. f' (λx y. f x) (λx. x))
+  2. (λx. f (x x))(λx. f (x x))[f→λx y. y] => (λx. (λx y. y) (x x)) (λx. (λx y. y) (x x))
+  3. (λx g y.x g y)[g→x g y] => (λx g y. x g y)
+  4. ((λx y. y) y)[y→λx. y] => ((λx y'. y') (λx. y))
 
 4.
   1.

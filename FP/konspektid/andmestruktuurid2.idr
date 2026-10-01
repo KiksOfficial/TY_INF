@@ -1,4 +1,4 @@
-module Konspektid.Andmestruktuurid_Idrises
+module Konspektid.Andmestruktuurid2
 
 --uute tyypide loomine idrises
 -- data e. uue algebralise andmetyybi loomine
@@ -67,3 +67,31 @@ sp1 = MkSphere { radius = 2, center = pt1 }
 -- Näide väljade projitseerimisest (saab käivitada nt REPL-is: sp1.center.x)
 getCenterX : Sphere -> Double
 getCenterX s = s.center.x
+
+add' : Nat -> Nat -> Nat
+add' n Z = Just n
+add' (S n) m = S (add n m)
+
+-- binaararve saab arvutada kiiremini reversed?
+
+toI : List Bool -> Integer
+toI [] = 0
+toI (True::xs) = 2 * (toI xs)
+toI (False::xs) = 1 + 2 * (toI xs)
+
+fromI : Integer -> List Bool
+fromI x = if x <= 0 then []
+          else if x `mod` 2 == 0 then False :: fromI ( x`div`2)
+          else True :: fromI (x`div`2)
+
+incr : List Bool -> List bool
+incr [] = [True]
+incr (False::xs) = True :: xs
+incr (True::xs) = False :: incr xs
+
+add2 : List Bool -> List Bool -> List Bool
+add2 [] ys = ys
+add2 (x::xs) [] = x::xs
+add2 (False :: xs) (y::ys) = y :: add2 xs ys
+add2 ( True :: xs) (False :: ys) = True :: add2 xs ys
+add (True :: xs) (False :: ys) = False :: incr (add xs ys)
