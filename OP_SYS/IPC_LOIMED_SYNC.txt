@@ -1,0 +1,93 @@
+Protsess koondab ressursid {virtuaalne aadressiruum, avatud failid ja oigused, vahemalt 1 taitmisloim}
+
+loim taidab kaske {oma registrid, PC, stack
+tuum ajastab kaivitusvalmis threade
+ootamine ei kuluta pidevalt CPU-d}
+
+Blovk ootab syndmust
+stopped - singaaliga peatatud
+CPU-l tootab parajasti 1 loim protsessi ressursid sailivad ka ootamise ajal
+
+Miks protsessid peavat suhtlema
+1 protsess toodab andmeid, teine tootleb neid
+teenus vastab kliendi paringule
+too jagatakse erakdi kaitstud osadeks
+tulemus ja too lopetamine tuleeb teistele teatada
+IPC - inter-Process communication
+protsesside vaheline suhtlus: andmete vahetus ja kostoo korraldamine
+Eraldi aadressiruum kaitseb protsesse, IPC loob teadliku yhenduse
+
+Torujuhe koosneb protsessidest
+
+cat a.txt | grep ERROR | wc -l
+kolm valist programmi 3 protsessi 2 toru
+interaktiivses bashis 1 too ja tavaliselt 1 protsessigrupp
+osad voivad tootada kattuva ajaga andmed liiguvad jark jargulu
+
+Shell yhendab standardsisendid ja valjundid
+
+tootja stdout: FD 1 -> Toru tuumas -> Tarbija stdin: FD 0
+
+failideskriptor on protsessis kasutatav taisarvuline viide
+shell saab yhendused enne programmi kaivitamist exec-ga
+stderr ehk FD 2 jaab tavalise | korral eraldi
+Programm voib kasutada sama ligemis ja kirjutamisliidest eri yhendustega
+
+tootja kirjutab -> piiratud maluga puhver baidid jarjekorras -> tarbija loeb
+tyhi toru, kirjutaja alles olemas: lugeja voib oodata
+tais toru: kirjutaja voib oodata kuni ruum vabaneb
+ootel loim ei vaja pidevalt CPU aega
+
+Kuidas aru saada et too on labi
+
+Koik kirjutamisotsad on suletud ( prst puhvri tyhenemist naeb lugeja baiti EOF)
+Koik lugemisotsad on suletud: uus kirjutus pohjustab tavaliselt SIGPIPE-i
+Vaikimisi lopetab sigpipe kirjutaja; kasitlemisel voib kirjutus tagada vea EPIPE
+Tarbetult avatuks jaanud toruots voib lopetamise ootama jatta
+
+Andmete puudumine praegu ja andmevoo lopp on erinevad olukorrad
+
+Jagatud mälu on teadlik erand
+Protsess A oma aadressiruum ->(kaardistus)->yhised andmed mälus<-(kaardistus)<-protsess B oma aadressiruum
+
+
+OS lubab molemal protsessil samale malupiirkonnale ligi paaseda
+andmete paigutus ja ligipaasujarjekord tuleb kokku leppida
+
+Jagatud malu voimaldab jagada andmeid; synkroonimine hoiab kasutuse kooskolas 
+
+Jagatud malu - suur yhine andmebuffer - yhised baidid eraldi koordineerimine
+
+Sokkel - Klient ja teenus - kohalik v vorgusuhtlus
+
+Sonumijarjekord - eraldi tooteated - sailivad sonumite piirid
+
+Signaal - peata, jatka, lopeta - syndmus v juhtimisseade
+
+Valik soltub sellest kuida jagame ja millist eraldust vajame
+
+Sokkel - teenustega saab raakida ka teises arvutis
+Unix domain sokkel {
+    sama arvuti protsesside vahel
+    sageli failisysteemi teega aadress
+    nt kohalik klient ja teenus 
+  }
+TCP/IP sokkel {
+    sama v eri arvutites
+    ip aadress ja prodi nr
+    nt browser ja veebiserver
+  }
+
+Pordinumber nimetab suhtluseosa see ei ole PID
+
+mitu loime 1 protsessi sees - loimed annavad protsessule mitu taitmisvoogu; ressursid jaavad yhiseks
+
+Mida loimed jagavad ja mida mitte
+
+loimed jagavad virtuaalset aadressiruumi ja programmikoodi, kuhi ja globaalsed muutujad, avatud failide deskriptorid, protsessi isentiteet ja pohiosa oigustest
+igal loimel oma taitmise koht, PC, registrite seis, Kutsete pinu ????
+
+kernel ajastab kivitusvalmis loimi
+TCP loime
+PCB prots
+Linuxis kirjeldab ajastatavat yksust task_struct; osa ressursse on loimedel yhised

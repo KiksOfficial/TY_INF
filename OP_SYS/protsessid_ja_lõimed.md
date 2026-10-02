@@ -4,10 +4,10 @@ N1:
 
 sort {
 
-Kest kaivitab programmi sort,
-tootamiseks on vaja CPU aega, malu ja failidele ligipaasu
-Samal ajal voivad tootada teised programmid ja kasutajad,
-OS peab eristama taitmisi, jagama ressursse ja kontrollima ligipaasu
+  Kest kaivitab programmi sort,
+  tootamiseks on vaja CPU aega, malu ja failidele ligipaasu
+  Samal ajal voivad tootada teised programmid ja kasutajad,
+  OS peab eristama taitmisi, jagama ressursse ja kontrollima ligipaasu
 
 }
 
@@ -22,12 +22,12 @@ Protsess maarab taitmiskeskkonna (ressursid)
 Loim liigub programmi kaskude kaudu edasi
 
 Protsessi alla kuuluvad {
-Virtuaalne aadressiruum (kood, andmed, kuhi, pinud)
+  Virtuaalne aadressiruum (kood, andmed, kuhi, pinud)
 
-identiteet ja ressursid (PID, oigused, avatud failid)
+  identiteet ja ressursid (PID, oigused, avatud failid)
 
-esialgu alati aind 1 thread, millel on kasuloendur (PC) + registrid ning oma pinu
-}
+  esialgu alati aind 1 thread, millel on kasuloendur (PC) + registrid ning oma pinu
+  }
 
 Protsessi virtuaalse malu mottekaart {
 
@@ -62,8 +62,8 @@ hallatud keeltes teeb heap maluhaldust garbage collector (prugikoristus)
 Kogu protsessi loppedes vabastab OS selle aadressiruumi
 
 Thread - 1 protsess, yhine aadressiruum ja avatud failid, globaalsed andmed ja kuhi {
-Loim A: oma PC, registrid, stack
-Loim B: oma PC, registrid, stack
+  Loim A: oma PC, registrid, stack
+  Loim B: oma PC, registrid, stack
 }
 threadid saavad samade andmetega tootada, kuid peavad ligipaasu kordineerima
 
@@ -78,15 +78,17 @@ RBP = Base Pointer (raami/pinu baasviit x86-64 arhitektuuril)
 
 Registrid - ei istu malus, vaid on protsessori sees (liitmise/tehete toovaartused)
 Protsessori registrid ja rutiinid soltuvad arhitektuurist
-Muutujal ei pruugi olla oma registrit ja optimeeritud koodis voib vaartus olla silurile kattesaamatu ()
+Muutujal ei pruugi olla oma registrit ja optimeeritud koodis voib vaartus olla silurile kattesaamatu
+
+Lõime jätkamiseks säilitatakse PC, SP ja registriolek
 
 PCB - Process control block - selle sees on {
-PID, vanemprotsess, protsessi hetkeseisund
-Taitmise kontekst aka SP ja PC, registrid
-Prioriteet, CPU kasutus, jarjekordade seosed
-Aadressiruumi ja malukaardistuse info voi viited
-Avatud failid, kasutaja ja ligipaasuoigused
-Kasutatud ressursid, ajad ja piirangud
+  PID, vanemprotsess, protsessi hetkeseisund
+  Taitmise kontekst aka SP ja PC, registrid
+  Prioriteet, CPU kasutus, jarjekordade seosed
+  Aadressiruumi ja malukaardistuse info voi viited
+  Avatud failid, kasutaja ja ligipaasuoigused
+  Kasutatud ressursid, ajad ja piirangud
 }
 
 PCB seob protsessi oleku ja ressursid kerneli jaoks 1ks tervikuks
@@ -97,7 +99,7 @@ PC, registrid, SP, pinu info
 }
 
 PCB yhised protsessiressursid multithread mudelis {
-Identiteet, aadressiruum, avatud failid ja oigused
+  Identiteet, aadressiruum, avatud failid ja oigused
 }
 
 KONTEKSTIVAHETUS EI KOPEERI KOGU MALU TCB-SSE EGA PCB-SSE
@@ -120,25 +122,25 @@ NB: aeg voib labi ka saada (time slice), siis Running state laheb sujuvalt uuest
 
 Linuxis {
 
-R - Running / Runnable (Linuxis on valmis JA tootav MOLEMAD tahistatud R-tahega)
+  R - Running / Runnable (Linuxis on valmis JA tootav MOLEMAD tahistatud R-tahega)
 
-Ootus
-S - signaaliga katkestatav ootus (Interruptible sleep)
-D - katkestamatu ootus (Uninterruptible sleep, sageli I/O)
+  Ootus
+  S - signaaliga katkestatav ootus (Interruptible sleep)
+  D - katkestamatu ootus (Uninterruptible sleep, sageli I/O)
 
-Peatatud
-T - signaaliga peatatud
-t - siluriga/debuggeriga peatatud
+  Peatatud
+  T - signaaliga peatatud
+  t - siluriga/debuggeriga peatatud
 
-Muud
-X - surnud (dead, harva nahtav)
-I - joude kerneliloim (idle)
-Z - zombie (lopetanud, aga peaprogramm pole tulemust wait()-iga koristanud)
+  Muud
+  X - surnud (dead, harva nahtav)
+  I - joude kerneliloim (idle)
+  Z - zombie (lopetanud, aga peaprogramm pole tulemust wait()-iga koristanud)
 
 }
 
 Zombie {
-Elav laps teeb midagi -> (exit) Z (laps on too lopetanud, aga vanem pole tema lopuinfo katsunud) -> (wait) reaped (ehk vanem koristab lopuinfo)
+  Elav laps teeb midagi -> (exit) Z (laps on too lopetanud, aga vanem pole tema lopuinfo katsunud) -> (wait) reaped (ehk vanem koristab lopuinfo)
 }
 
 Zombi enam kaske ei taida.
@@ -149,15 +151,15 @@ Kui vanemprotsess sureb enne lapsprotsessi, saab orvuks jaanud laps uue vanema (
 Kontekstivahetus ja kernelisse sisenemine
 
 Kontekstivahetus {
-A taitmise olek (PC, SP, registrid) salvestatakse,
-Ajastaja valib ja kaivitab B,
-B kontekst taastatakse, B jatkab
+  A taitmise olek (PC, SP, registrid) salvestatakse,
+  Ajastaja valib ja kaivitab B,
+  B kontekst taastatakse, B jatkab
 }
 
 Systeemikutse (Syscall) {
-Loim palub kernelilt teenust,
-Taitmine liigub kasutajareziimist (user mode) kernelireziimi (kernel mode),
-Sama loim voib parast teenust kohe edasi tootada
+  Loim palub kernelilt teenust,
+  Taitmine liigub kasutajareziimist (user mode) kernelireziimi (kernel mode),
+  Sama loim voib parast teenust kohe edasi tootada
 }
 
 Iga syscall EI pohjusta loimevahetust. Kontekstivahetus EI kopeeri kogu protsessi malu.
@@ -204,10 +206,10 @@ OS-i vastendatud lehekyljed - osa neist parajasti RAM-is
 
 Failideskriptor (FD) viitab kerneli hallatavale objektile
 FD naited {
-3: Avatud andmefail
-4: Toru lugemisots
-5: Toru kirjutamisots
-6: Vorgusokkel
+  3: Avatud andmefail
+  4: Toru lugemisots
+  5: Toru kirjutamisots
+  6: Vorgusokkel
 }
 deskriptori kaudu saab rakendada lugemist/kirjutamist
 

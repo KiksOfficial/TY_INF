@@ -1,0 +1,18 @@
+sum [ x-y | (x,y) <- zip [3,4] [1..6] ]
+
+
+f : List (Int, String) -> String -> String
+f [] s = s
+f [(n,x)] s = x
+f (x::xs) s = f xs s
+
+f [(5,"a"), (6,"b")] "" = ?
+
+Margi, kas termid on alfa-ekvivalentsed:
+(a) (λ x. add x x)= ? α (λ y. add x x)
+
+(b) (λ x. add x y)= ? α (λ y. add y x)
+
+(c) (λ x y. add x y)= ? α (λ y x. add y x)
+
+(d) (λ x. g x)= ? α g
