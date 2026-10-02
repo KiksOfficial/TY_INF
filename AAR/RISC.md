@@ -86,6 +86,9 @@ salvesta malu tulemus registrisse kui vajalik
 
 registri fail 2 lugemiskohaga
 
+<img width="1349" height="638" alt="Screenshot 2026-10-02 at 15 07 06" src="https://github.com/user-attachments/assets/fc9d8b27-e737-4fd6-b15f-74c56f742170" />
+
+
 # Registri fail, kahe lugemiskohaga
 
 Slaidil on esitatud kahe lugemiskohaga registrifaili loogiline skeem kahes erinevas esituses (üldine plokk-skeem vasakul ja detailsem lahtikirjutus paremal).
@@ -102,5 +105,7 @@ Slaidil on esitatud kahe lugemiskohaga registrifaili loogiline skeem kahes erine
 
 1. **Lugemine (Read):** Protsessor seab liinidele `Aadress A` ja `Aadress B` soovitud registrite numbrid. Registrifail väljastab nende registrite sisu koheselt väljunditesse `Väljundandmed A` ja `Väljundandmed B`.
 2. **Kirjutamine (Write):** Kui on vaja tulemus salvestada, antakse `Aadress C` kaudu sihtregistri number ning `Sisendandmed` liini kaudu kirjutatakse väärtus vastavasse registrisse.
+
+<img width="1398" height="837" alt="Screenshot 2026-10-02 at 15 04 45" src="https://github.com/user-attachments/assets/a528ab6e-f53c-42bf-a65d-59872fb313f8" />
 
 
