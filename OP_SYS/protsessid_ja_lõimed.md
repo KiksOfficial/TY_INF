@@ -13,9 +13,15 @@ sort {
 
 Programm - kaivitatav kood failis
 Protsess - 1 programmi taitmise eksemplar
+Lõim on protsessi osa, mis jooksutb koodi (protsess on nagu konteiner)
 Molemalt kaivitusel on oma PID ja taitmise olek
 
 Sama programmifail ei tahenda sama protsessi. PID on protsessi identifikaator
+
+PC naitab, kus kood praegu on
+SP - naitab kui suur nihe on praeguse aadressi ja stack aadressi vahe (kus parajasti kaadris asume)
+iga lõime jaoks on oma stack
+
 
 Protsess yhendab ressursid ja taitmise
 Protsess maarab taitmiskeskkonna (ressursid)
@@ -206,6 +212,8 @@ OS-i vastendatud lehekyljed - osa neist parajasti RAM-is
 
 Failideskriptor (FD) viitab kerneli hallatavale objektile
 FD naited {
+  1: stdin?
+  2: stdout?
   3: Avatud andmefail
   4: Toru lugemisots
   5: Toru kirjutamisots
@@ -218,3 +226,100 @@ Faili avamine (open) ei lae automaatselt kogu faili protsessi mallu
 lsof - saad naha, mida su protsess napib (koik avatud objektid ja deskriptorid)
 lsof valjundi reziimid FD loppus: r = lugemine, w = kirjutamine, u = molemad
 FD tyybid: cwd (tookaust), REG (tavafail), DIR (kaust), FIFO/pipe (toru), IPv4/TCP (vorgusokkel)
+
+-#######################################################
+######################################################
+
+Vanem ja laps moodustavad protsesside puu
+
+igal lapsel parent id (PPID)
+igal lapsel oma id (PID)
+Protsess oib ise uusi lapsi luua
+sugulussuhe ei tahenda yhte kuhja ehk PID
+
+fork() = 1 kutse 2 taitmist
+
+pid_t = pid = fork()
+
+if (pid < 0) {
+perror("fork");
+} else if (pid ==0){
+//laps
+} else {//parent}
+
+exec() - uus program samas protsessis
+exec-pere asendab protsessi programmi ja aadressiruumi sisu
+PID jaab samaks uut last sellega ei looda
+edukas kutse ei naase vana Programmikoodi
+failideskriptoreid saab uude prograami kaasa anda
+
+EHK fork(): uus protsess exec(): uus programm olemasolevas protsessis
+
+Kuidas kest välise käsu kaivitab {
+  Kest -> fork laps: uus PID -> exec: nt. ls -> loppolek(wait)->esiplaan ootab töö lõppu
+    V                                              |
+    Vanem: kest jätkab ----------------------------|
+
+  Kest interpreteerib käsu ja tekitab protsessi
+}
+
+Lõppemine, zombie ja orvuks jaamine
+
+protsess lopetab ise v lopetava signaali tulemusel
+wait/waitpid annab vanemale lapse loppoleku
+(wait ootab koiki lapsi, waitpid ootab kindlat last)
+
+zombie - laps on loppenud a loppolek veel vastu votmata
+orb - vanem on loppenud laps saab linuxis uue vanema
+
+Vanema surm ei lopeta yldjuhul automaatselt koiki lapsi, zombi ei taida enam progrrammi
+vanema surma ouhul saab laps uue vanema
+
+Lõppkood ple standardvaljund
+
+standarvaljund kannab programmi toodetuid andmeid
+loppkood kirjeldab käsu loppemist: tavaliselt 0 on edu
+bashis annab $? viimase kasu loppstaatuse
+jargmine kask voib selle vaartuse asendada
+
+Signaal annab protsessile syndmusest teada
+
+SIGINT - lopetab - kasutaja katkestus
+SIGTERM - lopetab - palve lopetada; saab kasitleda
+SIGKILL - lopetab - sunnitud lopp; ei saa pyyda ega eirata
+SIGTSTP - peatab - terminalist peatamine; saab kasitleda
+SIGSTOP - peatab - sunnitud peatus, ei saa pyyda ega eirata
+SIGCONT - jatkab - lubab peatatud taitmisel jatkuda
+
+kill saadab signaali; saadetud signaal ei pea preotsessi lopetama
+
+Ctrl-C SIGINT
+Ctrl-Z SIGTSTP
+
+Signaali saab terminali esiplaani protsessiryhm
+????
+
+Kesta töö ple alati 1 protsess
+
+cat ... | sort | uniq
+
+jobs: selle kesta hallatavad tood
+Too number ja PID on erinevad identifikaatorid
+Toode juhtimise korral seob kest toru protsessiryhmaks
+
+Ampersand (&) kaivitab too taustal
+sleep 300 &
+
+taustal olemine ei tahenda vaiksemat prioriteeti
+$! - viimase taustal jooksutatud kasu PID
+$? - viimase jooksutatud kasu tagastuskood
+taustatöö voib endiselt terminali kirjutada
+
+nohup ja & lahendavad eri ylesandeid
+nohup - kaivitab kasu nii et SIGHUP on eiratud
+& kest ei oota too loppu esiplaanil
+ymbersuunamised eemaldavad soltuvuse terminali sisendist ja valjundist
+See ei taga ellujaamist taaskaivituse ega teenushalduri lopetamispoliitika korral
+
+Taustal kaivitamine yksi ei luba et too jaab valjalogimisel ellu
+
