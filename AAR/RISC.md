@@ -108,4 +108,91 @@ Slaidil on esitatud kahe lugemiskohaga registrifaili loogiline skeem kahes erine
 
 <img width="1398" height="837" alt="Screenshot 2026-10-02 at 15 04 45" src="https://github.com/user-attachments/assets/a528ab6e-f53c-42bf-a65d-59872fb313f8" />
 
+NB! RA jouab ALU-sse RB ei pruugi
+NB2! TEGU ON LOAD KASUGA
 
+# Protsessori andmetee ja juhtimissüsteemi tahvlijoonis (03.10.2025 loeng)
+
+Sellel tahvlijoonisel on kujutatud lihtsustatud ühe- või mitmetsüklilise protsessori (CPU) andmetee (datapath) ja juhtplokk koos kõigi peamiste funktsionaalsete komponentide ning signaalivoogudega.
+
+---
+
+## 1. Peamised komponendid ja nende rollid
+
+### A. Juhtimine ja käsuregister
+* **Käsuregister (Instruction Register):** Hoiab mälust loetud käsku. Käsk jaguneb osadeks:
+  * **Registrite aadressid (5 biti, 5 biti, 5 biti / 5 5 5):** Määratlevad lähte- ja sihtregistrid registrifailis.
+* **Otsustaja / Juhtseade (Control Unit / Otsustaja):** Dekodeerib käsuregistri sisendi ning genereerib juhtsignaalid (Valik 1, Valik 2 jne) muunduritele (multipleksoritele) ja ALU-le.
+* **Juhtimine (Control Lines):** Punased liinid joonisel, mis edastavad juhtsignaale üle kogu protsessori.
+
+### B. Registrid ja registrifail
+* **Registri fail (Register File):** Sisaldab protsessori üldotstarbelisi registreid.
+  * **Aadress A ja Aadress B:** Sisendid loetavate registrite valimiseks.
+  * **Aadress C:** Sisend kirjutatava (siht-)registri valimiseks.
+* **RA (Register A) ja RB (Register B):** Vaheregistrid registrifailist loetud väärtuste ajutiseks hoidmiseks.
+* **RM:** Mälu andmeregister (Memory Data Register / Read Memory), mis hoiab mälust loetud andmeid.
+* **Ajutine R / RY / RZ:** Täiendavad vaheregistrid (nt ALU tulemuse `RZ` või mälust pärit andmete `RY` hoidmiseks enne registrifaili kirjutamist).
+
+### C. Aritmeetika-loogikaplokk (ALU) ja muundurid
+* **ALU (Arithmetic Logic Unit):** Teostab aritmeetilisi ja loogilisi operatsioone vastavalt sisendkäsule (`Käsk K`).
+* **Multipleksorid (Mux):** Valikulised lülitid andmevoogude suunamiseks:
+  * **MuxC:** Valib registrifaili kirjutatava aadressi või andmeallika.
+  * **MuxB:** Valib ALU teise sisendi (kas registrist `RB`, konstandi/nihte või muu allika).
+  * **MuxY / MuxPC / MuxInc:** Suunavad andmeid vastavalt sellele, kas tegemist on mälupöörduse, koodihüppe või järgmise käsu aadressi arvutamisega.
+
+### D. Programmilohend (PC) ja mäluliides
+* **PC (Program Counter):** Hoiab järgmise täidetava käsu aadressi.
+* **Liitja (Adder) ja MuxInc:** Arvutavad järgmise käsu aadressi (nt `PC + 4` või hüppeaadressi).
+* **Mälu liides (Memory Interface):** Süsteemi ühenduslüli välise mäluga (RAM/vahemälu):
+  * **Aadressi liin:** Edastab mäluaadressi (pärineb kas PC-st või ALU/rekistri arvutustest).
+  * **Andmete liin:** Edastab loetavaid või kirjutatavaid andmeid.
+
+---
+
+## 2. Töötlemise sammud (Sammud tahvli vasakus servas)
+
+Tahvlil on vasakus servas rohelisega markeeritud protsessori täitmise sammud:
+
+1. **Samm 1 (Käsu toomine / Fetch):** Käsk loetakse mälust `PC` aadressi järgi ja salvestatakse **Käsuregistrisse**.
+2. **Samm 2 (Dekodeerimine / Decode):** Käsk dekodeeritakse `Otsustaja` poolt, vajalikud registrid loetakse registrifailist vaheregistritesse `RA` ja `RB`.
+3. **Samm 3 (Täitmine / Execute):** **ALU** teostab vajaliku arvutuse `RA` ja `MuxB` kaudu saadud väärtuste põhjal. Tulemus läheb registrisse `RZ`.
+4. **Samm 4 (Mälupöördus / Kirjutamine - Memory / Writeback):** Vajadusel loetakse/kirjutatakse andmed **Mäluliidese** kaudu või salvestatakse tulemus läbi `MuxY` tagasi **Registrifaili** (`Aadress C`).
+
+---
+
+## 3. Andmevoogude kokkuvõte
+
+* **Punased liinid:** Juhtsignaalid (Control Signals), mis juhivad multipleksoreid, ALU-d ja registrite kirjutamist.
+* **Sinised/Mustad liinid:** Tegelikud andme- ja aadressisiinid (Data & Address Busses).
+
+Käskude kodeerimine
+
+nt. 5 bitti 1 registri kirjeldamiseks
+|Rscr1(31-27)|Rsrc2(26-22)|Rdst(21-17)|OP-kood(16-0)
+Registrites kogu lähteinfo
+
+|Rscr(31-27)|Rdst(26-22)|immediate operand(21-6)|OP-kood(16-0)
+1 arg otse käsust
+
+Käsu laadimine ja käivitamine
+
+Add R1,R2,R3
+
+|00010|00011|00001|xxxxx|
+
+1. mälu aadress <=[PC], Loe malust, IR<=Mälu andmed, PC<=[PC]+4
+2. dekodeeri kask, RA<=[R2], RB<=[R3]
+3. Arvuta summa RZ<=[RA]+[RB]
+4. RY<=[RZ]
+5. salvesta registrisse R1<=[RY]
+
+KORRAGA SAAB DEKODEERIDA KASKU JA LUGEDA REGISTRITE SISU
+
+Load R1,X(R2)
+
+1. Mälu aadress<=[PC], Loe mälust,
+IR<=Mälu andmed, PC<=[PC]+4,
+2. Dekodeeri käsk, RA<=[R2]
+3. Arvuta aadress RZ<=[RA]+X
+4. Mälu aadress<=[RZ], Loe mälust, RY<=Mälu andmed
+5. Salvesta registrisse R1<=[RY]

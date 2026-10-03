@@ -16,3 +16,9 @@ Margi, kas termid on alfa-ekvivalentsed:
 (c) (λ x y. add x y)= ? α (λ y x. add y x)
 
 (d) (λ x. g x)= ? α g
+
+
+
+Alfa ekvivalentsus - lih muudetakse var nimi
+
+
