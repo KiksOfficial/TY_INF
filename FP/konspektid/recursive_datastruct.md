@@ -39,14 +39,15 @@ nul  ≡ λz. z true          (≡ fst)
 hd    ≡ λz. fst (snd z)
 tl    ≡ λz. snd (snd z)
 
-• Termi M nimetatakse püsipunktikombinaatoriks kui
-    \forall F. M F = F (M F)[cite: 1]
+Termi M nimetatakse püsipunktikombinaatoriks kui
 
-• Curry "paradoksaalne" kombinaator
-    Y \equiv \lambda f. (\lambda x. f (x x)) (\lambda x. f (x x))[cite: 1]
+∀F.MF=F(MF)
 
-• Kombinaator Y on püsipunktikombinaator
-    Y e \to_\beta (\lambda x. e (x x)) (\lambda x. e (x x))[cite: 1]
-    \to_\beta e ((\lambda x. e (x x)) (\lambda x. e (x x)))[cite: 1]
-    =_\beta e (Y e)[cite: 1]
+Curry "paradoksaalne" kombinaator
 
+Y≡λf.(λx.f(xx))(λx.f(xx))
+   
+Kombinaator Y on püsipunktikombinaator - saab kasutada rekursiivste func defineerimiseks
+Ye→β (λx.e(xx))(λx.e(xx))
+  →β e((λx.e(xx))(λx.e(xx)))
+  →β e(Ye)
