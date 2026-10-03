@@ -39,31 +39,14 @@ nul  ≡ λz. z true          (≡ fst)
 hd    ≡ λz. fst (snd z)
 tl    ≡ λz. snd (snd z)
 
-# Püsipunktid
+• Termi M nimetatakse püsipunktikombinaatoriks kui
+    \forall F. M F = F (M F)[cite: 1]
 
-* Termi $M$ nimetatakse *püsipunktikombinaatoriks* kui
-  $$\forall F. M F = F (M F)$$
+• Curry "paradoksaalne" kombinaator
+    Y \equiv \lambda f. (\lambda x. f (x x)) (\lambda x. f (x x))[cite: 1]
 
-* Curry "paradoksaalne" kombinaator
-  $$Y \equiv \lambda f. (\lambda x. f (x x)) (\lambda x. f (x x))$$
-
-* Kombinaator $Y$ on püsipunktikombinaator
-  $$Y e \to_\beta (\lambda x. e (x x)) (\lambda x. e (x x))$$
-  $$\phantom{Y e} \to_\beta e ((\lambda x. e (x x)) (\lambda x. e (x x)))$$
-  $$\phantom{Y e} =_\beta e (Y e)$$
-
-"Tugev" püsipunkti kombinaator
-
-$$\Theta \equiv (\lambda x y.\ y(x x y)) (\lambda x y.\ y(x x y))$$
-
-Püsipunktikombinaatoreid saab kasutada rekursiivsete funktsioonide defineerimiseks.
-
-Näide:
-$$
-\text{add} = \lambda x\ y.\ \text{cond} (\text{iszero}\ x)\ y\ (\text{add}(\text{pred}\ x)(\text{succ}\ y))
-$$
-
-$$
-\text{add} \equiv Y (\lambda f\ x\ y.\ \text{cond} (\text{iszero}\ x)\ y\ (f\ (\text{pred}\ x)(\text{succ}\ y)))
-$$
+• Kombinaator Y on püsipunktikombinaator
+    Y e \to_\beta (\lambda x. e (x x)) (\lambda x. e (x x))[cite: 1]
+    \to_\beta e ((\lambda x. e (x x)) (\lambda x. e (x x)))[cite: 1]
+    =_\beta e (Y e)[cite: 1]
 

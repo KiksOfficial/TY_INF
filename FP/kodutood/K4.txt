@@ -13,10 +13,10 @@
   5. λh x. cond h (add 1 x) k kinnised: h x vabad: cond add 1 k
 
 3.
-  1. (λf. f y(λx.x))[y→λx y. f x] => (λf'. f' (λx y. f x) (λx. x))
-  2. (λx. f (x x))(λx. f (x x))[f→λx y. y] => (λx. (λx y. y) (x x)) (λx. (λx y. y) (x x))
-  3. (λx g y.x g y)[g→x g y] => (λx g y. x g y)
-  4. ((λx y. y) y)[y→λx. y] => ((λx y'. y') (λx. y))
+  1. (λf. f y(λx.x))[y→λx y. f x] => (λw. w (λx y. f x)(λx.x))
+  2. (λx. f (x x))(λx. f (x x))[f→λx y. y] => (λx. (λx y. y) (x x))(λx. (λx y. y) (x x))
+  3. (λx g y.x g y)[g→x g y] => (λx g y.x g y)
+  4. ((λx y. y) y)[y→λx. y] => ((λx y. y) y)
 
 4.
   1.
