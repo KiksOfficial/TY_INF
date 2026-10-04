@@ -7,23 +7,23 @@
 -- Ülesanne 1: vabad muutujad
 
 -- Leia vabad muutujad
--- a. 𝜆𝑥. (𝜆𝑦. 𝑔 𝑥 𝑦) (𝑓 𝑥 𝑦)
--- b. 𝜆𝑥. 𝜆𝑦. 𝑔 𝑥 𝑦 (𝑓 𝑥 𝑦)
+-- a. 𝜆𝑥. (𝜆𝑦. 𝑔 𝑥 𝑦) (𝑓 𝑥 𝑦) = g f y
+-- b. 𝜆𝑥. 𝜆𝑦. 𝑔 𝑥 𝑦 (𝑓 𝑥 𝑦) = f g 
 
 
 
 -- Ülesanne 2: substitutsioon
 
 -- Tehke järgnevad substitutsioonid:
--- a. (𝜆𝑓. 𝑓 𝑦 (𝜆𝑥. 𝑥))[𝑦→𝜆𝑥 𝑦. 𝑓 𝑥]
--- b. ((𝜆𝑥. 𝑓 (𝑥 𝑥))(𝜆𝑥. 𝑓 (𝑥 𝑥)))[𝑓→𝜆𝑦. 𝑥]
+-- a. (𝜆𝑓. 𝑓 𝑦 (𝜆𝑥. 𝑥))[𝑦→𝜆𝑥 𝑦. 𝑓 𝑥] = (𝜆𝑓'. 𝑓' (𝜆𝑥 𝑦. 𝑓 𝑥) (𝜆𝑥. 𝑥))
+-- b. ((𝜆𝑥. 𝑓 (𝑥 𝑥))(𝜆𝑥. 𝑓 (𝑥 𝑥)))[𝑓→𝜆𝑦. 𝑥] = ((𝜆𝑥'. (𝜆𝑦. 𝑥) (𝑥' 𝑥'))(𝜆𝑥'. (𝜆𝑦. 𝑥) (𝑥' 𝑥')))
 
 
 
 -- Ülesanne 3: redutseeri normaalkujule
 
 -- Kasutades normaaljärjekorda, redutseeri normaalkujule:
--- (𝜆𝑓 𝑥. 𝑓 (𝑓 𝑥)) (add 2) 2
+-- (𝜆𝑓 𝑥. 𝑓 (𝑓 𝑥)) (add 2) 2 => add 2 (add 2 2) => add 2 4 => 6
 
 
 -- Ülesanne 4: listifunktsioon
@@ -37,8 +37,9 @@
 -- False
 
 yl4 : List (Bool,b) -> Bool
-yl4 [] = True
-yl4 ((a,b)::xs) = if a then yl4 xs else False
+yl4 [] = False
+yl4 ((True,_)::xs) = True
+yl4 ((False,_)::xs) = yl4 xs
 
 
 -- Ülesanne 5: listifunktsioon foldr-ga
@@ -48,7 +49,7 @@ yl4 ((a,b)::xs) = if a then yl4 xs else False
 -- võrdsed.
 --
 yl5 : List (Int,Int) -> Bool
-yl5 = foldr(\(x,y), zs => if x == y then True else zs) False
+yl5 = foldr (\(a,b), xs => if a == b then True else xs) False
 -- 
 -- Vaata näiteid.
 
@@ -82,9 +83,6 @@ tree1 = Branch (Branch Leaf (1,0.5) Leaf) (5,1.5) (Branch Leaf (7,2.5) Leaf)
 -- 0.0
 
 sumTreeIf : (a -> Bool) -> BinTree (a, Double) -> Double
-sumTreeIf _ Leaf = 0
-sumTreeIf p (Branch a (b, c) d) =
-  sumTreeIf p a  + (if p b then c else 0) + sumTreeIf p d
 
 
 -- Ülesanne 7: kahendotsimine
@@ -110,10 +108,4 @@ sumTreeIf p (Branch a (b, c) d) =
 -- Nothing
 
 findInTree : Ord a => a -> BinTree (a, b) -> Maybe b
-findInTree x Leaf =  Nothing
-findInTree x (Branch a (b,c) d) =
-  case compare x b of
-       LT => findInTree x a
-       EQ => Just c
-       GT => findInTree x d
 
