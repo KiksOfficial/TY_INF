@@ -109,3 +109,21 @@ sumTreeIf : (a -> Bool) -> BinTree (a, Double) -> Double
 
 findInTree : Ord a => a -> BinTree (a, b) -> Maybe b
 
+
+-- a. λx. (λy. fxy)(λz. gzx) = f g
+-- b. (λxy. hx)(λz. fyz) = h f y
+--
+-- a. (λx. f(λy. xy))[f→λz. xz] = (λx'. (λz. xz)(λy. x'y))
+-- b. (λf. fx(λx. fx))[x→λy. fy] = (λf'. f'(λy. fy)(λx. fx))
+--
+-- (λxy. x(xy))(add 1)2 => add 1 (add 1 2) => 4
+
+
+data Tree2 a = Leaf1 a | Node (Tree2 a) (Tree2 a)
+
+puu : Tree2 Int
+puu = Node (Leaf1 1) (Node (Leaf1 2) (Leaf1 3))
+
+treeSize2 : Tree2 a -> Int
+treeSize2 (Leaf1 _) = 1
+treeSize2 (Node left right) = treeSize2 left + treeSize2 right

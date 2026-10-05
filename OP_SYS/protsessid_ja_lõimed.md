@@ -284,12 +284,12 @@ jargmine kask voib selle vaartuse asendada
 
 Signaal annab protsessile syndmusest teada
 
-SIGINT - lopetab - kasutaja katkestus
+SIGINT (Ctrl C) - lopetab - kasutaja katkestus
 SIGTERM - lopetab - palve lopetada; saab kasitleda
 SIGKILL - lopetab - sunnitud lopp; ei saa pyyda ega eirata
 SIGTSTP - peatab - terminalist peatamine; saab kasitleda
-SIGSTOP - peatab - sunnitud peatus, ei saa pyyda ega eirata
-SIGCONT - jatkab - lubab peatatud taitmisel jatkuda
+SIGSTOP (Ctrl Z) - peatab - sunnitud peatus, ei saa pyyda ega eirata
+SIGCONT (pmst fg/bg)- jatkab - lubab peatatud taitmisel jatkuda
 
 kill saadab signaali; saadetud signaal ei pea preotsessi lopetama
 
@@ -323,3 +323,14 @@ See ei taga ellujaamist taaskaivituse ega teenushalduri lopetamispoliitika korra
 
 Taustal kaivitamine yksi ei luba et too jaab valjalogimisel ellu
 
+bg on sama mis kohe alguses command loppu & lisamine
+
++ märk tähistab jooksvat taustatööd ja - märk eelmist.
+
+Nii fg- kui bg-käsule saab parameetriks anda taustaprotsessi järjekorranumbri kujul %n.
+kill saadab SIGTERM
+nohup kaivitamisel protsess tootab ka ss kui kasutaja valja loginud
+
+Iga protsessi käivitumisel on tema jaoks automaatselt avatud kolm failipidet: 0 – standardsisend, 1 – standardväljund, 2 – veaväljund. Seetõttu võib standardväljundi ümbersuunamiseks kasutada ka 1> ja standardsisendi ümbersuunamiseks 0<.
+
+Kui soovida veaväljundit suunata samasse, kuhu läheb standardväljund, siis võlusõna on 2>&1
