@@ -12,6 +12,11 @@
   * $C$ – integreerimiskonstant
 
 ---
+integraal du = u + C
+integraal(x)d2x = integraal(x *(2x)')dx
+$$\int \cos(3x) \, dx$$
+   * Sisefunktsioon: $3x \Rightarrow (3x)' = 3$
+   * **Tulemus:** $\frac{1}{3} \sin(3x) + C$
 
 ## 5.2 Määramata integraali leidmine
 
