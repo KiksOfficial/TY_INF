@@ -1,23 +1,54 @@
-# Peatükk 5: Määramata integraal ja integreerimise põhireeglid
+# Peatükk 5: Määramata integraal
 
-## 1. Integraali ja diferentsiaali seos
-* Integraali märk ja diferentsiaal ($d$) taandavad teineteist otse välja: $\int du = u + C$.
-* Näide: $\int d(2 + \arctan x) = 2 + \arctan x + C = \arctan x + C$.
+## 5.1 Algfunktsioon ja määramata integraal
 
-## 2. Astmeintegraalid ja murrud
-* Põhireegel: $\int x^n \, dx = \frac{x^{n+1}}{n+1} + C$.
-* Nimetajas olevad juured viiakse lugejasse negatiivsete astmetena.
-  * Näide: $\int \frac{dx}{x\sqrt{x}} = \int x^{-\frac{3}{2}} \, dx = -\frac{2}{\sqrt{x}} + C$.
-* Muutuja viimine diferentsiaali märgist läbi ($d(x)$ meetod):
-  * $\int \sqrt{x} \, d\sqrt{x} = \frac{(\sqrt{x})^2}{2} + C = \frac{x}{2} + C$.
-  * $\int (x - 3)^5 \, d(x - 3) = \frac{(x - 3)^6}{6} + C$.
+* **Algfunktsioon:** Funktsiooni $f(x)$ algfunktsiooniks hulgas $X$ nimetatakse funktsiooni $F(x)$, mille korral kehtib $F'(x) = f(x)$ iga $x \in X$ korral.
+* **Algfunktsioonide hulk:** Kui $F(x)$ on funktsiooni $f(x)$ üks algfunktsioon, siis kõik selle funktsiooni algfunktsioonid avalduvad kujul $F(x) + C$, kus $C \in \mathbb{R}$ on suvaline konstant.
+* **Määramata integraal:** Funktsiooni $f(x)$ kõigi algfunktsioonide hulka $F(x) + C$ nimetatakse funktsiooni $f(x)$ määramata integraaliks ja tähistatakse:
+  $$\int f(x) \, dx = F(x) + C$$
+  * $f(x)$ – integreeritav funktsioon
+  * $f(x)\,dx$ – integreeritav avaldis
+  * $x$ – integreerimismuutuja
+  * $C$ – integreerimiskonstant
 
-## 3. Lineaarne asendus (kordajaga arvestamine)
-Kuna integreerimine on tuletise võtmise vastupidine tehe, tuleb $x$-i kordajaga jagada (või arvestada ahelreegli mõjuga):
-* **Trigonomeetrilised funktsioonid:** 
-  * $\int \cos(2x) \, dx = \frac{1}{2}\sin(2x) + C$.
-  * $\int \cos(1 - x) \, dx = -\sin(1 - x) + C$.
-* **Eksponentfunktsioonid:**
-  * $\int e^{3-x} \, dx = -e^{3-x} + C$.
-* **Logaritmilised ja murdintegraalid:**
-  * $\int \frac{1}{x + 7} \, dx = \ln|x + 7| + C$.
+---
+
+## 5.2 Määramata integraali leidmine
+
+Integreerimine on diferentseerimise pöördtehe.
+
+### Põhilised omadused:
+1. **Tuletis ja integraal:** $\left( \int f(x) \, dx \right)' = f(x)$
+2. **Diferentsiaal ja integraal:** $d\left( \int f(x) \, dx \right) = f(x) \, dx$
+3. **Konstandi ettetoomine:** $\int c \cdot f(x) \, dx = c \int f(x) \, dx \quad (c \neq 0)$
+4. **Summa ja vahe integreerimine:** $\int (f(x) \pm g(x)) \, dx = \int f(x) \, dx \pm \int g(x) \, dx$
+
+### Põhiliste elementaarfunktsioonide integraalid:
+* $\int 0 \, dx = C$
+* $\int 1 \, dx = x + C$
+* $\int x^\alpha \, dx = \frac{x^{\alpha+1}}{\alpha+1} + C \quad (\alpha \neq -1)$
+* $\int \frac{1}{x} \, dx = \ln|x| + C$
+* $\int e^x \, dx = e^x + C$
+* $\int a^x \, dx = \frac{a^x}{\ln a} + C \quad (a > 0, a \neq 1)$
+* $\int \sin x \, dx = -\cos x + C$
+* $\int \cos x \, dx = \sin x + C$
+* $\int \frac{1}{\cos^2 x} \, dx = \tan x + C$
+* $\int \frac{1}{1 + x^2} \, dx = \arctan x + C$
+* $\int \frac{1}{\sqrt{1 - x^2}} \, dx = \arcsin x + C$
+
+---
+
+## 5.3 Muutujavahetus integraalis
+
+Kui integraali $\int f(x) \, dx$ ei saa otse põhivalemite abil leida, kasvatatakse tihti muutujavahetust.
+
+### Võte/Teoreem:
+Tehes muutujavahetuse $x = \varphi(t)$, kus $\varphi$ on diferentseeruv ja pööratav funktsioon, saame:
+$$\int f(x) \, dx = \int f(\varphi(t)) \cdot \varphi'(t) \, dt$$
+
+**Sammud:**
+1. Valitakse uus muutuja $t = g(x)$ või $x = \varphi(t)$.
+2. Arvutatakse vastav diferentsiaal $dx = \varphi'(t) \, dt$ (või $dt = g'(x) \, dx$).
+3. Asendatakse integraalis kõik algse muutuja $x$ avaldised $t$ kaudu.
+4. Integreeritakse saadud lihtsam integraal muutuja $t$ suhtes.
+5. Asendatakse tulemuses $t$ tagasi algse muutuja $x$ avaldisega.
