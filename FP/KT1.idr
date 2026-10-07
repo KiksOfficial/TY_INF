@@ -83,6 +83,8 @@ tree1 = Branch (Branch Leaf (1,0.5) Leaf) (5,1.5) (Branch Leaf (7,2.5) Leaf)
 -- 0.0
 
 sumTreeIf : (a -> Bool) -> BinTree (a, Double) -> Double
+sumTreeIf _ Leaf = 0
+sumTreeIf f (Branch left (a,b) right) = sumTreeIf f left + (if f a then b else 0) + sumTreeIf f right
 
 
 -- Ülesanne 7: kahendotsimine
@@ -108,6 +110,12 @@ sumTreeIf : (a -> Bool) -> BinTree (a, Double) -> Double
 -- Nothing
 
 findInTree : Ord a => a -> BinTree (a, b) -> Maybe b
+findInTree _ Leaf = Nothing
+findInTree x (Branch left (a,b) right) = 
+  case compare x a of
+       GT => findInTree x right
+       EQ => Just b
+       LT => findInTree x left
 
 
 -- a. λx. (λy. fxy)(λz. gzx) = f g
@@ -127,3 +135,5 @@ puu = Node (Leaf1 1) (Node (Leaf1 2) (Leaf1 3))
 treeSize2 : Tree2 a -> Int
 treeSize2 (Leaf1 _) = 1
 treeSize2 (Node left right) = treeSize2 left + treeSize2 right
+
+

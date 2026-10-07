@@ -9,8 +9,9 @@ Next actions (ASAP) | context {
 }
 
 Waiting for {
-
-
+  rega AAR kaitsmine
+  op sys praktikum
+  Func Proge KT1
   }
 
 Projects {
@@ -22,7 +23,7 @@ Some day maybe {
 
   }
 
-Tehtud asjad/maybe {
+Tehtud asjad {
 
   }
 

@@ -12,8 +12,8 @@ sort {
 }
 
 Programm - kaivitatav kood failis
-Protsess - 1 programmi taitmise eksemplar
-Lõim on protsessi osa, mis jooksutb koodi (protsess on nagu konteiner)
+Protsess - 1 programmi taitmise eksemplar (igal protsessil oma maluruum)
+Lõim on protsessi osa, mis jooksutb koodi (protsess on nagu konteiner) (igal lõimel oma stack)
 Molemalt kaivitusel on oma PID ja taitmise olek
 
 Sama programmifail ei tahenda sama protsessi. PID on protsessi identifikaator
@@ -27,7 +27,7 @@ Protsess yhendab ressursid ja taitmise
 Protsess maarab taitmiskeskkonna (ressursid)
 Loim liigub programmi kaskude kaudu edasi
 
-Protsessi alla kuuluvad {
+Protsessi alla kuuluvad (need igal threadil enda omad) {
   Virtuaalne aadressiruum (kood, andmed, kuhi, pinud)
 
   identiteet ja ressursid (PID, oigused, avatud failid)
@@ -35,21 +35,23 @@ Protsessi alla kuuluvad {
   esialgu alati aind 1 thread, millel on kasuloendur (PC) + registrid ning oma pinu
   }
 
+Lõimed protsessis jagavad mem addr space
+
 Protsessi virtuaalse malu mottekaart {
 
-Programmikood | globaalsed ja staatilised andmed | kuhi (heap), kuhu saab allokeerida dynaamilised objektid | Muud vastendused ja vaba ruum | Pinu (stack)
+  Programmikood | globaalsed ja staatilised andmed | kuhi (heap), kuhu saab allokeerida dynaamilised objektid | Muud vastendused ja vaba ruum | Pinu (stack)
 
-Aadressid on protsessi vaates virtuaalsed
-Sama aadress eri protsessides ei tahista sama fyysilist malu
-Fyysiline RAM ei ole selline jarjestatud riba
+  Aadressid on protsessi vaates virtuaalsed
+  Sama aadress eri protsessides ei tahista sama fyysilist malu
+  Fyysiline RAM ei ole selline jarjestatud riba
 
-Malu regioonide kasvusuunad:
-Stack (pinu) kasvab ylalt alla (suurematelt aadressidelt vaiksemate poole)
-Heap (kuhi) kasvab alt yles (vaiksematelt aadressidelt suuremate poole)
+  Malu regioonide kasvusuunad:
+  Stack (pinu) kasvab ylalt alla (suurematelt aadressidelt vaiksemate poole)
+  Heap (kuhi) kasvab alt yles (vaiksematelt aadressidelt suuremate poole)
 
-Funktsiooni kutsudes lisatakse pinu kaader (stack frame)
-Kui func teeb return, eemaldatakse kaader stackist
-Vanu baite ei kirjutata eemaldamisel nullidega yle
+  Funktsiooni kutsudes lisatakse pinu kaader (stack frame)
+  Kui func teeb return, eemaldatakse kaader stackist
+  Vanu baite ei kirjutata eemaldamisel nullidega yle
 
 }
 

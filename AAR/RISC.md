@@ -190,9 +190,66 @@ KORRAGA SAAB DEKODEERIDA KASKU JA LUGEDA REGISTRITE SISU
 
 Load R1,X(R2)
 
-1. Mälu aadress<=[PC], Loe mälust,
+1. Mälu aadress<=[PC], Loe mälust, Oota MFC,
 IR<=Mälu andmed, PC<=[PC]+4,
 2. Dekodeeri käsk, RA<=[R2]
 3. Arvuta aadress RZ<=[RA]+X
-4. Mälu aadress<=[RZ], Loe mälust, RY<=Mälu andmed
+4. Mälu aadress<=[RZ], Loe mälust, oota MFC RY<=Mälu andmed
 5. Salvesta registrisse R1<=[RY]
+
+/5 naitab et tuleb 5 bitti
+
+registri fail -> buffer registrid -> (RB yhendatud multiplexeriga (MUXB)(vali b) MUX valib kas vaartus tleb b-st v mujalt) -> ALU -> Buffer register RZ -> 
+Buffer RY -> 
+
+PC -> (vali mem) MUXmem -> mäluliides
+V ^
+liitja -> 
+
+Mäluliides [aadressid | andmed] -> tulemus kirjutatakse käsuregistrisse [0..31] -> (aadress a, aadress b)
+                                                    juhtimisplokk  V
+                                                          (vali c)MUXC -> registrifail 
+Kui teine liidetav ontsene vaartus ss  |Otsene| <- Käsuregister (kuni 16 v 26 bitti viimased 4/6 bitti taidame ette(mingid 4 bitti lahevad ette, seda otsustab juhtsignaal)) -> MUXB 
+
+
+Branch offset
+
+Rsrc|Rdst|Immediate Operand|OP-Kood|
+
+1. Mälu aadres <= [PC], Loe mälust, IR<=Mälu andmed, PC <=[PC]+4
+2. Dekooderi käsk
+3. Arvuta aadress PC <= [PC]+ Hargnemise nihe
+4. Oota
+5. Oota
+
+Branch_if_[R1]=[R2]
+1.
+2. dekodeeri käsk RA<=[R1], RB<=[R2]
+3. Vordle [RA] ja [RB] kui vordsed ss arvuta aadres PC = [PC] + hargnemise nihe
+4. Oota
+5. Oota
+
+XGY = x2 * not y2 + not (xor x2 y2) + * (x1 * not y1 + not (xor x1 y1) * x0 * not yo)
+XEY = not (xor x2 y2) * not (xor x1 y1) not (xor x3 y3)  
+XLY = not XEY * not XGY
+
+Käskude kodeerimine 
+
+Käsu laadimine ja kaivitamine |Immediate value(31-6)| OP-Kood(5-0)|
+
+Call R1
+1. Mälu aadress <=[PC], Loe malust, IR<= malu andmed, PC<=[PC]+4
+2. Dekodeeri kask, RA<=[R1]
+3. Ajutine PC <=[PC], Arvuta aadress PC<=[RA]
+4. RY<=[Ajutine PC]
+5. RegisterLINK<=[RY]
+
+Juhtsignaalide genereerimine
+
+LubaIR = T1 * MFC
+LubaPC = T1 * MFC + T3 * (BR + Call + IRQ)
+ValiB = Otsene 
+KirjutaREG = T5 * (ALU + Load + Call)
+
+Programmide kaivitamiseks peab CPU suutma genereerida juhtsignaale {Hardwired, Microprogrammed}
+Juhtsignaalide vajaduse maaravad { Sammuloenduri sisu, Käsuregistri sisu, Arvutuste tulemused, mis seisus malu on}

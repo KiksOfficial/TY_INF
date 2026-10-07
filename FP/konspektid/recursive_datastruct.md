@@ -39,6 +39,12 @@ nul  ≡ λz. z true          (≡ fst)
 hd    ≡ λz. fst (snd z)
 tl    ≡ λz. snd (snd z)
 
+ringimuslause = identsus
+
+not = (lambda x. x false true)
+
+Kombinaator - normaalkujul termid, kus pole vabu muutujaid
+
 Termi M nimetatakse püsipunktikombinaatoriks kui
 
 ∀F.MF=F(MF)
@@ -51,3 +57,10 @@ Kombinaator Y on püsipunktikombinaator - saab kasutada rekursiivste func define
 Ye→β (λx.e(xx))(λx.e(xx))
   →β e((λx.e(xx))(λx.e(xx)))
   →β e(Ye)
+
+KIab. => (lambda xy. x) (lambda x. x) a b => (lambda x. x) b => b
+cond (cond true false true) x y => cond false x y => y
+
+arv nagu lihtne for tsykkel
+Churchi nr saab alati 2 arg
+
