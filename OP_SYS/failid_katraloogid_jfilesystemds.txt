@@ -1,0 +1,180 @@
+Protsess Lõpeb ja fail jaab
+
+Protsessi muutujad elavad tema mälus ja kaovad protsessi lõppedes
+Põsival andmekandjal olev fail voimaldab andmeid hiljem uuesti kasuutada
+
+Protsess A tootab muutja: text ->(kirjutab)-> Fail: report.txt salvestatu andmed -> 
+-> (hiljem) -> Protsess B loeb faili teeb andmetest oma mälukoopia
+
+Faili eluiga pole seotud1 protsessi eluiga
+Yhine faililiides
+
+Programm: open avab, read loeb, write kirjutab, close sulgeb
+Linuxi VFS: yhine faililiides tuumas {
+    ext4 - kohalik failisysteem
+    NFS - failid vorguserveris
+    procfs - tuuma loodud vaade
+  }
+
+  Programm ei pea iga fs kettavormingut ise tundma
+  Lugeda saab osa failist; kogu faili ei pea korraga mälusse tooma
+
+  Ühine liides, erinevad andmeallikad ja voimalused
+
+  Tekst, pilt ja PDF on sisu vormingud
+  Tavaline fail, kataloog ja symboolne link on faili tyybid
+  Metaandmed - andmed faili kohta
+
+  mtime: sisu viimase muutmise aeg
+  ctime: inode'i oleku viimase muutmise aeg, mitte loomisaeg
+
+Kataloog seob nime inode'iga
+
+inode - struktuur, kus hoiame metaandmed
+
+Nimi kuulub kataloogikirjesse; inode ei sisalda 1 taielikku teekonda
+Inode-number eristab obje 1 fs piires
+ka kataloogil on metaandmed ja tema kirjete hoidmine votab ruumi
+
+nimi kuulub kataloogi
+inodesse kuuluvad {omanik, tyyp oigused, viited faili andmetele}
+
+Avamine loob protsessile deskriptori
+prst edukad avamist fread(fd,...) kasutab deskriptorit, mitte faili nime
+
+Protsessi tabel FD 3 -> Avatud faili kirjeldus A režiim: lugemine, nihe 4
+Protsessi tabel FD 4 -> Avatud faili kirjeldus A režiim: lugemine, nihe 0
+
+Skeemis avati sama tavaline fail 2x eraldi
+Kummalgi avamisel on oma ligemis-/kirjutamisnihe failis
+FD on protsessisisene number; close(fd) sulgeb selle viite
+
+Kõva link: 2 nime 1 fail
+
+report.txt -> inode 4201 (1 sisu, yhed oigused, 2 nime)
+report-hard.txt ->inode 4201
+
+Kõvalink - pmst 2 nime, mis viitavad samale failile 
+
+ls -li naitab ka inode nr
+
+Sisu muutmine 1 nime kaudu on nahtav ka teise nime kaudu
+Kova link ei ole koopia; tavaliselt ei looda seda kataloogile
+Linuxis ei saa kõva linki luua yle fs piiri
+
+Symboolne link: nimi viitab teekonnale
+
+report-link.txt -> {inode 4300, symboolne link report.txt} ->(otsing)->Nime otsing leiab inode 4201 sisu
+
+Eraldi obje,mis talletab teekonna; sihtfaili sisu ei kopeerita
+Voib viidata kataloogile v teises fs olevale objele
+sihtteekonna kadumisel jaab alles katkine link
+
+Koopia, uus nimi v eemaldamine
+
+cp a b - luuakse eraldi fail b - a jaab alles
+mv a b - muutub nimi v asukoht - inode ja sisu sailivad
+rm a - eemaldab kataloogikirje a - teised viited voivad sailida
+
+nime eemaldamine ei lopeta juba avatud faili kasutamist
+ruumi saab vabastada viimase kova lingi ja avatud viidete kadumisel
+rm ei ole andmete turvaline ylekirjutamine
+
+faili niimi viitab deskriptorile
+
+
+Oigused ja protsessi idenditeet
+
+Protsess {
+  kasutaja UID
+  ryhmade GID
+  nt kasutaja mari, ryhm tudengid
+  } -> 
+  Võrdlus
+  ->
+  Fail {
+    omaniku UID,
+    ryhma GID
+    Õigused: u - omanik, g - ryhm, o - teised
+    }
+
+1. Kas protsessi kasutaja vastab faili omanikule? Kasuta u bitte.
+2. Muidu: kas faili rühm kuulub protsessi rühmade hulka? Kasuta g bitte.
+3. Muidu kasuta o bitte
+
+-rw-r-----
+
+- ehk tavaline fail
+rw- omaniku oigused:loe ja kirjuta 6
+r-- ehk ryhma oigused: loe 4
+-- teised: oigusi ple 0
+
+r = 4, w = 2, x = 1
+
+Samad rwx-bitid erinev tahendus
+
+r - loe faili sisu (file) - loe kataloogis olevate kirjete nimesid (dir)
+w - muuda faili sisu (file) - muuda kataloogikirjed: lisa v eemalda nimesid; tavaliselt vaja ka x (dir)
+x - luba faili kaivitamine programminea (file) - Otsi teadaolevat nime ja labi kataloog failitee otseteena (dir)
+
+Faili avamiseks on vaja otsinguoigust x igas labitavas kataloogis
+
+kataloogi r ei luba failide sisu lugeda
+
+Faili lugemine ja kustutamine
+
+Protsess töötab kasutajana student. Failinimi on teada.
+projekt/ student d-wx------ (0300)
+projekt/report.txt kati -r-------- (0400)
+
+Mida student proovib? Tulemus ja põhjus
+
+Loe faili sisu -  Ei: faili lugemisõigus puudub.
+Muuda olemasoleva faili sisu -  Ei: faili kirjutamisõigus puudub.
+Eemalda teadaolev failinimi -  Jah: kataloogis on w+x.
+Loetle kataloogi kõik nimed -  Ei: kataloogil puudub r.
+
+Eeldused: kirjutatav failisüsteem; ülemkataloogidel x; tavaline protsess; puuduvad ACL,
+
+umask - kuidas vaikimis vaartustatakse failioigused
+
+~ - not
+
+tulemus = küsitud_mode & ~umask
+
+umask 027 seab maski käesolevas kestas; lapsed pärivad selle.
+Mask ei lisa programmi poolt küsimata õigusi.
+Olemasolevate failide õigused ei muutu.
+See on bittide eemaldamine, mitte kaheksandarvude lahutamine.
+
+Eribitid
+
+setuid - kaivitamisel voib protsessi efektiivseks UID-ks saada omaniku id (chmod u+s app)
+setgid - Uued objed pärivad kataloogi ryhma; uued alamkataloogid parivad ka setgid-biti (chmod g+s projekt)
+sticky - nime eemdaldamist v ymbernimetamist npiiratakse faili omanikule, kataloogi omanikule v privileegiga protsessile, (chmod +t jataud)
+
+Eribitt täiendab põhireegleid
+
+Õiguste diagnoosimisel vaata ni põhibitte kui ka täiendavaid reegleid
+
+sudo chattr +i fail.txt sudo chattr -i fail.txt lsattr fail.txt
++ lisab;- eemaldab;= asendab. -R: rekursiivne. Tugi sõltub failisüsteemist.
+
+kui faili oiguste taga + ss failile on maaratud individuaalne ACL ja e peaks vaatama getfacl
+
+Fail paikneb plokkides
+
+faili jerjestikused baidid ei pea asuma 1s plokivahemikus
+
+inode hoiab neid vahemikke, kus faili blokid asuvad
+
+Seade, köide ja fs on eri kihid
+
+plokkseade->fs
+plokkseade>partitsioon->fs
+plokkseade>partition>LVM(PV;VG;LV)> gs on LV sees
+
+Vormistamine loob fs andmestruktuurid
+Haakimine yhendab olemasoleva fs kataloogipuuga
+loogilise koite suurus ja selle sees oleva fs suurus on eri asjad
+

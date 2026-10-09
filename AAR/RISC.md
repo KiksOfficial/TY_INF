@@ -22,8 +22,10 @@ CPU = {
   Käsuregister
   Juhtimine
   Protsessori mäluliides (Aadressisiin, andmesiin, juhtimissiin, mälukontroller)
-  
+
 }
+
+VASAK BIT 1 on negatiivne arv
 
 Käsu laadimise faas {
 IR <- [[PC]]
@@ -179,6 +181,7 @@ Käsu laadimine ja käivitamine
 Add R1,R2,R3
 
 |00010|00011|00001|xxxxx|
+|Rsrc|R|
 
 1. mälu aadress <=[PC], Loe malust, IR<=Mälu andmed, PC<=[PC]+4
 2. dekodeeri kask, RA<=[R2], RB<=[R3]

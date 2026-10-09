@@ -7,24 +7,21 @@
 -- Ülesanne 1: vabad muutujad
 
 -- Leia vabad muutujad
--- a. 𝜆𝑥. (𝜆𝑦. 𝑔 𝑥 𝑦) (𝑓 𝑥 𝑦) = g f y
--- b. 𝜆𝑥. 𝜆𝑦. 𝑔 𝑥 𝑦 (𝑓 𝑥 𝑦) = f g 
-
+-- a. 𝜆𝑥. (𝜆𝑦. 𝑔 𝑥 𝑦) (𝑓 𝑥 𝑦) = y f g
+-- b. 𝜆𝑥. 𝜆𝑦. 𝑔 𝑥 𝑦 (𝑓 𝑥 𝑦) = f g
 
 
 -- Ülesanne 2: substitutsioon
 
 -- Tehke järgnevad substitutsioonid:
--- a. (𝜆𝑓. 𝑓 𝑦 (𝜆𝑥. 𝑥))[𝑦→𝜆𝑥 𝑦. 𝑓 𝑥] = (𝜆𝑓'. 𝑓' (𝜆𝑥 𝑦. 𝑓 𝑥) (𝜆𝑥. 𝑥))
--- b. ((𝜆𝑥. 𝑓 (𝑥 𝑥))(𝜆𝑥. 𝑓 (𝑥 𝑥)))[𝑓→𝜆𝑦. 𝑥] = ((𝜆𝑥'. (𝜆𝑦. 𝑥) (𝑥' 𝑥'))(𝜆𝑥'. (𝜆𝑦. 𝑥) (𝑥' 𝑥')))
-
+-- a. (𝜆𝑓. 𝑓 𝑦 (𝜆𝑥. 𝑥))[𝑦→𝜆𝑥 𝑦. 𝑓 𝑥] = (𝜆𝑓'. 𝑓' (𝜆𝑥 𝑦. 𝑓 𝑥)  (𝜆𝑥. 𝑥))
+-- b. ((𝜆𝑥. 𝑓 (𝑥 𝑥))(𝜆𝑥. 𝑓 (𝑥 𝑥)))[𝑓→𝜆𝑦. 𝑥] = ((𝜆𝑥'. (𝜆𝑦. 𝑥) (𝑥 𝑥))(𝜆𝑥'. (𝜆𝑦. 𝑥) (𝑥 𝑥)))
 
 
 -- Ülesanne 3: redutseeri normaalkujule
 
 -- Kasutades normaaljärjekorda, redutseeri normaalkujule:
--- (𝜆𝑓 𝑥. 𝑓 (𝑓 𝑥)) (add 2) 2 => add 2 (add 2 2) => add 2 4 => 6
-
+-- (𝜆𝑓 𝑥. 𝑓 (𝑓 𝑥)) (add 2) 2 => add 2 (add 2 2) => 6
 
 -- Ülesanne 4: listifunktsioon
 
@@ -38,9 +35,8 @@
 
 yl4 : List (Bool,b) -> Bool
 yl4 [] = False
-yl4 ((True,_)::xs) = True
 yl4 ((False,_)::xs) = yl4 xs
-
+yl4 ((True,_)::xs) = True
 
 -- Ülesanne 5: listifunktsioon foldr-ga
 
@@ -49,7 +45,7 @@ yl4 ((False,_)::xs) = yl4 xs
 -- võrdsed.
 --
 yl5 : List (Int,Int) -> Bool
-yl5 = foldr (\(a,b), xs => if a == b then True else xs) False
+yl5 xs = foldr (\(x, y), xs => if x == y then True else xs ) False xs
 -- 
 -- Vaata näiteid.
 
@@ -86,7 +82,6 @@ sumTreeIf : (a -> Bool) -> BinTree (a, Double) -> Double
 sumTreeIf _ Leaf = 0
 sumTreeIf f (Branch left (a,b) right) = sumTreeIf f left + (if f a then b else 0) + sumTreeIf f right
 
-
 -- Ülesanne 7: kahendotsimine
 
 -- Kirjuta funktsioon findInTree : Ord a => a -> BinTree (a, b) -> Maybe b,
@@ -113,18 +108,18 @@ findInTree : Ord a => a -> BinTree (a, b) -> Maybe b
 findInTree _ Leaf = Nothing
 findInTree x (Branch left (a,b) right) = 
   case compare x a of
-       GT => findInTree x right
-       EQ => Just b
        LT => findInTree x left
+       EQ => Just b
+       GT => findInTree x right
 
 
 -- a. λx. (λy. fxy)(λz. gzx) = f g
 -- b. (λxy. hx)(λz. fyz) = h f y
 --
--- a. (λx. f(λy. xy))[f→λz. xz] = (λx'. (λz. xz)(λy. x'y))
--- b. (λf. fx(λx. fx))[x→λy. fy] = (λf'. f'(λy. fy)(λx. fx))
+-- a. (λx. f(λy. xy))[f→λz. xz] = 
+-- b. (λf. fx(λx. fx))[x→λy. fy] = 
 --
--- (λxy. x(xy))(add 1)2 => add 1 (add 1 2) => 4
+-- (λxy. x(xy))(add 1)2 => add 1 (add 1 2) => 
 
 
 data Tree2 a = Leaf1 a | Node (Tree2 a) (Tree2 a)
@@ -133,7 +128,6 @@ puu : Tree2 Int
 puu = Node (Leaf1 1) (Node (Leaf1 2) (Leaf1 3))
 
 treeSize2 : Tree2 a -> Int
-treeSize2 (Leaf1 _) = 1
-treeSize2 (Node left right) = treeSize2 left + treeSize2 right
+
 
 

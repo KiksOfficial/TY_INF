@@ -91,3 +91,91 @@ kernel ajastab kivitusvalmis loimi
 TCP loime
 PCB prots
 Linuxis kirjeldab ajastatavat yksust task_struct; osa ressursse on loimedel yhised
+
+rohkem lõimi ei taga suuremat arvutuskiirust
+Lõimed aitavad tööosi kattuma panna ja rakendusel reageerida
+TID - Thread ID
+
+struct job { int in, out; };
+
+void *worker(void *arg) {
+  struct job *j = arg;
+  j->out = j->in * j->in;
+  return NULL;
+}
+
+struct job j[2] = {{2, 0}, {3, 0}};
+pthread_t t[2];
+
+for (int i = 0; i < 2; i++)
+  pthread_create(&t[i], NULL,worker, &j[i]);
+
+for (int i = 0; i < 2; i++)
+  pthread_join(t[i], NULL);
+
+
+• create: uus lõim alustab
+funktsioonist worker.
+• join: oota selle lõime lõppu.
+• Argumendi objekt peab elama
+töö lõpuni.
+• Linuxi NPTL kasutab vastavust
+1 : 1.
+Lühendatud väljavõte. Täielik näide
+kontrollib tagastuskoode.
+
+Kaks suurendamist, 1 kadunud uuendus
+
+algul x = 0; suurendamine koosneb 3-st sammust
+samm 1 Lõim A loeb 0, arvutab 1| Lõim B | Yhine x = 0
+samm 2 - | Lüim B loeb 0, arvutab 1| Yhine x = 0
+samm 3 A kirjutab 1 | - | Yhine x = 1
+samm 4 - | Lõim B kirjutab 1| Yhine x = 1
+
+Ühiste andmete olemasolu ei taga tegevuste õiget järjekorda.
+C keeles on tavalise muutuja sünkroonimata andmevõistlus määramata käitumine. Tabel
+on mõttemudel, mitte selle programmi väljundiprognoos.
+
+Mutex kaitseb tervet kriitilist lõiku
+lock(m)
+x = x + 1
+unlock(m)
+
+Sama muitexit hoiab korraga kuni 1 loim
+koik konfliktsed ligipaasud jargivad sama kokkulepet
+lukk ei kinnitu muutujale automaatselt
+luku all olev too toimub jarjestikku
+
+A: Lukk käes -> kaitstud x
+B: ootab lukku
+
+Õigsus tuleb kokkuleppest, mida kõik osalejad järgivad
+
+wait vabastab mutexi ootamise ajaks; naastes hoiab seda jälle
+Aratus ei taga, et jarjekord on endiselt mittetyhi; vaja on while-kontrolli
+
+Tarbija
+lock(m)
+while que_not_empty():
+  wait(not_empty, m)
+item = remove_item()
+unlock(m)
+proccess(item)
+
+Tootja
+lock(m)
+add_item(item)
+signal(not_empty)
+unlock(m)
+
+Mutex - kes paaseb sisse
+semafor - mitu luba on saadaval
+
+Kaks lukku võivad tekitada ummiku
+
+|Loim A hoiab L1, ootab L2| <=> |Loim B hoiab L2, ootab L1|
+
+Kumbki ei joua lukku vabastabselle
+naite reegel: koik votavad esmalt L2, ss L2
+Rohkem CPU-sid ei korvalda ringootust
+Protsessid annavad eraldatuse; jagatud ressursid vajavad koostööreegleid
