@@ -11,6 +11,8 @@
 -- Main>  yl1 [(1,2),(2,3),(4,5),(1,3)] 
 -- False
 
+yl1 : Eq a => List (a,a) -> Bool
+yl1 xs = foldr (\(x,y), acc => if x == y then True else acc) False xs
 
 
 -- Ülesanne 2: puu
@@ -36,4 +38,5 @@ tree1 = Branch (Branch Leaf (1,0.5) Leaf) (5,1.5) (Branch Leaf (7,2.5) Leaf)
 -- 0.0
 
 sumTreeIf : (a -> Bool) -> BinTree (a, Double) -> Double
-sumTreeIf p t = ?sumTreeIf_rhs
+sumTreeIf f Leaf = 0
+sumTreeIf f (Branch left (a,b) right) = sumTreeIf f left + (if f a then b else 0) + sumTreeIf f right

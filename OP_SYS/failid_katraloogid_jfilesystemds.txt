@@ -1,12 +1,12 @@
 Protsess Lõpeb ja fail jaab
 
 Protsessi muutujad elavad tema mälus ja kaovad protsessi lõppedes
-Põsival andmekandjal olev fail voimaldab andmeid hiljem uuesti kasuutada
+Püsival andmekandjal olev fail voimaldab andmeid hiljem uuesti kasutada
 
 Protsess A tootab muutja: text ->(kirjutab)-> Fail: report.txt salvestatu andmed -> 
 -> (hiljem) -> Protsess B loeb faili teeb andmetest oma mälukoopia
 
-Faili eluiga pole seotud1 protsessi eluiga
+Faili eluiga pole seotud 1 protsessi eluiga
 Yhine faililiides
 
 Programm: open avab, read loeb, write kirjutab, close sulgeb
@@ -39,7 +39,7 @@ ka kataloogil on metaandmed ja tema kirjete hoidmine votab ruumi
 nimi kuulub kataloogi
 inodesse kuuluvad {omanik, tyyp oigused, viited faili andmetele}
 
-Avamine loob protsessile deskriptori
+Avamine loob protsessile failideskriptori (FD)
 prst edukad avamist fread(fd,...) kasutab deskriptorit, mitte faili nime
 
 Protsessi tabel FD 3 -> Avatud faili kirjeldus A režiim: lugemine, nihe 4

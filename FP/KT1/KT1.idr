@@ -1,3 +1,5 @@
+module K1 
+
 sum [ x-y | (x,y) <- zip [3,4] [1..6] ]
 
 
