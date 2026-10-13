@@ -1,0 +1,39 @@
+module Kt1_2026_b
+-- Ülesanne 1: listifunktsioon foldr-ga
+
+-- Kasutades foldr-i, kirjuta mitterekursiivne funkstsioon yl1, mis arvutab 
+-- True siis ja ainult siis, kui listis leidub paar (a,b), kus a ja b on 
+-- võrdsed.
+-- 
+-- Vaata näiteid.
+
+-- Main> yl1 [(1,2),(2,3),(4,4)] 
+-- True
+-- Main>  yl1 [(1,2),(2,3),(4,5),(1,3)] 
+-- False
+
+yl1 : Eq a => List (a,a) -> Bool
+yl1 = foldr (\(a,b)::xs => if a == b then True else xs) False
+
+-- Ülesanne 2: puu
+
+-- Vaata andmetüübi  BinTree a  definitsiooni.
+-- 
+-- Kirjuta funktsioon sumTreeIf : (a -> Bool) -> BinTree (a, Double) -> Double, 
+-- mis liidab kokku puus leiduvate paaride teised komponendid, kui esimene 
+-- argument tagastab paari esimesel komponendil True.
+-- 
+-- Vaata näiteid.
+
+data BinTree a = Leaf | Branch (BinTree a) a (BinTree a)
+
+tree1 : BinTree (Int, Double)
+
+-- Main> sumTreeIf (/=3) tree1
+-- 4.5
+-- Main> sumTreeIf (/=5) tree1
+-- 3.0
+-- Main> sumTreeIf (\ _ => False) tree1
+-- 0.0
+
+sumTreeIf : (a -> Bool) -> BinTree (a, Double) -> Double

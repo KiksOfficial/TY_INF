@@ -1,0 +1,145 @@
+Ideaalne mälu on kiire, suur ja odav
+
+Mälu maksimaalse suuruse maarab ara adresseeritav ala
+
+16 biti puhul 12**16 ~65.5kiB
+32 biti puhul 2**32 ~ 4.3GiB
+
+Infot salvestatakse ja loetakse sõnade kaupa (machine word) ehk mitu bitti korraga
+
+|CPU| -> k bitine aadressisiin |Memory|
+      <-> n bittine andmesiin
+      <-> juhtsignaalid R/W MFC (MFC - Memory function complete)
+
+Mälu adresseerimine {
+    iga sona jaoks
+    v ainult esimese sona jaoks plokis
+  }
+
+Mäluga suhtlust voivad juhtida taktsignaalid v spets juhtsignaalid
+
+Mälu pöördumisaeg (mem access time) - ajavahemik Read/write ja MFC signaalide vahel
+
+Mälutsykli kestus (mem cycle time) - ajavahemik 2 jarjestikuse Read/Write signaali vahel
+
+RAM (random access memory) - koikides malupesades olev info saadakse katte O(1) ajaga
+
+jadapöördusandmed - juurdepaasu aeg soltub andme asukohast/aadressist
+
+Vahemälu ja virtuaalmälu
+
+CPU suudab reegline toodelda infot kiiremini kui tavaline mem cycle kestus
+
+1 voimaluseks cycle lyhendamiseks on vahemalu kasutamine
+
+vahemalu on vaike aga kiire, see on paigutatud CPU ja pohimalu vahele
+selles hoitakse programmi jaoks aktiivst infot
+
+Virtuaalmälu suurendab mälumahtu näiliselt
+
+Põhimälus hoitakse aind aktiivset osa virt malust
+Ülejäänu paikneb aeglasemal andmekandjal, tavaliselt kõvakettal
+
+– Programmi töö käigus aktiivse piirkonna asukoht muutub ja vastavalt tuuakse ka
+kõvakettalt infot põhimälusse (ja visatakse sealt midagi hetkel vähem olulist minema)
+
+RAM voeti kasutusele 60. lopus
+
+Mälukiibi ehitus
+mälurakud paigutatakse enamasti massiividena, kus iga element
+suudab salvestada ühe biti infot
+
+Aadressi dekooder 
+
+tulpadena D trigerid mille vahel sense/write ahel
+
+
+64x64 malurakk | sense/write ahelad (64) valjundisse suunatakse 1 
+adresseerimiseks 64 traati, mille ette dekooder (6 bitine), multiplexerile ka 6 bitti addresseerimiseks kokku 12 bitti
+lisaks R/W + chip select
+
+SRAM - static ram
+kiire a kallis (palju transistore)
+suudab sailitada infot kuni voolu saab
+
+SRAM rakuehitus - koosneb 6st transistorist 
+2 inverterit peegelpildis, molemal pool transistorid, write line, 2 bit lines,
+
+NOT loogika element - b tyypi (1 puhul kinni) transistor jadamisi yhendatud n tyypi (1 puhul lahti) transistoriga
+
+async DRAM (dynamic RAM) - oluliselt odavam, aga info kustub teatava aja moodudes, seetottu vajab varskendamist
+info salvestatakse kondensaatori laenguga
+laeng sailib kondensaatoril moned kymned millisekundid
+
+1 transistoriga DRAM rakk
+
+lyliti transistor (seda juhib sonaliin), kondensaator (1 ots GND teine bitiliiniga)
+
+Info salvestamiseks lülitatakse transistor sisse ja rakendatakse pinge biti liinile
+Nii salvestub kondensaatoris kindel hulk laengut
+Transistori väljalülitamisel hakkab kondensaator tühjenema
+
+DRAM lugemine
+transistor lylitatakse sisse
+Biti liiniga ühendatud võimendi saab aru, kas kondensaator on laetud üle
+läveväärtuse või mitte
+– kui on, siis ühendatakse biti liin pingeallikaga ja laetakse kondensaator uuesti
+täis
+– mälurakus on salvestatud loogiline 1
+– kui ei ole, siis ühendatakse biti liin maaga
+ja laetakse kondensaator täiesti tühjaks
+– mälurakus on salvestatud loogiline 0
+• Nagu näeme, värskendab mälu lugemine
+automaatselt mälus sisalduva info
+
+Lisades tulpade liinide otsa trigerid, saame salvestada kogu antud rea sisu
+ja pärast, ilma rida uuesti aktiveerimata, selle info edastada
+
+Üheks rakenduseks oleks plokkide kaupa (järjestikuste) andmete
+edastamine
+– järjestikused tulpade aktiveerimised järjestikuste CAS signaalide juhtimisel
+– fast page mode
+– see on oluliselt kiirem kui juhusliku mälupesa lugemine
+
+Kus kasutatakse?
+– regulaarse mustriga mälu-luge
+- andmete lugemisel vahemällu 
+
+sync DRAM (SDRAM)
+selle maluga suhtlus synkroonselt taktsignaaliga
+Ehitus väga sarnane asünkroonse DRAM’i ehitusega
+Värskendusahelad
+– sageli juba DRAM kiibi sees
+– sel juhul kasutaja ei tajugi mäluraku dünaamilist ehitust
+
+Latency - aeg mis kulub 1 sona kandmiseks malust v mallu
+
+labilaskevoime - baitide arv mida yldse voimalik ajayhikus yle kanda
+
+Double Data Rate Synchronous Dynamic Random Access
+Memory (DDR SDRAM)
+• Tavalise SDRAM’i toimingud tehakse üks kord takti jooksul
+(näiteks taktsignaali tõusval frondil)
+• DDR toiminguid tehakse kaks korda takti jooksul, taktsignaali
+mõlemal frondil
+• Latentsusaeg sellest ei lühene
+• Küll aga kasvab läbilaskevõime
+• DDR, DDR2, DDR3, DDR4, DDR5
+
+Püsimalu sailitab infot ss ka kui vool valjas (ROM e. read only mem)
+kondensaatori asemel sulavkaitse
+olek 0 on yhendatud
+
+Vajadus sellise mälu järgi, mis säilitaks infot ka voolu
+väljalülitamisel
+• ROM (read only memory)
+• PROM (programmable read only memory)
+• EPROM (erasable programmable read only memory)
+• EEPROM (electrically erasable programmable read only
+memory)
+• välkmälu (flash memory)
+
+Mälu hierarhia 
+
+[Registrid, vahemälu] CPU, Põhimälu, Secondary storage (SSD), offline storage ehk lindiseadmed
+
