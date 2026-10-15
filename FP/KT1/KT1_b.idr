@@ -1,4 +1,3 @@
-module Kt1_2026_b
 -- Ülesanne 1: listifunktsioon foldr-ga
 
 -- Kasutades foldr-i, kirjuta mitterekursiivne funkstsioon yl1, mis arvutab 
@@ -13,8 +12,7 @@ module Kt1_2026_b
 -- False
 
 yl1 : Eq a => List (a,a) -> Bool
-yl1 = foldr (\(a,b)::xs => if a == b then True else xs) False
-
+yl1 = foldr (\(x,y), acc => if x == y then True else acc) False
 -- Ülesanne 2: puu
 
 -- Vaata andmetüübi  BinTree a  definitsiooni.
@@ -28,6 +26,8 @@ yl1 = foldr (\(a,b)::xs => if a == b then True else xs) False
 data BinTree a = Leaf | Branch (BinTree a) a (BinTree a)
 
 tree1 : BinTree (Int, Double)
+tree1 = Branch (Branch Leaf (1,0.5) Leaf) (5,1.5) (Branch Leaf (7,2.5) Leaf)
+
 
 -- Main> sumTreeIf (/=3) tree1
 -- 4.5
@@ -37,3 +37,5 @@ tree1 : BinTree (Int, Double)
 -- 0.0
 
 sumTreeIf : (a -> Bool) -> BinTree (a, Double) -> Double
+sumTreeIf f Leaf = 0
+sumTreeIf f (Branch left (x,y) right) = sumTreeIf f left + (if f x then y else 0) + sumTreeIf f right

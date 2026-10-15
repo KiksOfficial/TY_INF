@@ -39,7 +39,7 @@ nul  ≡ λz. z true          (≡ fst)
 hd    ≡ λz. fst (snd z)
 tl    ≡ λz. snd (snd z)
 
-ringimuslause = identsus
+tingimuslause = identsus
 
 not = (lambda x. x false true)
 
@@ -58,9 +58,19 @@ Ye→β (λx.e(xx))(λx.e(xx))
   →β e((λx.e(xx))(λx.e(xx)))
   →β e(Ye)
 
+Yf
+Y on nagu base case ja f on hargnemine, mis tagab et base case saavutatakse
+
 KIab. => (lambda xy. x) (lambda x. x) a b => (lambda x. x) b => b
 cond (cond true false true) x y => cond false x y => y
 
 arv nagu lihtne for tsykkel
 Churchi nr saab alati 2 arg
 
+###################
+aplikatsioon - func rakndamine
+abstraktsioon - func defineerimine
+
+Koiki matemaatilisi arvutusi saab puhtas lambda arvutuses teha
+
+vabu muutujaid ei tohi ns ymbernimetada

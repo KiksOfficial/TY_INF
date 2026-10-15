@@ -10,6 +10,13 @@ Analoogia tehase konveieriga
 
 Vahetulemus hoitakse puhvrites
 
+CPU käsu täitmise etapid
+1. IF ehk instruction fetch
+2. ID ehk instruction decoding
+3. EX ehk execution
+4. MEM ehk memory access
+5. WB ehk write back (registrisse)
+
 Vahemälu tähtsus {
   iga etapp taidetakse ara 1 takti jooksul
   erinevates ettappide taitmisele kuluv aeg on erinev
