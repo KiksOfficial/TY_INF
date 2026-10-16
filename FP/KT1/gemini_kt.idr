@@ -15,6 +15,7 @@
 -- 0
 
 yl5 : List (Bool, Int) -> Int
+yl5 = foldr (\(x,y), acc => if x then acc + 1 else acc) 0
 
 {-
 Kirjuta funktsioon height : BinTree a -> Nat, mis arvutab ja tagastab selle puu kõrguse (sügavuse) Naturaalarvuna (Nat).
@@ -25,6 +26,8 @@ võid kasutada ka lihtsamat tingimuslausega lähenemist, nt if ... then ... else
 -}
 
 data BinTree a = Leaf | Branch (BinTree a) a (BinTree a)
+
+tree1 : BinTree (Int, Double)
 tree1 = Branch (Branch Leaf (1,0.5) Leaf) (5,1.5) (Branch Leaf (7,2.5) Leaf)
 
 height : BinTree a -> Nat

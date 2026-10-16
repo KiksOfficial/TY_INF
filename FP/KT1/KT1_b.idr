@@ -28,7 +28,6 @@ data BinTree a = Leaf | Branch (BinTree a) a (BinTree a)
 tree1 : BinTree (Int, Double)
 tree1 = Branch (Branch Leaf (1,0.5) Leaf) (5,1.5) (Branch Leaf (7,2.5) Leaf)
 
-
 -- Main> sumTreeIf (/=3) tree1
 -- 4.5
 -- Main> sumTreeIf (/=5) tree1
@@ -37,5 +36,5 @@ tree1 = Branch (Branch Leaf (1,0.5) Leaf) (5,1.5) (Branch Leaf (7,2.5) Leaf)
 -- 0.0
 
 sumTreeIf : (a -> Bool) -> BinTree (a, Double) -> Double
-sumTreeIf f Leaf = 0
+sumTreeIf _ Leaf = 0
 sumTreeIf f (Branch left (x,y) right) = sumTreeIf f left + (if f x then y else 0) + sumTreeIf f right
