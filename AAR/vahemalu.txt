@@ -1,0 +1,191 @@
+Vorreldes CPU kiirusega on malu aeglane
+
+Vahemalu voimaldab malul naida kiiremana kui ta tglt on
+vahemalu efektiivsus pohineb {
+    enamus programmide tooajast kulub tsyklites ja samade protseduuride samaaegsest taitmisest
+    hiljuti taidetud kasud tulevad suure toenaosusega tagasi taitmisele 
+    viimati taidetud kasule (malus paiknemise mottes) lahedal asuvad kasud tulevad suure toenaosusega uuesti taitmisele
+  }
+
+Vahemalu (Cache)
+
+Paigutades programmi aktiivse osa kiiresse vahemallu, saame suurevoidu programmi tooajas
+
+Eelmisel slaidil kirjapandud ajalise läheduse tõdemus soovitab lugeda kõik
+vajaminevad käsud vahemällu
+– tõenäoliselt läheb neid varsti uuesti tarvis
+
+Eelmisel slaidil kirjapandud ruumilise läheduse tõdemus soovitab lugeda
+vahemällu mitte üksikud käsud vaid ka nende naabruses asuvad käsud
+– s.t loeme andmed vahemällu plokkide kaupa (block, cache line)
+– tõenäoliselt läheb ka neid käske varsti tarvis
+
+Pohimalu <-> vahemalu <-> CPU
+Kui vajatakse malust andmeid ss loetkse need vahemallu
+kui vajalikud andmed juba vahemalus ss loeatakse kohe sealt
+Tagatakse vastavus pohimalus ja vahemalus resideeruva koopia vahel (mapping func)
+Kui vahemalu on tais ss tuleb uute andmete lisandumisel mdagi valja visata (replacement algorithm)
+
+CPU ei pea olema teadlik vahemalu olemasolust
+  - tema annab ainult malust lugemise ja kirjutamise kaske
+  - Vahemälu kontrollahelad selgitavad välja, kas vajalik info on juba vahemälus (tabamus)
+  - või tuleb info alles vahemälusse lugeda (möödalask)
+Kui andme on juba vahemalus ss pohimalust ple tarvis lugeda
+
+Kirjutamiseks on 2 varianti
+write thtough - nii vahemalu kui ka malu uuendatakse yheaegselt
+write-back, copy-back - uuendtakase aind vahemalu
+  - vahemalust ploki eemaldamisel uuendatakse info ka pohimalus
+  - Info uuendamise vajaduse kohta kajastub muudetud lipubitis (modified, dirty bit)
+
+Kui infot ple vahemalus
+Lugemine (Read miss)
+  - loetakse kogu plokk pohimalust vahemallu ning edastatakse vajalik sona CPU-le
+  - loetakse info pohimalust ja edastatakse vajalik sona protsessorile kohe kui ta on olemas (load through, early restart) (veidi kiirem, aga nõuab keerukamaid juhtimisahelaid)
+Kirjutamine (write miss)
+  - Kirjutatakse info põhimällu ilma vahemälu vahenduseta (write-through)
+  - Loetakse esmalt kogu plokk vahemällu ja siis muudetakse vastav sõna
+vahemälus (write-back)
+
+
+Info paigutus vahemalus
+
+Otsene paigutus (direct mapping) iga pohimalu ploki puhul teada, kus asub
+Assotsiatiivne paigutus (Assiciative mapping) - kogu info voib paigutada kogu vahemalu ulatuses (pmst tuleb kogu vahemalu labi vaadata)
+Assotsiatiivse ryhmana paigutus (set-associative mapping)
+
+N1:
+4096 plokist koosneb pohimalu
+128 plokki vahemalu
+ploki suurus 16 sona (ehk 2 baiti)
+seega pohimalu suurus = 16 * 4096 sona 
+vahemalus 128 * 16 sona
+
+
+Otsene paigutus
+
+|Plokk 0|plokk 1| Plokk 2|...|Plokk 4095| (pohimalu)
+
+|Plokk 0|Plokk 1|...|Plokk 127| vahmealu (igal plokil silt)
+
+Malu plokk j pannakse C plokist koosnevas vahemalus plokki (j mod C) (siin C=128)
+0 mod 128 = 0
+128 mod 128 = 0
+molemad pointivad vahemalus plokile 0
+1 ja 129 pointivad plokile 1 jne
+
+malu aadress jagatakse 3-ks osaks
+
+|b15-b11 (silt)|b10-b4 (plokk)|b3-b0 (sona)|
+
+sona-vali maarab sona asukoha plokis
+ploki-vali maarab ploki koha vahemalus
+sildi-vali (tag field) maarab milline pohimalust paiknevatest plokkidest vahemallu kirjutati
+
+plokk 0 = 0000
+plokk 1 = 0001
+plokk 127 = 00000(sildi vali)111...
+plokk 128 = 00001(sildivali)111...
+
+Assotsiatiivne paigutusviis
+
+malu ploki j saab panna suvalisse kohta vahemalus
+malu aadressi jagame 2ks osaks {
+    12 bitti sildivaljaks (idefintseerimiseks)
+    4 bitti sonavali
+
+    vahemalu kasutus efektiivsem
+    vahemälu
+    kasutamisel tuleb läbi
+    vaadata kõik sildi-väljad
+  }
+
+Assotsiatiivne ryhm
+
+Kahe eelmise variandi kombinatsioon
+Mälu ploki j saab panna vahemälus ettemääratud
+alamhulga suvalisse plokki
+
+nt pohimalus 0 ja 62 lahevad vahemalus plokk 0
+nt pohimalus 1 ja 63 lahevad vahemalus plokk 1 jne
+
+malu aadress jagatakse 3ks osaks
+alamhulga idefintseerimiseks laheb 6 bitti - prgu 2 blokki alamhulgas
+6 bitti sildivaljaks
+
+Sõna-väli määrab ära sõna asukoha plokis
+Alamhulga-väli määrab ära ploki võimalikud asukohad vahemälus
+Sildi-väli määrab ära milline põhimälu plokkidest vahemälusse kirjutati
+
+Ryhma suuruse moju
+k-way set-associative cache
+  ryhmade arv | plokkide arv ryhmas v alamhulgas | sildivali| alamhulkade vali|
+    128                       1                         5           7
+      64                    2                           6           6
+      32                      4                         7           5
+      16                      8                         8           4
+      8                       16                        4
+      4                       32
+      2                      64             
+
+      1                     128                          12          0
+
+Asjakohasuse bit (valid bit) - See bitt ütleb, kas andmed vahemälus on asjakohased
+• Arvuti sisselülitamisel kõik need bitid väärtusega 0
+• Info laekumisel seatakse selle biti väärtuseks 1
+• Kui põhimälu uuendatakse vahemälust mööda minnes, tuleb kontrollida
+selle ploki olemasolu/puudumist vahemälus
+– kui see plokk vahemälus, siis seatakse selle biti väärtuseks 0
+– stale-data
+• Samalaadsed mured DMA ülekannete puhul mälust kõvakettale
+– Siin on võimalik olukord, kus põhimälus ei ole adekvaatne info (write-back
+protocol)
+– Üks võimalus andmed jõuga kaasajastada ja alles siis DMA ülekanne teha
+– Seda probleemi nimetatakse vahemälu koherentsuse küsimuseks
+
+Asendusalgorytmid
+
+Otsese paigutuse korral on pohimalu ploki paigutuskoht vahemalus yheselt teada
+Assotsiatiivse paigutuse ja Assotsiatiivse ryhma paigutamisel on valik suurem
+
+NB! Asendusalgoritmi valik mõjutab programmi jõudlust väga palju!
+
+LRU (least recently used) replacement algorithm Vahetame välja ploki, mille
+viimatisest kasutamisest on kõige rohkem aega möödas
+– kasutusinfo jaoks peab olema spetsiaalne loendur
+• Vanima elemendi väljavahetamine
+– miinus: ei arvesta hiljutisi kasutusmustreid
+• Juhusliku ploki asendamine
+– Vaatamata lihtsusele üllatavalt head tulemused!
+
+Arvuti kasutab 32-bitiseid mäluaadresse.
+Põhimälu on 1GiB, vahemälu 4KiB , mis on organiseeritud assotsiatiivse
+rühmana (4 plokki, 64B plokis)
+• Arvuta bittide arv mäluaadressi sildi, alamhulga ja sõna väljas
+
+Kokku 32 bitti
+6 bitti - sonavali
+4 bitti - Alamhulga-väli
+4 kiB / 4 * 64 B = 16 ryhma 
+sildivali - 22 bitti
+
+Arvuti kasutab 32-bitiseid mäluaadresse.
+Põhimälu on 1GiB, vahemälu 4KiB , mis on organiseeritud assotsiatiivse
+rühmana (4 plokki, 64B plokis)
+• Arvuta bittide arv mäluaadressi sildi, alamhulga ja sõna väljas
+• Protsessor loeb 1088 sõna (suurusega 4B) järjestikustest mälupesadest
+alates pesast 0.
+Kordab seda tegevust veel 9 korda. Vahemälu eelda olevat 10 korda kiirem
+kui põhimälu.
+Eeldusel, et vahemälu on alguses tühi ja et kasutatakse LRU algoritmi
+vahemälu täitmisel, rehkenda vahemälu kasutamisest tulenev kiiruse võit
+(kordades)
+
+4096 -> 1024 sona
+1088 sona -> 68 plokki
+
+Kui vahemalu tais LRU algorythmi jargi asendatakse vanim element
+
+kiiruse voit = aeg ilma vahemaluta / aeg koos vahemaluga
+
+(9x68x10t) / (1x68x(10t+t)) + 8(48t+20x(10t+t))

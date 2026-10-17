@@ -1,0 +1,146 @@
+Haakepunkt on kataloog olemasolevas puus
+mount teeb fs sisu seal nahtavaks
+varasem kataloogi sisu jaab haakimise ajal peitu
+umount eemaldab haake mitte fs
+kataloogitee ei ytle millisel fyysilisel seadmel andmed asuvad
+
+lsblk - millised plokkseadmed ja nendevahleised seosed on olemas
+findmnt - milline fs on sellesse kohta haagitud
+df - kui palju ruumi on fs kasutusel ja vaba
+du - kui palju kasutavad labitud failid ja kataloogid
+
+Millal on kirjutatud andmed pysivad
+õnnestunud write() v close() ei taga veel pysimist
+fsync() ootab faili andmete ja vajalike metaandmete salvestamist
+Päevik (journal) aitab taastada fs kooskola prst katkestust
+hetketommis (snapshot) sailitab varasema vaate soltumatu varukoopia kaitseb ka andmekandja kaotuse eest
+
+rakenduse buffer ->(write) tuuma lehevahemalu (cache)-> seadme buffer ja andmekaitsja
+
+Failivaade ja plokivaade
+fs kaudu - Nii + nihe + baitide arv {loe nt. 100 baiti nihkest 200, fs leiab vajalikud plokid}
+plokkseadme kaudu - Loogiliste plokkide aadressid (nt. partitsiooni tommis) failinimesid ei tolgendata, ka partitsiooni ja FS metaandmed on andmed
+
+dd if=algus.bin of=koopia.bin bs = 1M (bs on I/O puhvri suurus)
+
+plokkseade - partitsioon
+
+Plokkivaade ei tahenda automaatselt kiiremat ligipaasu 
+
+Rakendus - gaili suvaline baidivahemik
+FS - Nt 1 4kiB  andmeplokk
+512e loogiline - 512 B|512 B|....
+512e fyysiline - 1 4096 B fyysiline sektor
+
+N: 4 kiB = 4096 B = 8 * 512 B
+
+Sona plokk ei tahenda igas kihis sama suurusega yhikut
+
+Kui loogilineplokk on 512 B ja kirjutad 100 B ss 412 baiti laheb raisku
+
+HDD - liikuv mehhanism
+
+Pea liigub soovitud rajale
+ketas poorleb kuni andmed jouavad pea alla
+kontroller loeb/kirjutab andmeid
+
+OS-i vaade: LBA (logical block addressing)
+loe loogilised plokid numbriga (n, n+1...)
+
+HDD päringu viivitus = pea liikumine + poorlemise ootus + andmeedastus (lisaks voivad nojutada jarjekord ja vahemalu)
+
+Miks päringuid jarjestada
+FCFS - saabumise jarjekorras nagu FIFO
+SCAN-i idee: teeninda suuna kaupa nagu lift nagu queue
+eesmark: vahem ootamist, sailitades oigluse
+
+Keskmine ootus - 4.17 ms ehk pool pooret kui nurkasend on juhuslik
+
+SSD ja HDD
+
+andmekandja - NAND-välkmälu | Magnetpind 
+juhtpöördus -  elektrooniline liigipaas | pea liikumine ja poorlemine
+sisemine - too Kontroller, kaardistus, kustutamine | mehhaanika ja kontroller
+OS vaade - Loogilised plokid molemal
+
+Ltantsus - aeg paringu esitamisest selle lopetamiseni
+labilase - kui palju baite sekundis
+IOPS - mitu I/O operatsiooni sekundis
+
+Suur MB/s number ei kirjelda yksi rakenduse joudlust
+
+NAND lehed ja kustutusplokid
+
+1 NAND kustutusplokk
+|leht 0|leht 1|...|leht 7|
+
+Lugemise ja programmeerimise yksus on 1 lk
+Kustutatakse terve plokk, kus on palju lehekylgi
+vanu andmeid ei saa suvaliselt samas kohas yle kirjutada
+
+SSD kontroller ja FTL
+
+OS: loogiline plokk A -> FTL kaardistus -> uus fyysiline leht ja vana aegunud leht
+Uus versioon kirjutatakse vable lehele; kaardistus muutub
+Prygikoristus: kehtivad lehed kopeeritakse mujale, vana plokk kustutatakse
+Kulumise yhtlustamine: koormus jaotatakse NAND plokkide vahel
+
+TRIM ja vaba ruum
+Fs teab - faili andmeplokke ple enam vaja; Ruumi saab anda jarmistele failidele
+Kontroller vajab vihjet - Discard/TRIM teatab vabastatud loogilistest vahemikest; neid andmeid ei pea prygikoristuses sailitama
+
+FS vaba ruum ->(discard) SSD kontroller
+fstrim voib saata vabade vahemike infor perioodiliselt
+TRIM ei vordu kohese fyysilise kustutamise ega turvalise andmehavitusega
+Prygikoristaja taidab TRIM alad nullidega
+
+NAND, SATA, NVME ja M.2
+
+Andme kandja - NAND - salvestav malutehnoloogia
+Side - SATA v PCIe/NVMe - yhendus ja kasuliide
+Kuju - 2.5 v M.2 - fyysiline vormitegur
+
+NVMe on protokoll; kohalik NVMe SSD kasutab tavaliselt PCIe-d
+
+MBR JA GPT
+
+MBR {
+    4 primaarset kirjet - laiendatud partitsioon voimaldan loogilisi partitsioone
+    512 B loogilise sektori korral, tavaparane piir 2 TiB
+  }
+
+GPT {
+    64 bitised aadressiplokidõsageli 128 kirjet; arv ple universaalne ylempiir
+    paiste ja kirjete varukoopia ketta lopus
+  }
+
+|kaitsev MBR|GPT pais|partitsiooni kirjed|partitsioonidele eraldatav ruum|kirjete varukoopia|paise varukoopia|
+Partitsioonitabel maarab piirid, fs korraldab sisu
+
+
+Partitsioneerimine - GPT partitsioonipiirid - /dev/vdb1
+FS loomine - ext4 metaandmed partitsioonil - failidele sobiv struktuur
+Haakimine - OS-i haakimistabel - sisu nahtav /srv/data all
+
+UUID ja pysiv haakimine
+seadme nimi voib muutuda, UUID tuvastab tuvastab fs
+lsblk -f naitab tyypi ja UUID; findmnt tegelikke haakimisi
+
+/etc/fstab sisu 
+
+ro - haagi kirjutuskaitstult, tavaliseks muutmiseks kasutame rw
+nofail - valikulise ketta puudumine ei pea systeemi kaivitust peatama
+0 2 - dump varundus valja; fs kontrolli jark 2. root fs tavaliselt 1
+
+
+fstab kirjeldab soovitud seadistust; findmnt naitab hetkeseisu
+
+UEFI ja OS kaivitus
+
+UEFI pysivara -> EFI kaivituslaadur-> linux kernel ja initramfs -> root fs /
+                  ^
+                systeemi partitsioon FAT-fs ja .efi failid
+GPT: partitsioonide paigutus, UEFI: pysivara liides ja kaivitus
+ESP ei ole llinuxi juur fs. andmeketas ei vaja tingimata ESP-d
+
+

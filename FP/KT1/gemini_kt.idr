@@ -15,8 +15,7 @@
 -- 0
 
 yl5 : List (Bool, Int) -> Int
-yl5 = foldr (\(x,y), acc => if x then acc + 1 else acc) 0
-
+yl5 = foldr (\(x,y), acc => if x then 1 + acc else acc) 0
 {-
 Kirjuta funktsioon height : BinTree a -> Nat, mis arvutab ja tagastab selle puu kõrguse (sügavuse) Naturaalarvuna (Nat).
 Leppigem kokku, et:
@@ -33,7 +32,6 @@ tree1 = Branch (Branch Leaf (1,0.5) Leaf) (5,1.5) (Branch Leaf (7,2.5) Leaf)
 height : BinTree a -> Nat
 height Leaf = 0
 height (Branch left _ right) = 1 + max (height left) (height right)
-
 
 myFilter : (a -> Bool) -> List a -> List a
 myFilter f = foldr (\x, acc => if f x then x :: acc else acc) []
@@ -72,7 +70,7 @@ sumTreeBy f (Branch left (x,y) right) = sumTreeBy f left + (if f x then y else 0
 -- True
 
 allEven : List Int -> Bool
-allEven = foldr (\x, acc => if x `mod` 2 == 0 then acc else False ) True
+allEven = foldr (\x, acc => if x `mod`2==0 then acc else False) True
 
 tree2 : BinTree Int
 tree2 = Branch (Branch Leaf 1 Leaf) 5 (Branch Leaf 7 Leaf)

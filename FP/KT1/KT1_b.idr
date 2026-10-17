@@ -12,7 +12,7 @@
 -- False
 
 yl1 : Eq a => List (a,a) -> Bool
-yl1 = foldr (\(x,y), acc => if x == y then True else acc) False
+yl1 = foldr (\(x,y) ,acc => if x == y then True else acc) False
 -- Ülesanne 2: puu
 
 -- Vaata andmetüübi  BinTree a  definitsiooni.
