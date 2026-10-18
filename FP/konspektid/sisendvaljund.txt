@@ -1,0 +1,57 @@
+idrise puhtad funktsioonid ei voimalda teha mittepuhtaid arvutusi
+Puhas: func tulemus soltub aind argumentide vaartusest
+ei saa teha nt random : () -> Int
+
+Lahendus on IO liides
+IO a tyypi vaartus - masin arvutab a tyypi vaartuse
+pure : a -> IO a masin tagastab argumendi vaartuse
+(>>=) : IO a -> (a -> IO b) -> IO b masin kaivitab esimese argumendi ja rakendab tulemust teisele
+
+lisaks baasfuncid nagu putStrLn : Stinrg -> IO () ja getLine : IO String (votab kasutaja sisendi)
+
+nii saab kombineerida IO masinaid nt.
+
+main : IO ()
+main = randonRIO (1,10) >>= classsify >>= putStrLn
+    where classify : Int -> IO String
+          classsify = if x `mod` 2 == 0 then pure "paaris" else pure "paaritu"
+
+sama asja saab teha nii
+
+main : IO ()
+main = do
+    r <- randomRIO (1, 10)
+    c <- classify r
+    putStrLn c
+    where classify : Int -> IO String
+          classify x = ...
+
+proc : IO ()
+proc = do
+    s <- getLine
+    let n : Int
+        n = read s
+        n2 : Int
+        n2 = 2*n
+    putStrLn ("Kaks korda " ++ s ++ " on " ++ show n2)
+
+Do syntaks algab do-ga, millele jarnevad jarjest toodeldavad laused
+laused mustriga x <- p, (kus p : IO a ja x : a)
+let laused ning
+avaldised e, mille tyyp on IO a
+
+
+do seob kokku IO-avaldised, kuid ei saa vaadata konstruktsioonide sisse: See tähendab, et üheainsa avaldise jaoks pole eraldi do-plokki vaja.
+Näiteks: main = putStrLn "Hello World!"
+
+Hargnemise puhul võib olla vaja kasutada mitut do-d: Kui tingimuslause (if-then-else) harus on vaja sooritada mitu tegevust järjest, tuleb kasutada täiendavat do-plokki.
+
+main : IO ()
+main = do
+    putStrLn "Kirjuta midagi!"
+    xs <- getLine
+    if (xs=="")
+        then putStr "Sõnakuulmatu!"
+        else do
+            putStrLn "Tänan!"
+            putStrLn ("Kirjutasid: " ++ xs)

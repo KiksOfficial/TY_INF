@@ -132,14 +132,15 @@ olek 0 on yhendatud
 
 Vajadus sellise mälu järgi, mis säilitaks infot ka voolu
 väljalülitamisel
+  DMA (direct memory access)
 • ROM (read only memory)
 • PROM (programmable read only memory)
 • EPROM (erasable programmable read only memory)
-• EEPROM (electrically erasable programmable read only
-memory)
+• EEPROM (electrically erasable programmable read only memory)
 • välkmälu (flash memory)
 
 Mälu hierarhia 
 
 [Registrid, vahemälu] CPU, Põhimälu, Secondary storage (SSD), offline storage ehk lindiseadmed
+
 
