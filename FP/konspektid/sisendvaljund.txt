@@ -2,6 +2,10 @@ idrise puhtad funktsioonid ei voimalda teha mittepuhtaid arvutusi
 Puhas: func tulemus soltub aind argumentide vaartusest
 ei saa teha nt random : () -> Int
 
+parameetriline polymorfisn - erinevatel tyypidel sama definitsiooni
+ad-hoc polymorfism - mitu erinevat definitsiooni erinevatel tyypidel
+polymorfism - paljutyybiline (1 objel palju tyype)
+
 Lahendus on IO liides
 IO a tyypi vaartus - masin arvutab a tyypi vaartuse
 pure : a -> IO a masin tagastab argumendi vaartuse
@@ -55,3 +59,11 @@ main = do
         else do
             putStrLn "Tänan!"
             putStrLn ("Kirjutasid: " ++ xs)
+
+do  x
+    y sama, mis x >>y
+do  x <-z
+    y sama, mis z >>= (\x => y)
+
+
+do asemel saab kasutada >> 

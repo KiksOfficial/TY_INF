@@ -1,0 +1,136 @@
+parallel siinid vs jadasiinid
+
+4 bitti korraga
+komponent A (0)------------------ komponent B
+            (0)------------------
+            (1)------------------
+            (0)------------------
+
+signaal liigub valguse kiiruse lahedasel kiirusel (lisandub detection time)
+oota ara levimisaeg ja detekteerimisaeg
+
+teoreetiliselt saab teha nii et 0.1V = 1 0.2V = 10 0.3V = 11 jne (a see suht veaohtlik)
+teine variant korgem taktsagedus 
+saab tuua komponente lahemale
+mia suurem sagedus seda suurem toenaosus et trigger teeb vea kasvab
+iga bitti peab hoidma sideliinil teatud ajal
+
+enamasti CPUst valjuvad yhendused on jadayhendused
+jadayhendus - bitid tulevad jadamisi
+
+otssignaalid ei pea omama yyht taktsignaali
+jadayhenduses osa infost pole kasulikud (nt. 8 biti kasuliku info kohta 10 bitti) - garanteerib selle, et iga teatud aja tagant toimub 1 ja 0 vahetus
+liinile andja saab muuta taktsagedust ja vastuvotja saab kohaneda sellega
+
+jadasiin
+edu saavutame sellega, et meil harva vaj 1 bitti korraga saata, seega suurema paki saab panna korgema taktsagedusega liinile panna soltumata distantsist
+sel juhul trigger soltub aind iseendast
+
+Arvutis signaalide vahetamine suht lippude vehkimine
+Kasutatakse paralleelseid jadasiine - side liinid ple omavahel syncronyzed
+
+Otspunktid peavad oskama kokkulepitud protokolli lahti motestada jadasiinidel (parallel liidesed primitiivsemad)
+
+Aadressisiini abil maaratakse millisest malu piirkonnast on vaja andmeid lugeda v millisesse salvestada
+
+mida pikem sideliin seda suurem energiakulu
+
+koik riistvara komponendid on mingitel maluaadressivaljadel
+
+kui cpu tahab mingit suurt malu saada ss paneb aadressisiini yles oleku, kust tahab aadressi saata, paneb yles kontroll-lipud nt tahab lugeda
+ss mingi malukomponent v midagi muud reageerib selle peale, kui read request ss komponent sab aru et talt tahetakse andmeid, ss malu lykkab andmed lipuga CPU-le tagasi, lopuks korjatakse lipud
+
+sisemised registrid
+protsessori sisemiste registride suurus naitab kui palju infot on voimalik korraga toodelda
+registrite suurus naitab ka mitme bitise CPU-ga on tegu
+registrites hoitakse andmeid nende tootlemise ajal
+
+####################################
+
+x86 arh tööreziimid
+Real mode - 16 bit
+
+IA-32 arh
+32 bit - protected mode
+16 bit - virtual real mode
+
+IA-32e arh
+64 bitine reziim
+32 bitine compatbility mode
+
+malus riistvara on 0xFFFFFFFF all pool (4GiB) - see osa malust jaab kasutamata
+32 bitise OS voiks panna kuni 3GiB malule
+
+64 bitissed ja 32 bitised rakendused omavahel suhelda ei saa
+
+
+Mälu organiseerimine
+
+fyysiline malu - malu, mille poole CPU oma siinidega poorduda saab 
+fyysiline malu on jagatud 8 bitisteks pesadeks (bait)
+iga malupesa omab fyysilist aadressi
+fyysiline/malu aadressiruum on
+32 bitisel CPU-l vahemikus 0..2**36-1 (64GB)
+64 bitisel CPU-l vahemikus 0..2**64-1 (16EB)
+tanastel CPU-del on see enamasti piiratud 35-41 biti ehk 32GB-2TB
+
+
+Sisend/valjund aadressiruum
+
+lisaks fyysilisele aadressiruumil on x86 arh kasutusel ka
+I/O memory space
+on malu aadressiruumist eraldiseisev
+sisaldab 2**16 (64K) eraldi adresseeritavat 8 bitist I/O porti
+kahte v nelja jarjestikust I/O porti saab kombineerida vastavalt 32 ja 54 bitiseks
+I/O portide poordumiseks on CPU-l eraldi kasud
+
+I/O seadmed saavad olla 
+malu vastendusega (memory mapped io ehk MMIO) -seadme poole poordutakse fyysilise aadressiruumi kaudu
+port vastendusega (port mapped io ehk PMIO) - seadme poole poordutakse sisend-valjund aadressiruumi kaudu
+seadmed saavad olla ka molema vastendusega
+
+FYYSILINE AADRESSIRUUM
+
+0000...|xxxx|aaa|b|cc|d|e|f|...FFFF
+            
+App1 0000...|aaa|b|d|
+virt1
+
+App2 0000...|cc|e|f|
+virt1
+
+andmekandja
+|    |
+
+fyysilist malu antakse lehekylgede kaupa
+kui malu piirkonda pole monda aega kasutatud kirjutatakse see andmekandjale
+
+
+##################################################
+
+CPU ja malu vaheline kiiruste vahe kasvab ca. 50% aastas (CPU kiirem ofc)
+Vahemalu (cache) tootab RAM malust kiiremini ja kasutatakse selleks, et vähendada malu poole poordumise aega
+Enamikel tanastel CPU-del on vahemalt 3 tyypi vahemalu
+  - Kaskudee vahemalu (instruction cache)
+  - Andmete vahemälu (data cache)
+  - TLB (Translation Lookaside Buffer) Puhver (hoitakse virtuaalse ja fyysilise aadressi omavahelist teisendust)
+
+
+dynaamiline malu on nagu aukudega amber (seda peab koguaeg varskendama) (kondensaator + transistor)
+staatilise malu rakk koosneb 6st transistorist
+staatiline malu kiirem kui dynaamiline, sst transistor kiirem, kui kondensaator
+
+90/10 principle - 9/10 protsessor kasutab juba kasutatud andmeid (hoitakse caches)
+
+fyysiline aadressiruum - aadressiruum, mida CPU fyysiliselt naeb
+selleks, et 2 protsessi korraga samasse mällu ei kirjutaks, annab maluhaldur neile malu. Programm naeb neid aadresse nullist alates.
+
+Uute RAM malude latency laheb tsyklites moodetuna korgemaks
+fyysilisi protsessoreid tahistatakse socketiga 
+
+igal tuumal oma L1 andmeta vahemalu
+2 tuuma jagavad L1 instructions vahemalu
+L2 vahemula ka 2 tuuma vahel
+L3 cache koikide tuumade vahel
+igal protsessoril oma malu(kontroller) ehk numanode (eraldatud malu piirkond CPU taga)
+

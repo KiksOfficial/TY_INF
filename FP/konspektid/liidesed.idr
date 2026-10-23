@@ -21,12 +21,12 @@ Equal Bool where
     a ==? b = ?eq_Bool     -- Bool'ide võrdsus
 
 --Idrise standardteegis on defineeritud tüübiklass Eq:
---
-interface Eq a where
-    (==), (/=) : a -> a -> Bool
 
 -- Minimaalne definitsioon peab sisaldama:
 -- (==) või (/=)
+
+interface Eq a where
+  (==), (/=) : a -> a -> Bool
   x /= y = not (x == y)  -- vaikedefinitsioon
   x == y = not (x /= y)  -- vaikedefinitsioon
 
