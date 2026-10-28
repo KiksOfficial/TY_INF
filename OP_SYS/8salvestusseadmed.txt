@@ -143,4 +143,56 @@ UEFI pysivara -> EFI kaivituslaadur-> linux kernel ja initramfs -> root fs /
 GPT: partitsioonide paigutus, UEFI: pysivara liides ja kaivitus
 ESP ei ole llinuxi juur fs. andmeketas ei vaja tingimata ESP-d
 
+Ubuntu kaivitamine
+1. UEFI - algseadistab riistvara ja valib NVRAm kaivitus kirje jargikaivitatava EFI programmi
+2. ESP ja shim - EFI systeemi partitsioonilt laetakse alla shim, mis kaivitab grubi
+3. GRUB - Laeb Linuxi tuuma ja initramfs RAM-i ning annab juhtimise tuumale
+4. tuum ja initramfs - TTuum kaivitub. initramfs tooriiistad teevad "/" kattesaadavaks ja mountivad selle
+5. Systemd PID 1 - prst "/" yleminekut kaivitab systemd teenused ja sisselogimise
+
+Secure Boot
+  - kontrollib kaivituskoodi allkirju seadistatud usaldusreeglite jargi
+  - kontrollitud kaivitusaehl eeldab ka jargmiste  komponentide kontrollimist
+
+Ketta krypteerimine (nt. LUKS)
+  - kaitseb kryptitud andmete konfidentsiaalsus
+  - oige votmega avamisel saab  OS kasutada dekryptivat plokkseadet
+
+Kaivituskoodi usaldamine ja salvestatud andmete salajasus on eri eesmargid
+
+LVM: PVG, VG ja LV
+PV - physical volume
+VG - volume group
+LV - logical volume
+
+VG vaba ruum peab joudma  LV kaudu fs-ni
+
+sudo lvextend -L +8G /dev/vgdata/lvdata - kasvatab plokkseadet
+sudo resize2fs /dev/vgdata/lvdata - kasvatab fs
+
+RAIID 0 - eri andmed, sama ketas (pooled andmed 1 pooled 2)
+
+RAID 1 - samad andmed molemal (pmst andmete dubleerimine)
+
+RAID 5 - Hajutatud paarsus (distributed parity).
+         Kasulik maht: (N−1)S, kus N on ketaste arv ja S on ühe ketta kasutatav maht.
+         Talutavad kettarikked: Üks ketas.
+
+RAID 6 - Kaks sõltumatut paarsust.
+         Kasulik maht: (N−2)S.
+         Talutavad kettarikked: Kaks ketast.
+
+RAID 10 - Põhimõte: Vööditatud peeglipaarid (striped mirrors) (kombinatsioon 1-st ja 0-st)
+          Kasulik maht: NS/2.
+          Talutavad kettarikked: Kuni üks ketas igast paarist.
+
+RAID 10 korral loeb ka see, millisesse konkreetsesse peeglipaari rikkis kettad kuuluvad.
+(RAID 5-st pmst piisab)
+
+RAID, snapshot ja varundus
+liiasega RAID - jatkab tood liikme rikke jarel - faili kustutamine kehtib kogus massiivis
+hetketommis - sailitab varasema seisundi - voib jagada algandmetega samu fyysilisi seadmeid
+Varundus - taastab andmed sailitatud koopiat - koopia peab sailima ka algandmete kadumise korral
+
+too jatkumine ja ja andmete taastumine on erinevad eesmargid
 

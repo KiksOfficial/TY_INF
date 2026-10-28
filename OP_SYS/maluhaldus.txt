@@ -1,0 +1,107 @@
+2 protsessi sama aadress
+
+Protsess A {
+    virtuaalne aadress 0x123
+    vaartus 10
+  }
+
+Protsess B {
+    virtuaalne aadress 0x123
+    vaartus 99
+  }
+Kuidas see voimalik - igal protsessil oma virtuaalmalu
+
+Virtuaalse aadressi tahendus soltub protsessi aadressiruumist
+
+Protsessi aadressiruum {
+    Pinu
+    kaardistamata ala
+    kuhi
+    globaalsed andmed
+    kood
+  } (aadressid kasvavad alt yles)
+
+PC ja SP sisaldavad siin mudelis virtuaalseid aadresse
+sama protsessi loimed jagavad aadressiruumi
+igal loimel oma taitmiskontekst ja pinu
+aadressiruum sisaldab ka kasutamata vahemikke
+
+Malujaotur, OS ja MMU
+malloc/free (malujaotur) - jagab programmile maluplokke ja votab need tagasi (kuhjast) - malu kysimisel ja vabastamisel
+OS - haldab aadressiruumi kaardistust ja fyysilist malu - kaardistuse loomisel v muutmisel
+MMU CPU riistvara - teisendab virtuaalse aadressi ja kontrollib ligipasuoiguseid - programmi malupoordumisel 
+
+ravaliseks malupoordumiseks ple vaja syscall
+
+lihtne mudel: baas ja piir
+Protsessi aadress a -> Kontroll 0 <= a < L if lubatud then fyysiline aadress =  B + a else lubamatu poordus
+B - piirkonna algus fyysilises malus
+L - piirkonna pikkus , riistvara kontrollib piiri
+
+Vaba malu voib olla fragmented
+valine fragmenteerimine - vaba ruumi jatkub a pidevat ala ple
+
+Segmeteerimine: Mitu erinevat piirkonda
+Aaadress (s,d)
+s - segmendi number
+d - nihe segmendis
+
+kood - (B0, L0)
+andmed - (B1, L1)
+pinu - (B2, L2)
+
+igal segmendil on oma baas, pikkus ja oigused
+kui 0 <=d<=Ls ja poordus on lubatud ss fyysiline aadress = Bs + d
+segmendid voivad olla eri suurustega
+pidevalt paigutatud segmentide vahele voivad jaada augud
+
+1 suure piirkonna asemel haldame mitut tahenduslikku piirkonda
+
+Segmenteerimine ja tanapaevane protsess
+Kood kuhi ja pinud - nende jaoks eraldi segmendid
+Ristvaraline Segmenteerimine - Aadressi moodustumine segmendi ja selle sees oleva nihke kaudu
+Lehekylgedeks jaotamine - virtuaalse malu fikseeritud osade kaardistamine RAM-i
+
+Pigem on kasutusel lehekyljed
+
+Lehekylg ja kaater
+Virtuaalmalu - jagame aadressiruumis fikseeritud suurusega lehekylgedeks
+Fyysiline RAM - jagame malu sama suurustega kaadriteks (frame)
+
+lehekylje tabel seob virt malu fyysilise maluga
+reaalselt ei pruugi fyysiline malu olla jarjest
+
+3 lehekylje jaoks piisab 3st vabast kaadrist eri kohtades
+
+Leht ja nihe
+Lehe number valib lehekylje. Nihe valib baidi selle sees (nt protsess on 0x1000 muutuja = 0x123 ss fyysiline aadress on protsess+muutuja)
+lehekylje tabelis votab oma kaadri vastavalt indexi jargi nt 2 7 5 index 1 = 7 
+lehe nu,ber asendub kaadri numbriga nihe sailib
+
+Sama aadress erinev kaardistus
+Sama aadressiarv ei anna protsessile ligiapaasu teise protsessi andmetele
+
+Kaardistus maarab ka ligipaasu
+
+Programmikood -R ja X - kaarte voib lugeda ja taita 
+muudetavad oigused - R,W - kaarte voib lugeda ja kirjutada
+kaardistamata ala - oigused puuduvad 
+
+Riistvara kontrollib poordumise liiki ja oiguseid
+lubamatu poordumine annab juhtimise OS-ile
+
+lehepohine kaitse ei kontrolli iga C massivi piiri
+
+Konteksti vahetus ja aadressiruum
+                     protsess  A -> protsess B          |  protsess A 1 loim teisele
+PC, SP ja registrid - Taastame B loime taitmiskonteksti | taastame teise loime taitmiskonteksti
+Aadressiruum          Aktiivseks saab B aadressiruum    | A yhine aadressiruum sailib 
+RAM sisu             andmed jaavad oma kaadrisse        | andmed jaavad oma kaadrisse
+tavaline kontekstivahetus ei kopeeri kogu protsessi malu
+
+(index tabeleid hoiame kernel mälus)
+
+Protsessi malukaart linuxis
+cat /proc/$$/map 
+vahemik ja oigused kirjeldavad virtuaalset kaardistust
+p - privaatne kaardistus

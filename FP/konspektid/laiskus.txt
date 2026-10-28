@@ -1,0 +1,25 @@
+idris voimaldab defineerida lopmatuid struktuure, aga neid ei saa taielikult valja arvutada
+Lõpmatu arvutamise piiramiseks paneme Returniks Stream a (a voib olla misiganes Int String jne)
+Idris teisendab Inf a <-> a
+
+take : Nat -> Stream a -> List a
+
+Sarnaselt Inf tüüpidele saab optimeerimiseks kasutada Lazy tüüpe:
+
+data Lazy : Type -> Type where
+    Delay : a -> Lazy a
+    
+... ja funktsioon
+
+Force : Lazy a -> a
+
+Reeglid:
+* Delay argumenti ei väärtustata.
+* Force (Delay e) = e
+* Idris teisendab väärtusi vastaval tüübile Lazy a <-> a
+
+Soovitus: Pane Lazy argumendi tüübi ümber, kui seda ei pruugi vaja minna.
+
+Näiteks: (&&) : Bool -> Lazy Bool -> Bool.
+
+A Stream on lopmatu Lazy voib olla lopmatu, aga ei pruugi

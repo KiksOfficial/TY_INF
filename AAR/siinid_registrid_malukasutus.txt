@@ -123,7 +123,8 @@ staatiline malu kiirem kui dynaamiline, sst transistor kiirem, kui kondensaator
 90/10 principle - 9/10 protsessor kasutab juba kasutatud andmeid (hoitakse caches)
 
 fyysiline aadressiruum - aadressiruum, mida CPU fyysiliselt naeb
-selleks, et 2 protsessi korraga samasse mällu ei kirjutaks, annab maluhaldur neile malu. Programm naeb neid aadresse nullist alates.
+selleks, et 2 protsessi korraga 
+samasse mällu ei kirjutaks, annab maluhaldur neile malu. Programm naeb neid aadresse nullist alates.
 
 Uute RAM malude latency laheb tsyklites moodetuna korgemaks
 fyysilisi protsessoreid tahistatakse socketiga 

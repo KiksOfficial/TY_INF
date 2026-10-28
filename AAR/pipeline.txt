@@ -167,3 +167,48 @@ Hypoteetiline olukord {
   deltamiss = 0.05 * 10 (käsud ise) + 0.1 * 0.3 * 10 (andmed) = 0.8
 }
 
+##########################################
+##########################################
+
+Esimesena voeti pipeline kasutusele 80486 CPUs
+hilisematel CPU-del neid mitu
+tanastel CPU-del toru 10-20 sammu
+
+mida pikem konveier, seda kauem laheb tulemuse kattesaamiseks aega
+kui keset konveierit tekib viga, ss tommatakse konveier tyhjaks
+
+CPU-l programmeeritavad loogikalylitused
+
+Kui tuumade arv kasvab, ss kasvab ka voimsus
+
+Krypteeritud andmekandjad alguses aeglased 
+Protsessoritel kujunenud iga func jaoks oma element
+
+Korraga saab 1 threadi peal aind 1 protsess
+
+Hyper threading (HT) - Intel
+Simultaneous Multithreading (SMT) - AMD
+
+Voimaldab 1 fyysilisel CPU-l taita yheaegselt mitut threadi
+Arhitektuuriliselt sisaldab HT CPU 2 v rohkemat loogilist CPU
+Iga loogiline CPU omb oomi registrit ja katkestuskontrollerit
+Kaskude taitmiseks kasutatakse yhist taiturmootorit
+
+EI TOHI SEG AJADA HYPER TRANSPORT'iga
+
+Multi core tehnoloogia
+1 fyysilise CPU sees mitu tuuma, igal tuumal omakorda voib olla mitu loime 
+
+arvutusprotsessor peab olema voimalikult universaalne GPU tegeleb vaga konkreetse ylesandega seeprst GPUl stx tuumasid
+Tööstuses soltuub riistvara hind litsentsidest
+
+paralleel siinidel koik asjad 1 siini peal
+
+iga tuuma peal 1 execution engine
+1 loime kohta 1 registri komplekt
+
+Kui mitu CPU ss koige efektiivsem panna iga CPU taha vordne arv malu
+Tarkvara peab olema teadlik, milline on riistvaraline ylesehitus
+
+UMA - uniform memory access - CPU-de taga yhine malu
+NUMA - non uniform memory access - iga fyysilise CPU taga oma malu
