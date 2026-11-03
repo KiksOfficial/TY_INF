@@ -1,0 +1,86 @@
+TLB buffer - mappib fyysilised mem addressid virt aadressitega 
+
+SLAT - second level aadress translation - ainult vajalik virt masinate jooksutamiseks
+  – AMD-V Rapid Virtualization Indexing (RVI)
+  – AMD Nested Paging (NTP)
+  – Intel Extended Page Tables (EPT)
+
+• Füüsiline aadressiruum
+• Virtuaalne aadressiruum
+• Page Table (PT)
+• Translation Lookaside Buffer (TLB)
+• System Physical Address (SPA)
+• Guest Physical Address (GPA)
+• Guest Virtual Address (GVA)
+
+                [][][][][][][][][]
+                [OS              ]
+                [virtual hardware]
+      [][][][[][][VMM]
+      [OS            ]
+      [fyysiline malu]
+
+virtuaalmasinate virtual addressroom tle  mappida VM fyysilisele aadressile
+alguses tesiendatakse virtuaalsesse fyysilisse aadressiruumi ss fyysilisse aadressiruumi 2 poolt yksteise olemasolust midagi ei tea
+
+votab kauem a virtualiseerida saab 1koik mida
+
+   |[]
+   |[OS]
+[] |[Virt hardware]
+[OS|[VMM]]
+[fyysiline riistvara]
+
+draiverid - pmst OS laiendusmoodul
+
+OS teab et ta peal VM ja VM teab et on VM
+
+    [][]     [][]
+    [OS]     [OS]
+[][][Virt HW][Virt HW]
+[management OS]
+[hypervisor]
+[Fyysiline riistvara]
+
+Koige kiirem
+Esimesena jooksutatakse hyperviser ss OS
+Virtuaalmasin saab otse riistvara kasutada 
+
+Veel tehnoloogiaid 
+• Intel Virtualization Technology (Intel VT)
+• Intel Advanced Encryption Standard New Instructions (Intel AES-NI)
+• Intel Total Memory Encryption (Intel TME)
+• Enhanced Intel SpeedStep Technology
+  – Operatsioonisüsteem saab protsessori taktsagedust muuta kasutades selleks nö. P-state olekuid
+• Intel Speed Shift Technology
+Riistvaraliselt kontrollitud taktsageduse muutmine. Operatsioonisüsteemi teavitatakse P-state olekute abil
+• Intel GNA 2.0 (Gaussian Mixture Model and Neural Network Accelerator)
+  Riistvaraliselt assisteeritud kõnetuvastus.
+
+Serverites krypteeritakse ka operatiivmalu
+Enamasti ple vaja et CPU kaiks 100% seega taktsagedust kiirendatakse/aeglustatakse
+
+Tanane paev x86/x64 CPU maailmas
+
+2 pohilist tootjat AMD ja Intel
+
+• Viis põhilist tootesarja
+– Tahvel- ja hübriidarvutite protsessorid
+– Sülearvutite protsessorid
+– Lauaarvutite protsessorid
+– Serverite protsessorid
+– Manussüsteemide (embedded systems) protsessorid
+
+worstation (toojaam) - ehitatud alumise otsa servertehnoloogia otsa lauaarvuti
+
+Intel Core ja Core Ultra 3/5/7/9
+• Alates 2023.a. detsembrist eraldas Intel mobiilsete
+protsessorite tooteseeria uute Intel Core ja Core Ultra nimede
+alla
+• 4-5 kohalised numbrilised markeeringud lühendati 3 kohaliseks
+• ja generatsioonid asendati seeriatega (Series n)
+• Näiteks Intel Core Ultra Series 1
+– Core Ultra 7 165H
+– Core Ultra 5 134U
+
+

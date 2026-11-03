@@ -1,0 +1,1 @@
+mkdir -p build/exec/_tmpchez_app/ && ln -sf /opt/homebrew/Cellar/idris2/0.8.0_2/libexec/idris2-0.8.0/lib/libidris2_support.dylib build/exec/_tmpchez_app/libidris2_support.dylib

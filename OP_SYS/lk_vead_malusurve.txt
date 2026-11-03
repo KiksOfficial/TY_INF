@@ -1,0 +1,351 @@
+Kaardistus residentsus ja oigused
+
+Kehtiv residentne kaardistus, vajalik oigus olemas - tavaline malupoordumine
+Piirkond lubatud, öeht ple RAM-is, - lk viga os saab vajaliku sisu kasutatavaks teha
+Piirkond puudub v tegevus keelatud - segfault
+
+lk viga ei tahenda automaatselt programmi viga
+
+Uus malu ja malloc
+OS'i uus anonyymne malu . programmile nahtav algsisu on nullid, teise protsessi vana sisu ei avaldata
+malloc(n) - tagastatud sisu pple garanteeritult algvaartustatud jaotur voib taaskasutada sama protsessi vabastatud ploki
+calloc(n, size) - tagastatud malu on nullitud
+free(p) - Plokk vabaneb jaoturile; see ei pea kohe OS-ile ega
+RAM-i vabade kaadrite hulka naasma.
+
+Massivi piir ja lk piir -
+1 kirjutatava lk sees voib olla mitu obje
+MMU kontrollib kaardistust ja lehe oiguseid, mitte C massiivi pikkust.
+Piirist valjumine on programmi viga ka siis kui SIGSEGV eu teki
+Malukaitse ei asenda programmi piiride kontrolli
+
+TLB - translator lookaside buffer (aadressitolgetele vahemalu)
+CPU kasutab virt aadresssi, TLB leht -> kaader ja ligipaasu oigused -> fyysiline aadress ja andmete kasutamine
+lk tabelid kirjeldavad kaardistusi RAM-is
+TLB hoiab osa hiljuti kasutatud tolkeid protseeorile lahedal
+TLB kirje säästab tõlke jaoks leheküljetabelite läbimist.
+
+TLB salvestab tõlkeid. Andmevahemälu salvestab andmeid.
+
+Tabamus: tõlge on TLB-s
+Möödalask: tõlget pole TLB-s
+1. Leitakse sobiv tõlge.
+2. Kontrollitakse vajalikku õigust.
+3. Kasutatakse füüsilist aadressi.
+1. Läbitakse leheküljetabelid.
+2. Sobiv residentne kirje leitakse.
+3. TLB täiendatakse ja töö jätkub.
+Näiteks x86-s teeb tabelite läbimise tavaliselt riistvara.
+Puuduv residentsus või sobimatu õigus võib tekitada leheküljevea.
+TLB möödalask üksi ei ole leheküljeviga.
+
+TLB ja kontekstivahetus
+Protsess A
+leht 1 → kaader 7
+
+Protsess B
+leht 1 → kaader 20
+
+Sama virtuaalne leht
+võib vajada eri tõlget.
+
+• Protsessi vahetades peab CPU kasutama õiget aadressiruumi.
+• Vanad tõlked kas tühistatakse või eristatakse kontekstitunnusega.
+• Sama protsessi lõimed jagavad aadressiruumi kaardistusi.
+
+Kontekstivahetus peab säilitama ka aadressitõlke õigsuse.
+
+Iga kontekstis vahetus ei tyhjenda koguaeg TLB
+
+Leheküljetabeli suurus
+
+Õppemudel: 32-bitine aadress, 4 KiB leht, 4-baidine tabelikirje.
+Virtuaalseid lehekülgi: 232/212 = 220
+Ühetasemeline tabel: 220 × 4 B = 4 MiB
+
+• Lihtne tabel vajab kirjet igale võimalikule virtuaalsele lehele.
+• Protsess kasutab sageli ainult väikest osa aadressiruumist.
+• Paljude protsesside tühjade piirkondade kirjeldamine kulutab RAM-i.
+
+Kas saame jätta kasutamata piirkondade tabeliosad loomata?
+
+Mitmetasemeline leheküljetabel
+
+Sama õppemudel: 10 bitti juurtabelile + 10 bitti alamtabelile + 12 bitti nihkele.
+
+Juurtabel
+4 KiB
+-> 10 bitti ->
+
+Üks alamtabel
+-> 10 bitti ->
+
+1024 kirjet = 4 KiB
+Kaadri number
++ nihe
+
+Kasutamata piirkond: alamtabelit pole
+
+• Alamtabel luuakse ainult vajaliku virtuaalse piirkonna jaoks.
+• Üks alamtabel kirjeldab kuni 1024 lehte ehk 4 MiB aadressiruumi.
+• Juurtabel + üks alamtabel: 8 KiB tabelimälu, andmelehed lisaks.
+
+Säästame tabelimälu; TLB aitab vältida korduvaid tabelikäike.
+
+Leheküljevea käsitlemine
+
+CPU tekitab leheküljevea
+V
+OS kontrollib virtuaalset piirkonda
+ja pöördumise lubatavust
+
+Lubamatu pöördumine
+tavaliselt SIGSEGV (keelatud)
+
+OS teeb lubatud lehe kasutatavaks
+vajadusel laadib või kopeerib (lubatatud)
+V
+Õnnestumisel uuendatakse kaardistust
+ja sama käsk jätkub
+
+Leheküljeviga võib olla OS-i tavalise töö osa. (See ei tahenda automaatselt segfault)
+
+Lehe sisu päritolu
+
+Uus anonüümne leht - Programmile nähtav algsisu on nullid.
+Failiga seotud leht - Vastavast failiosast, võimalusel juba RAM-is olevast vahemälust.
+
+
+volatile unsigned char *p =
+  mmap(NULL, 8192,
+  PROT_READ | PROT_WRITE,
+  MAP_PRIVATE | MAP_ANONYMOUS,
+  -1, 0);
+
+if (p == MAP_FAILED) return 1;
+
+p[0] = 7;
+p[4096] = 9;
+p[0] = 8;
+
+Virtuaalne piirkond
+1. leht 0x40000000
+lubatud R,W
+priv kaadrit veel ple
+
+2. leht 0x40100000
+Lubatud R, W 
+Priv kaadrit veel ple
+
+Algseis: piirkond on lubatud, kuid privaatseid kaadreid pole veel
+eraldatud.
+
+p[0] = 7
+1. CPU tekitab lk vea, sest ple vastava piirkonnaga seotud fyysilist piirkonda
+2. OS kontrollib kirjutamisoigust
+3. OS eraldab nullitud kaadri ja seab kaardistuse (RAM {Kaader 5, p[0] = 7})
+4. Sama kirjutus jätkub ning salvestab 7
+
+Esimene kirjutus muudab lehe selles näites residentseks.
+
+p[4096] = 9; ( RAM {kaader 8, p[4096] = 9})
+Kirjutus teise lehte: uus leheküljeviga ja
+kaader 8.
+
+p[0] = 8;
+Esimene leht on juba olemas: kirjutus
+muudab kaadri 5 esimest baiti.
+
+Eeldame, et vahepeal lehti RAM-ist ei
+eemaldata ega õigusi muudeta.
+
+Uut leheküljeviga pole vaja iga muutuja lugemise või kirjutamise jaoks.
+
+Failikaardistus ja jagamine
+
+Protsess A
+failiga seotud leht
+    V
+RAM-i üks kaader
+sama failiosa sisu  <- Protsess B sama failiosa leht
+   ^
+Käivitatav fail või teek
+
+• Sama failiosa lugemiseks võib mitu protsessi kasutada sama füüsilist kaadrit.
+• Virtuaalsed aadressid võivad protsessides erineda.
+
+Eraldi aadressiruumid võivad sisaldada kontrollitud jagatud kaardistusi.
+
+Fork: eraldi aadressiruumid
+
+vanemprotsess priv piirkond
+  V
+oma lk tabel riistvaras kirjutuskaitse
+
+Lapsega sama lugu 
+
+Yhine fyysiline kaader vaadeldava baidi vaartus 42
+
+Piirkonnad on loogiliselt kirjutatavad. OS lükkab privaatse koopia tegemise esimese
+kirjutuseni.
+Copy-on-write võimaldab eraldatust ilma kõiki andmelehti kohe kopeerimata.
+
+COW: kirjutamine loob eraldi koopia
+
+Vanemprotsess
+oma kaardistus
+  V
+Senine kaader
+väärtus 42
+
+OS kopeerib selle lehe sisu
+
+Lapse uus kaader vaartus 43
+
+Lapsprotsess kirjutab vaartuse 43
+
+Kirjutuskaitse tekitab erandi. OS tuvastab lubatud COW-kirjutuse, loob koopia ja laseb
+sama kirjutuse lõpule viia.
+
+Lapse kirjutus muudab tema privaatset koopiat. Vanema väärtus jääb 42.
+
+Eesmärk - Protsessid kasutavad samu andmeid - Protsessid säilitavad eraldi sisu
+Kirjutamine - Muudatus võib olla teistele sama jagatud ala kasutajatele nahtav - Kirjutaja saab vajadusel privaatse koopia.
+Näide - Kirjutatav jagatud mälupiirkond. - Privaatne anonüümne mälu pärast fork-i
+
+• Jagatud andmete muutmine võib vajada sünkroonimist.
+• Sama füüsilise kaadri kasutamine ei määra üksi kirjutamise tähendust.
+
+Kaardistuse liik ja õigused määravad, mida kirjutamine teeb.
+
+Virtuaalne maht , RSS ja PSS
+
+virtuaalne maht - Protsessi malu piirkonnad kogumaht
+RSS - Protsessi RAM-is olevad lehed, jagatud lehed kaasa arvatud
+PSS - Jagatud lehe maht arvestatakse protsesside vahel osadeks.
+
+{A privaatne 4 kiB}
+{A ja B jagatud 4 kiB}
+{B priaatne 4 kiB}
+
+A: RSS 8 KiB, PSS 6 KiB B: RSS 8 KiB, PSS 6 KiB
+Näidatud lehed kasutavad kokku 12 KiB füüsilist RAM-i.
+
+Kui RAM-i napib
+  V
+Uue lehe jaoks
+on vaja kaadrit -> Vajaduse korral ootab salvestamist
+  V
+Vabastab sobivaid
+vähem
+kasutatud lehti
+
+Osa hõivatud RAM-ist võib olla taaskasutatav.
+
+koik lehed ple vabastatavad
+
+Millise lehe saab vabastada
+Puhas failileht - korras failikoopia olemas. lehe voib RAM eemaldada - sisu taastakse vajadusel failist uuesti
+muudetud failileht - muudatused tuleb vastavasse faili tagasi kirjutada - taastatakse seejarel failist
+private anonymous page - sailitatav sisu vajab nt swap - taastatakse swapist, kui sisu viidi sinna
+
+Lehe sisu päritolu määrab, kuidas seda saab vabastada.
+
+Swap ja virtuaalmälu
+
+Virtuaalmälu
+• Protsessi aadressiruum, tõlge ja
+kaitse.
+• Toimib ka ilma swap’ita.
+
+Swap
+• Näiteks fail või partitsioon lehtede
+sisu säilitamiseks väljaspool
+RAM-i.
+• Võimaldab osa anonüümse mälu
+kaadreid vabastada
+
+Swap’i hõivatus üksi ei näita, kui palju lehti praegu sisse ja välja liigub.
+
+Asenduspoliitikad: FIFO, LRU ja Clock
+
+FIFO - Eemalda kõige varem sisse toodud leht. - Sissetoomise järjekord.
+LRU - Eemalda kõige kauem kasutamata olnud leht. - Viimaste kasutuste järjekord.
+Clock - Anna hiljuti kasutatud lehele uus võimalus. - Viitebitt ja ringis liikuv osuti.
+
+Eesmärk on vabastada leht, mida lähiajal tõenäoliselt vähem vajatakse.
+
+Clocki üks läbimine
+
+Kaader 0 R = 1
+Kaader 1 R = 0
+kaader 2 R = 1
+Kaader 3 R = 0
+
+1. Kaader 0: R = 1.
+Muuda R nulliks ja jätka.
+2. Kaader 1: R = 0.
+Vali selle leht eemaldamiseks.
+
+R: hiljutise pöördumise märk.
+Kaader 0 saab teise võimaluse. Vabastatakse kaader 1.
+
+Töökomplekt (aktiivse kasutuse hulk) ja thrashing
+
+Töökomplekt: lehed, mida programm on viimase ajavahemiku jooksul aktiivselt kasutanud
+
+Töökomplekt mahub RAM-i - Korduvad pöördumised leiavad vajalikud lehed sageli juba mälust.
+Aktiivne nõudlus ületab RAM-i võimalused - Vaja minevaid lehti eemaldatakse ja tuuakse peagi tagasi.
+Thrashing - Suur osa ajast kulub lehtede liigutamisele ja ootamisele. Kasulik töö edeneb halvasti.
+
+Aitab aktiivse mälunõudluse vähendamine, väiksem rööpsus või rohkem
+RAM-i.
+
+Overcommit ja OOM
+
+OOM— out of memory ehk mälupuudus.
+
+• Linuxi overcommit-poliitika mõjutab seda, milliseid mälutaotlusi lubatakse.
+• Edukas malloc ei tõenda, et kogu küsitud piirkond on juba RAM-is.
+• Taotlus võib ebaõnnestuda. Ka hilisem tegelik mälunõudlus võib ületada saada
+olevad ressursid.
+• Kui mälu vabastamisest ei piisa, võib OS või mälupiiranguga grupp jõuda
+OOM-olukorda.
+
+OOM-käsitlus võib lõpetada protsessi, et vabastada mälu.
+Ohvri valik sõltub poliitikast ja piirangutest. See ei ole lihtsalt reegel „lõpeta alati
+suurim protsess”.
+
+Mälukasutuse vaatlus Linuxis
+
+free -h
+ps -o pid,comm,vsz,rss -p $$
+vmstat -y 1 5
+
+available - Hinnang mälule, mida saab uueks tööks kasutada ilma swap’ita.
+VSZ, RSS - Protsessi virtuaalne maht ja residentne maht. Siin ps-is KiB.
+si, so  - Swap’ist sisse ja swap’i välja liikumise kiirus. Vaata muutust ajas.
+
+-y jätab vahele vmstat-i esimese, kiirusi käivitusest keskmistava raporti.
+Väike free või kasutatud swap üksi ei tõenda mälukriisi.
+
+$$ - bash PID
+
+
+
+####
+Kokkuvote
+
+Aadressitõlge ja TLB: Riistvara kasutab TLB-d (Translation Lookaside Buffer) kui aadressitõlgete vahemälu, et kiirendada virtuaalaadresside muutmist füüsilisteks ilma leheküljetabeleid korduvalt läbimata. Suuremates süsteemides kasutatakse mälusäästlikkuse huvides mitmetasemelisi leheküljetabeleid.   
+
+Leheküljevead (Page Faults): Kui leht pole RAM-is või puuduvad vastavad õigused, tekitab MMU leheküljevea, mida operatsioonisüsteem lahendab. Vead jagunevad:   
+
+
+Minor fault (ei nõua kettalt lugemist, nt anonüümne leht või juba mälus olev fail).
+Major fault (vajab I/O operatsiooni kettalt/swap-failist).
+Mälu eraldamine ja COW: malloc reserveerib virtuaalset mälu, kuid füüsiline kaader eraldatakse tihti alles esimesel kirjutamisel (lazy allocation / nõudluspõhine lehitsemine). Funktsioon fork kasutab Copy-on-Write (COW) mehhanismi, kus vanem ja laps jagavad algselt samu füüsilisi lehti kirjutuskaitse alusel ning tegelik koopia tehakse alles siis, kui üks osapool soovib andmeid muuta.   
+
+
+Mälusurve ja asendamine: Kui RAM-ist tuleb ruumi vabastada, eristatakse puhtaid faililehti (mida võib lihtsalt eemaldada) muudetud faililehtedest ja anonüümsetest lehtedest (mis vajavad salvestamist kettale või swap-ile). Lehtede asendamiseks kasutatakse algoritme nagu FIFO, LRU või Clock.
+
+Thrashing ja OOM: Kui aktiivne mälunõudlus ületab RAM-i mahu, tekib thrashing (süsteem kulutab enamiku ajast lehtede ketta ja RAM-i vahel liigutamisele ning kasulik töö seiskub). Äärmuslikus mälupuuduses käivitub OOM (Out of Memory) killer, mis lõpetab süsteemi päästmiseks mõne protsessi.
