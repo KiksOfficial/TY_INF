@@ -1,0 +1,88 @@
+• CPU ehk Central Processing Unit
+• On äärmiselt universaalne ja saab põhimõtteliselt hakkama igasuguste
+arvutustega.
+• Selline universaalsus on aga teisest küljest suureks puuduseks, sest
+universaalsus teeb CPU väga ebaefektiivseks.
+• Seetõttu ongi tänastele protsessoritele lisatud hulgaliselt spetsialiseeritud
+üksuseid, mis tegelevad väga efektiivselt ainult väga spetsiifiliste
+ülesannetega.
+• Üheks selliseks spetsialiseeritud üksuseks on algupäraselt olnud ka…
+
+GPU
+…, mis on tänaseks muutunud
+täiesti eraldi protsessorite
+kategooriaks
+• Graafikaprotsessor ehk GPU
+(Graphics processing unit)
+• GPU on eriotstarbeline protsessor,
+mis on optimeeritud
+graafikaandmete töötlemiseks
+• GPU on erinevalt CPU’st nö.
+„massiliselt“ paralleliseeritud
+arhitektuuriga (massively parallel
+architecture
+
+rastergraafika - igal punktil mingi värvus,2 mootmeline graafika
+vektorgraafika - pildid luuakse matemaatiliste valemite abil
+
+Telefoni ekraanil rohkem piksleid, sst seda vaatad lahemalt
+moistlikum on kasutajaliideseid joonistada vektorgraafikaga, sst erinevatel ekraanidel erinev arv piksleid
+
+graafika protsessor teisendab vektor -> raster 
+GPU teisendab 3D -> 2D
+
+GPU-del tuhanded tuumad, a need lihtsad 
+
+• Esialgu mõeldud ainult pildi genereerimiseks, ehk siis ekraanile kuvatavate
+  pikslite välja arvutamiseks
+• Selle tegevuse tarbeks sisaldab GPU nö. varjutus- või varjundustuumasid(Shader cores)
+• 3D graafika protsessimiseks töötati välja 3D graafikakonveier (pipeline), mille
+  osad funktsioonid on dünaamilised (tarkvaraliselt muudetavad)
+• Graafikakonveieri dünaamilisi funktsioone nimetatakse varjutus- või
+  varjundusfunktsioonideks (shader functions)
+• Neid varjundusfunktsioone ja –tuumasid on võimalik täna kasutada ka muul
+  otstarbel kui ainult ekraanipikslite oleku välja arvutamiseks
+
+• 3D graafikakonveierist räägime täpsemalt kevadises kursuses
+
+graafika arendajad saavad osade tuumade (shader cores) kaitumist muuta
+
+• 2000-ndate aastate keskel leidis Nvidia, et
+  graafikaprotsessoreid on võimalik efektiivselt kasutada ka
+  keerukateks teadusarvutusteks.
+• 2007. aasta avaldati CUDA (Compute Unified Device
+  Architecture) esimene versioon, mis võimaldas
+  tarkvaraarendajatel võtta kasutusele teatud graafikaprotsessori
+  osad massiliselt paralleliseeritud arvutuste jaoks.
+• Kusagil 2015. aastast on CUDA fookus liikunud
+  (tehis)närvivõrkudele ((artificial) neural networks)
+
+Utah teapot - 3D maailma "Hello world" (modelleerimise standardmudel)
+Esimene obje, millel rakendati 2D->3D algorytmi
+
+Ray tracing - algorytm, mis tegeleb valguse kaitumisega 3D maailmas
+kuni 2018 ei olnud voimalik teha ray tracingut reaalajas
+
+Neural networks - on sisendkihind ja valjundkihid, nende vahel neuronid, valjundis tõenäosus
+nt. numbri tuvastamiseks sisendis pixlite arv node ja valjundis 0-9 nodes, mida keerukam mudel, seda rohkem sisemisi layereid
+pilt jagatakse yksikuteks elementideks ning layer otsib neid yksiksuid elemente. Mudeli disainimine on vahekihtide valjamotlemine. Treenimise puhula iga layeri sisend komb arvutatakse iga jargneva kihi kaal. Treenimine - sisemiste neuronite kaalude arvutamine
+
+skalaar = 0 jark tensor, vektor 1 jargu tensorr, maatriks 2 jargu tensor
+tensor - maatriksite maatriks
+
+• NVIDIA Turing - TU102 GPU
+sisaldab
+– 4608 CUDA tuuma
+– 72 Ray tracing tuuma
+– 576 Tensor tuuma
+
+FLOPS - flopating point operations per second
+TFLOPS = Tera FLOPS (10**12)
+TOPS - Tera operations per second
+
+NPU - Neuroal processing unit
+  – Apple kasutab nimetust NE ehk Neural Engine
+  – Google kasutab nimetust TPU ehk Tensor Processing Unit
+
+pmst GPU-st eraldunud tensor tuumad
+

@@ -1,0 +1,7 @@
+Automaatsed testid
+
+Automaatsed testid on lähtekoodi sees ning nende käivitamiseks tuleb sisestada intepre.taatorisse ":exec testid". Kui testi tulemus on selline nagu peaks, siis tagastatakse iga testi väljundiisse True (testide oodatav väljund on lähtekoodis iga testi muutuja "program" järjendis)
+
+Käivitamise juhis
+
+Oma programmi loomiseks tuleb main : IO () alla lisada oma käskude järjend ning järgida eelnevate programmmide formaati (otse terminalist parsimise peale tulin liiga hilja) ning jooksutada ":exec main". Kohustuslike näidete saamiseks tuleb lihtsalt jooksutada ":exec main".

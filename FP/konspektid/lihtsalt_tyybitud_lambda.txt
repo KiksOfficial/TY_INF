@@ -36,9 +36,7 @@ subduktsioon, reduktsioon jmt. on defineeritud analoogselt puhta lambda arvutuse
 
 
 * Baasrelatsioon on kujul \Gamma \vdash e : \tau   (term e on tüüpi \tau kontekstis \Gamma)
-
   * \Gamma on muutujast ja tüübist paaride hulk {x_1 : \tau_1, ..., x_n : \tau_n}.
-
   * Korrektses tüüpimisrelatsioonis peab olema FV(e) \subseteq {x_1, ..., x_n}.
 
 * Lihtsalt tüübitud \lambda-arvutuse tüüpimisreeglid:
@@ -82,7 +80,7 @@ Naited:
 Konstantidega tüüpimispuu
 
 ========================
-                                                                                f : Int -> Int^\alpha \vdash f : Int^\delta -> Int^\gamma         f : Int -> Int^\alpha \vdash 5 : Int^\delta
+                                                                                f : Int -> Int^\alpha -> f : Int^\delta -> Int^\gamma         f : Int -> Int^\alpha -> 5 : Int^\delta
 --------------------------------------------------------- con                 ------------------------------------------------------------------------------------------------------------------ app
 f : Int -> Int^\alpha \vdash add : Int^\gamma -> Int -> Int^\beta                   f : Int -> Int^\alpha \vdash f 5 : Int^\gamma
 ------------------------------------------------------------------------------------------------------------------ app
@@ -107,3 +105,59 @@ f : Int -> Int^\alpha \vdash add : Int^\gamma -> Int -> Int^\beta               
 
 * Tüüpide säilitamine (subjekt-reduktsioon):
   Kui \Gamma \vdash e : \tau ja e \twoheadrightarrow_\beta e', siis \Gamma \vdash e' : \tau.
+
+
+lambda x : Int. mul x 3
+
+
+---------------------------con---------var
+x:Int |- mul:Int->Int->Int      T|-x:Int
+---------------------------------------------
+x:Int |- mul x: Int -> Int     T|- 3:Int
+------------------------------------------app
+x:Int |- (mul x 3)
+--------------------------------- abs
+|- lambda x:int. mul x 3
+
+kui on lambda ss tleb kasutada abs
+app - func arg(s) molemad tleb eraldi votta
+
+
+lambda x:Int mul x (mul x x)
+
+
+                  T|-mul T|-x
+--------con----var-------------
+T|- mul    T|-x  T|-mul x T|-x
+----------------------------------app
+T|- mul x T|-mul x x 
+---------------------------app
+x:Int |- mul x (mul x x)
+----------------------------abs
+T lambda x: Int. mul x (mul x x)
+
+
+lambda f g x. f (g x)
+
+                      T|-g:a->b  T|-x:a
+--------var--------------------------app
+T|- f: b->c             T|- g x: b
+--------------------------------------app
+f: g. x. |- f (g x)
+-----------------------------abs
+f: |- lambda g: x.f (g x)
+----------------------abs
+|-lambda f g x. f (g x): (b->c)->(a->b)->a->b
+
+
+x: |- x:    x: |-x:
+-------------------app
+x:    |- x x:
+-------------------abs
+|- lambda x: . x x
+
+
+Curry stiil - parameetril puudub spetsifikatsioon
+
+iga tyybitava termi e jaoks leidub (kontekst, tyyp), mille korral on voimalik puud ehitada
+See paara on unikaalne tyybimuutujate ymbernimetamise tapsuseni

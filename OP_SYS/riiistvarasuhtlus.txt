@@ -1,0 +1,281 @@
+Kuidas jouavad andmed RAM-i
+
+ssize_t n = read(fd, buf, 4096);
+
+• Fail on juba avatud ja asub kohalikul NVMe SSD-l.
+• Loetavad 4 KiB puuduvad lehevahemälust.
+• Rakenduse buf on kirjutatav ja juba RAM-is.
+
+Kui avame faili ss vahemalus tehakse selle jaoks leht
+
+Kes toob andmed RAM-i? Mida teeb CPU ootamise ajal?
+
+Jälgime tavalist puhverdatud lugemist Linuxis.
+
+Rakendus, tuum, draiver, kontroller
+
+Rakendus (read()) -(syscall)->(tuuma failikiht ja lehevahemalu)-(I/O paring)-> Draiver seadme juhtimine-(kasud)->NVMe kontroller riistvara-> SSD andmekandja
+
+Draiver on protsessoril tarkvara, mis teab kuidas kontroller tootama peaks
+
+Rakendus kasutab OS-i liidest; draiver tunneb seadme liidest.
+
+Kuidas CPU seadme registreid kasutab? - Port I/O v MMIO
+
+Kes liigutab andmeid seadme ja RAM-i vahel? - Programmeeritud I/O v DMA (direct memory access)
+
+Kuidas tarkvara märkab valmidust või lõpetamist? - Polling v katkestus
+
+Ühe seadme puhul võivad koos toimida:
+MMIO käsu andmiseks, DMA andmetele ja katkestus lõpetamise teatamiseks.
+
+Seadme kontrollerid ja registrid
+
+Kontroller võtab käske vastu ja juhib seadme tööd.
+
+CPU täidab draiveri koodi <-> Kontrolleri registrid COMMAND: tee midagi STATUS: töö olek DATA: andmeühik <-> Seadme sisemine töö
+
+• Draiver tunneb konkreetse kontrolleri liidest.
+• Registri lugemine võib anda oleku; kirjutamine võib käivitada tegevuse.
+• Need on seadme registrid, mitte CPU registrid nagu PC või SP.
+
+Port I/O ja MMIO
+
+port I/O (PIO) {
+    Aadressid - Eraldi I/O-aadressiruum
+    CPU ligipaas - x86-s näiteks IN, OUT
+    Linuxi draiver - Näiteks inb(), outb()
+  }
+
+MMIO {
+    Aadressid - malu aadressiruum
+    CPU ligipaas - Mälu lugemise ja kirjutamise käsud
+    Linux draiver - Näiteks readl(), writel()
+  }
+
+• Mõlemat saab kasutada C-keeles kirjutatud draiverist.
+• Andmete liigutamine ja lõpetamise teade on eraldi küsimused.
+
+PORT I/O on pigem asm
+MMIO pigem C
+
+MMIO piirkond aadressiruumis
+
+CPU kasutab virtuaalset aadressi -> aadressitolge ja ligipaasukaitse -> (Fyysiline RAM ravalised andmed) / (MMIO aken seadme registrid)
+
+• Kaardistuse kaudu saab draiver ligipääsu seadme aadressipiirkonnale.
+• MMIO-aadressile vastab seade; see piirkond ei pea olema RAM.
+• Registril võivad olla kõrvalmõjud ja eriline ligipääsukord.
+
+Mällu kaardistamine ei tähenda seadme sisu kopeerimist RAM-i.
+
+Draiver loeb ja kirjutab registreid
+
+status = readl(regs + STATUS);
+
+if (status & READY) {
+  writel(READ_ONE, regs + COMMAND);
+}
+
+• regs viitab draiverile kaardistatud registriaknale.
+• READY on olekubitt: seade saab uue käsu vastu võtta.
+• READ_ONE käsib valmistada ette ühe andmeühiku.
+
+Käsu andmine ei tähenda, et andmed on juba kohal.
+
+Programmeeritud I/O
+
+seadme DATA register -lugemine-> CPU loeb ja salvestab -(kirjutamine)-> Andmepuhver RAM-is
+
+• CPU käsud kannavad andmeühikuid seadme ja RAM-i vahel.
+• Seadme registrile pääseb ligi port I/O või MMIO kaudu.
+• Seadme valmisolekut võib märgata pollimise või katkestusega.
+
+Programmeeritud I/O kirjeldab andmete liigutamist CPU abil.
+
+
+DMA: seade liigutab andmed RAM-i
+
+CPU ja draiver seadistavad päringu -loeb-> DMA-võimeline seade / kontroller -andmed-> DMA buffer RAMis
+
+CPU saab vahepeal täita muud tööd
+
+• CPU ei pea iga ülekantavat andmeühikut ise kopeerima.
+• DMA loogika võib olla seadme kontrolleris; eraldi kiip pole kohustuslik.
+• Draiver valmistab ülekande ette ja käsitleb selle lõpetamist.
+DMA vähendab CPU andmeliigutamise tööd, kuid ei kaota draiveri rolli.
+
+Päringujärjekord ja DMA puhver
+
+1. CPU/draiver koostab päringu ja allokeerib puffri, kuhhu paringud paneb
+2. MMIO teavitus kontrollerile: uus too
+3. Paring RAM-is ID, loetav plokk, DMA aadress, maht loetakse kontrollerisse
+4. andmed DMA-ga pannakse eraldi andmepuhvrisse RAM-is
+
+• Päringu kirjeldus ja ülekantavad andmed on eri asjad.
+• MMIO kaudu võib piisata teatest, et järjekorras on uus päring.
+
+CPU MMU ja IOMMU
+
+CPU VIRTUAALNE AADRESS -> CPU MMU aadressitolge -> sama buffer fyysilises RAM-is
+Seadme DMA aadress -> IOMMU tolge ja kaitse -> sama buffer fyysilises RAM-is
+
+• CPU ja seade võivad sama puhvri jaoks kasutada eri aadresse.
+• IOMMU saab tõlkida ja piirata seadme DMA-pöördumisi.
+• IOMMU võib puududa; draiver kasutab ikkagi OS-i DMA liidest
+
+DMA buffer lifetime
+
+1. ettevalmistus (buffer ja DMA kaardistus)
+2. Ylekanne (seade kasutab bufferit)
+3. Lopetamine (CPU kasutab tulemust)
+
+• Puhver ja kaardistus peavad seadme töö ajal kehtima.
+• Draiver korraldab CPU ja seadme ligipääsu ning andmete nähtavuse.
+• Puhvrit võib vabastada või uuesti kasutada alles sobival hetkel.
+
+DMA ei tähenda, et mälu haldamine jääb OS-i kontrolli alt välja.
+
+Pollimine
+
+Tarkvara kontrollib seadme või päringu olekut korduvalt.
+
+while (!(readl(status_reg) & DONE)) {
+  /* kontrollime uuesti */
+}
+
+Õppemudel: MMIO olekuregistri DONE bitt tähendab päringu lõppu.
+
+• Kontrollida võib ka RAM-is olevat lõpetamiskirjet.
+• Aktiivne ootetsükkel kulutab protsessoriaega.
+• Ka DMA ülekande lõppu saab pollida.
+
+Pollimine kirjeldab oleku kontrollimist, mitte andmete liigutajat.
+
+Riistvaraline katkestus
+
+Kontroller Paring lopetatud -> katkestustaotlus IRQ -> CPU kaivitab tuuma kasitleja
+
+• Taotlus jõuab CPU-ni katkestuste taristu kaudu.
+• CPU salvestab vajaliku täitmisoleku ja siseneb käsitlejasse.
+• Maskimine ja prioriteedid võivad käsitlemise algust edasi lükata.
+
+Seade teatab sündmusest; käsitleja koodi täidab CPU.
+
+
+Katkestus ja kontekstivahetus
+Katkestuse käsitlemine ei nõua teise lõime käivitamist.
+Lõim B töötab -> IRQ käsitleja -> Lõim B jätkab
+
+• Katkestusse sisenemine säilitab katkestatud täitmise oleku.
+• Kontekstivahetus annab CPU teisele lõimele.
+• Ajastaja võib pärast käsitlemist valida teise lõime, kuid ei pea.
+
+Käsitlejast võib naasta samasse lõime ja samasse käsuvoogu.
+
+
+Ootav lõim ja töötav lõim
+
+Üks CPU tuum: A ootab lugemist, B töötab vahepeal.
+
+Samm      1       2       3             |4        5
+CPU A:  read()    B       IRQ käsitleja |B        A
+A olek  töötab    ootab   valmis*        valmis   töötab
+
+* Pärast lõpetamise töötlemist on A käivitatav.
+DMA ülekanne ja B käskude täitmine võivad ajaliselt kattuda.
+A jätkab alles siis, kui ajastaja annab talle CPU.
+
+
+Katkestuse käsitleja töö
+
+Vahetu käsitlemine
+• Tuvastab sündmuse põhjuse.
+• Kinnitab või vaigistab
+katkestusallika vastavalt seadmele.
+• Salvestab vajaliku lõpetamisinfo.
+
+Edasine töötlemine
+• Vajaduse korral tehakse osa tööst
+hiljem.
+• Päring märgitakse lõpetatuks.
+• Sobiv ootaja saab jätkamiseks
+valmis.
+
+Täpne tööjaotus sõltub seadmest, draiverist ja OS-i teostusest.
+Lühike vahetu käsitlemine aitab vältida teiste tööde pikka viivitust.
+
+
+Pollimise ja katkestuste valik
+
+                      Pollimine           Katkestus
+Harvad sündmused - Palju tühje kontrolle | CPU saab vahepeal muud
+Tihe sündmuste voog - Võimalik töödelda partiidena | Väga palju katkestusi lisab kulu
+Peamine kompromiss - CPU aeg vs reageerimisviivitus | Teavitamise ja käsitlemise kulu
+
+Kombinatsioon: katkestus teatab; pollimine korjab valmis tööd partiina.
+Sobiv valik sõltub sündmuste sagedusest ja jõudlusnõuetest.
+
+
+Süsteemikutse, leheküljeviga ja IRQ
+
+Süsteemikutse - Programm palub teadlikult tuuma teenust - read() jõuab tuuma
+Leheküljeviga - CPU mälupöördumine vajab erandi käsitlemist - Vajalik leht pole RAM-is
+Riistvara IRQ - Seade teatab sündmusest sõltumatult praegusest käsust - Kontroller lõpetab lugemise
+
+Leheküljeviga võib käivitada I/O; selle lõpp võib tuua IRQ.
+Kõik võivad vajada tuuma tööd, kuid neil on erinev põhjus.
+
+
+Üks tänapäevase arvuti ühendusskeem
+
+GPU ja NVMe on CPU-ga yhendatud labi PCIe 
+
+CPU {
+  tuumad,
+  mälukontroller
+  ja PCIe juurkompleks
+  }
+RAM ja CPU vahel mäluyhendus
+
+I/O kiibistik ja CPU vahel platvormi link, mis on yhendatud USB kontroller ja USB seadmed
+
+Ühenduste paigutus sõltub platvormist. SoC võib mitu plokki samasse kiipi ühendada.
+Juhtimine ja andmed liiguvad konkreetsete ühenduste kaudu.
+
+
+PCI Express: ühendus ja rajad
+
+[PCIe juurport/lüliti port]---[PCIe seade]
+                           ---
+                           ---
+
+• PCIe kasutab punktist punkti ühendusi; lülitid võimaldavad hargnemist.
+• x1, x4, x8, x16 näitavad radade arvu; põlvkond määrab raja kiiruse.
+• Pesa füüsiline pikkus ei taga sama arvu elektriliselt ühendatud radu.
+
+Rohkem radu aitab ainult siis, kui kogu andmetee seda toetab.
+
+
+USB: hostkontroller ja seadmeklassid
+
+USB ja host kontroller <-> USN jaotur <-> (klaviatuur HID klass)/(valine ketas massmaluklass)
+
+• OS tuvastab ühendatud seadme ja selle liidesed.
+• Standardne seadmeklass võimaldab kasutada ühist klassidraiverit.
+• Hostkontroller korraldab andmevahetuse USB seadmetega.
+
+USB seade ja CPU suhtlevad hostkontrolleri vahendusel.
+
+
+Seadme leidmine ja draiveri sidumine
+
+1. Tuvastamine: OS loeb seadme tunnused ja ressursid.
+2. Sobitamine: valitakse seadet või selle klassi toetav draiver.
+3. Algseadistus: vastavalt seadmele registrid, järjekorrad, DMA, katkestused.
+4. OS-i liides: rakendustele avaldatakse sobiv teenus.
+
+Plokkseade Näiteks /dev/nvme0n1
+Sisendseade Näiteks /dev/input/event0
+Seadme omadused  /sys: tuuma avaldatud seadmemudel
+Seadme tuvastamine ja töötava draiveri olemasolu on eri asjad.

@@ -1,7 +1,7 @@
 Kaardistus residentsus ja oigused
 
 Kehtiv residentne kaardistus, vajalik oigus olemas - tavaline malupoordumine
-Piirkond lubatud, öeht ple RAM-is, - lk viga os saab vajaliku sisu kasutatavaks teha
+Piirkond lubatud, leht ple RAM-is, - lk viga os saab vajaliku sisu kasutatavaks teha
 Piirkond puudub v tegevus keelatud - segfault
 
 lk viga ei tahenda automaatselt programmi viga

@@ -1,0 +1,241 @@
+Func jaotus, Neumanni mudel
+
+sisend (input)
+malu (memory)
+ALU
+
+Valjund (output)
+Juhtimine (control)
+Yhendusvork (interconnection network)
+
+Sisend ja valjund (I/O)
+
+
+Siini ehitus
+
+Seni vaatlesime yksikuid sys elemente
+Neid on vaja info edastamiseks yhendada
+Seda ylesannet taidab siin (bus)
+Lisaks andmetele kantakse siinide kaudu yle aadressiinfo ja juhtimiskorraldused
+
+---------------siin-------------
+1. I/O 2. I/O  CPU  mälu 
+
+1 hetkel saab siinile infot saata 1 seade
+
+Seadmete adresseerimine
+
+Siinil on liinid aadressitele, andmetele ja juhtsignaalide jaoks
+
+igal I/O seadmel oma unikaalne aadress
+
+Kui CPU saadab aadressisiinile kindla seadme aadressi, kellele info moeldud, ss seade votab info vastu ja vastavalt juhtsignaalidele (read, write) hakkab kasku taitma
+Seejärel saadetakse vastavad andmed andmesiinile
+
+Memory mapped I/O
+
+MMIO - sisend ja valjundseadmed kasutavad sama aadressiruumi
+
+koik kasud, millega sai poorduda malu poole sobivad ka I/O seadmetega suhtlemiseks
+nt. LOAD R1, DATAIN  STORE R1 DATAOUT
+
+Enamik arvutisüsteeme kasutabki Memory-mapped I/O‘d
+
+
+Eraldi aadressivali I/= seadmete jaoks
+
+Teistel on spets I/O kasud ja eraldi 16bit address bus I/O seadmetele
+
+NB! Eraldi aadressiväli ei tähenda eraldi traate aadresside
+jaoks!!!
+
+Spetsiaalne signaal siinil näitab, et tegemist on I/O
+operatsiooniga
+– Mälu ignoreerib selliseid käske
+– I/O seade uurib aadressivälja madalamaid bitte saamaks teada, kas käsk on mõeldud talle
+
+I/O seade
+
+[aadressiliinid]
+     |                            [andmeliinid]
+     |            [juhtimisliin]       ^ |
+     V                  V^             | V
+{[aadressi dekooder][juhtimisahelad][andme ja staatuse registrid]} I/O liides
+                         ^                        ^
+[                                        sisendseade                                                           ]
+
+I/O mureks see, et seadmed ei suuda tootada sama kiiresti kui CPU
+Seega on vaja andmete saatmine nende seadmete vahel syncida
+CPU saadab valjundseadmele info ja ootab seadmelt vastust
+Sisendseade tõstab lipu üles ja ütleb sellega protsessorile: mul on sinu jaoks andmeid
+
+
+Peame olema veendunud, et sisendandmeid loetakse aind 1x
+
+(SIN)      (SOUT)
+(DATAIN)  (DATAOUT)
+[sisend]  [valjund]  [CPU]
+  V^         V^        V^
+[           siin           ]
+
+SIN ja SOUT on sisend ja valjund bitid
+Kui SOUT on korge ss valjundseade ootab andmeid ja CPU liigutab andmed DATAOUT
+Kui SIN on korge ss sisendisse saabuvad andmed
+
+
+READ
+Move R3,#LOC - liigutab LOC aadressiinfo registrisse R1
+TestBit STATUS,#1 - pollimise teel vaata kas bitil on info 
+Branch=0 READ  - hargne koheale READ, kuis biti testimise kohal 0
+Move R2,DATAIN - nihutaba DATAIN info registrisse R2
+
+ECHO
+TestBit STATUS,#0 - ootame et bit oleks 1 ss valmis infot vasrtu votma 
+Branch=0 ECHO - kui branch 0 ss uuesti
+Move DATAOUT, R2 - R2 info liiguta DATAOUT registrile ja sealt ekraanile
+
+Move (R3)+, R2 - valmista tsykkel ette jarmiseks toiminguks 
+Compare R2, #$0D - vaata kas registris on ascii vaartus 0D ehk return
+Branch !=0 READ - kui eelmine sisend ple return ss oota uut klahvi
+Move DATAOUT, #$0A - lisab LFEED char
+
+
+Eelmine programm illustreeris programmi poolt kontrollitavat sisend/väljundit (program controlled I/O)
+
+CPU pidevalt vaatab staatuslippeja tagab synced andmevahtuse I/= sedmega
+Sellise programmi korral toimetab protsessor suurema osa ajast
+ootamistsüklites
+Tohutu ressursi raiskamine
+Mõistlik kasutada
+– katkestusi või
+– Otsemälupöördumisi (Direct Memory Access)
+
+
+IRQ
+Katkestuse soovi (Interrupt ReQuest) korral saadab seade protsessorile spetsiaalse signaali millal iganes ta on valmis suhtlema
+Protsessor ei pea nüüd enam tegelema pideva seadmete registrite küsitlemisega ja saab oma aega kasutada teiste tööde jaoks
+
+
+Katkestused
+
+• Seade saadab protsessorile riistvaralise signaali /tarkvaralise
+käsu (katkestus, interrupt), millega annab teada oma
+valmisolekust andmevahetuseks
+• Katkestuse teenindamise protseduur
+(Interrupt-service routine)
+• Protsessor saab nüüd ootamise asemel tegeleda kasulike
+asjadega, ideaalvariandis saame ootamisperioodidest
+täielikult lahti
+
+Enne katkestuse täitmist tuleb salvestada kogu info, mis katkestuse täitmise käigus muutuda võib
+Enne katkestusest naasmist tuleb kogu info uuesti taastada
+– nii saab algne programm jätkata samast kohast kus enne töö pooleli jäi
+– ainus kaotus on ajaline viivis
+
+Salvestatakse
+– programmiloenduri sisu
+– seisundilipud
+– registrid, mida mõlemad (algne programm ja interrupt-service routine) kasutavad
+
+Katkestuse ajal hoitakse Programmiloendurit, yldregistreid, Juhtumise lipud
+peale katkestust paneme need malust CPUsse tagasi
+
+
+Info salvestamine ja taastamine on raisatud aeg programmide töökiiruse mõttes
+Samuti pikeneb nii aeg, mil katkestuse nõue reaalselt täidetud saab (interrupt latency)
+Mõnedel juhtudel pole pikk viivis katkestusesoovi saabumisest reaalse täitmiseni aktsepteeritav
+
+Seetõttu salvestavad tänapäeva protsessorid ainult nii palju infot kui on hädavajalik katkestusele eelnenud programmikohast jätkamiseks
+– PC ja staatusregister salvestatakse protsessori riistvara poolt
+– kõik ülejäänud info juba katkestuse protseduuri alguses katkestuse protseduuri enda poolt
+
+
+• Üks lahendus on kasutada erineva reaktsiooniajaga katkestusi
+– kiirete puhul EI SALVESTATA registrite sisu
+– aeglaste puhul SALVESTATAKSE
+– konkreetne seade saab valida, kumba parasjagu tarvitada
+• Teine alternatiiv: topelt registrid protsessoris
+– Shadow registers
+– nüüd pole salvestada üldse tarvis
+• Katkestused võimaldavad üle anda juhtimise ühelt programmilt
+teisele välise info laekumise alusel
+• real-time processing– protsessori toimetamised on ajastatud
+vastavalt välistele sündmustele
+
+• Lisaks sellele, et seade paneb liinile püsti katkestuse soovi,
+peab protsessor seadet informeerima katkestusesoovi
+rahuldamisest
+– interrupt-acknowledge signaal
+– andmevahetuse alustamise käsu käivitamine katkestuse
+teenindamise protseduuris võib anda seadmele sama info
+• Erinevus alamprogrammi ja katkestuse protseduuri vahel:
+katkestuse protseduur kutsutakse välja suvalisel hetkel
+(käigusoleva programmi ajaarvamise mõttes)
+– käigusolev programm ja katkestuse väljakutsunud programm võivad
+olla lausa eri kasutajate omad
+
+
+Katkestuste lubamine-keelamine
+• Katkestuse lubamine suvalisel ajahetkel võib olla vastuolus
+programmeerija soovituga
+• Seetõttu peab olema mehhanism katkestuste haldamiseks
+– Interrupt-enable
+– Interrupt-disable
+• Soovitud katkestus tuleb täitmisse võtta üks ja ainult üks kord,
+s.t aktiivne katkestuse-soovi signaal ei tohi põhjustada arvuti
+lõputusse tsüklisse sattumist
+• Järgnevalt vaatame kolme võimalust
+
+Katkestuste lubamine-keelamine: võimalus 1
+• Protsessori riistvara ignoreerib katkestusesoovi signaali
+seni kuni katkestuse teenindamise protseduuri esimene
+käsk saab täidetud
+• Nüüd saab programmeerija alustada (soovi korral)
+katkestuse teenindamise protseduuri käsuga interrupt-
+disable
+• Nii välistame uued katkestused kuni käesoleva täitmise
+lõpuni
+• Enne tagasipöördumist katkestuse teenindamise
+programmist antakse käsk interrupt-enable
+
+Katkestuste lubamine-keelamine: võimalus 2
+• Protsessor võib automaatselt blokeerida katkestused peale
+katkestuse teenindamise protseduuri algust
+• Peale PC (program counter) ja PS (processor status
+register) sisu salvestamist pinus seatakse interrupt-enable
+bitt PS registris nulliks (passiivne) ja rohkem katkestusi ei
+aktsepteerita
+• Katkestusest naasmisel kopeeritakse PC ja PS sisu tagasi
+– sealhulgas ka interrupt-enable bitt PS registris üheks (aktiivseks)
+– nüüd on jälle kõik katkestused lubatud
+
+Katkestuste lubamine-keelamine: võimalus 3
+• Katkestuse soovi liinil kasutatakse frondilt käivituvaid
+trigereid, s.t katkestuse soovi arvestatakse nüüd ainult üks
+kord, sõltumata sellest kui pikalt katkestuse soovi signaal
+aktiivne on
+
+
+Kokkuvõte katkestuse täitmise stsenaariumist
+1. Seade avaldab soovi katkestuseks
+2. Protsessor katkestab jooksva programmi täitmise
+3. Uued katkestused blokeeritakse kontrollbiti passiivseks seadmisega PS registris
+4. Seadmele öeldakse, et tema katkestusesoov on aktsepteeritud
+5. Seade võtab katkestusesoovi maha
+6. Soovitud katkestuseprotseduur täidetakse
+7. Lubatakse uued katkestused ja protsessor naaseb katkestatud programmi täitmise juurde
+
+
+Katkestused paljude seadmega süsteemides
+• Kuidas protsessor tuvastab katkestusesoovija?
+• Kui katkestuse protseduurid on eri seadmete jaoks erinevad, kust
+protsessor teab milliselt aadressilt katkestuse protseduuri alustada?
+• Mis juhtub siis, kui seade A soovib katkestust ajal kui protsessor juba
+täidab seadme B katkestusesoovi?
+– Kas esimese katkestuse täitmise ajal tuleks uut katkestust
+hakata kohe teenindama?
+– Või oodata esimese täitmist ja alles siis hakata teenindama
+uut?
+• Mis juhtub siis, kui katkestusesoovid laekuvad üheaegselt?
+
+

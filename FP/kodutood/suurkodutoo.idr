@@ -117,16 +117,16 @@ test1 =
        [] => True
        _ => False
 
-approxEqual : Double -> Double -> Bool
-approxEqual a b = abs (a - b) < 0.000001
+leiaumbes : Double -> Double -> Bool
+leiaumbes a b = abs (a - b) < 0.000001
 
-pointsClose : Point -> Point -> Bool
-pointsClose (MkPoint x1 y1) (MkPoint x2 y2) =
-  approxEqual x1 x2 && approxEqual y1 y2
+punktidlahedal : Point -> Point -> Bool
+punktidlahedal (MkPoint x1 y1) (MkPoint x2 y2) =
+  leiaumbes x1 x2 && leiaumbes y1 y2
 
-segmentsClose : Segment -> Segment -> Bool
-segmentsClose (MkSegment s1 e1 p1) (MkSegment s2 e2 p2) =
-  pointsClose s1 s2 && pointsClose e1 e2 && approxEqual p1 p2
+segmendidlahedal : Segment -> Segment -> Bool
+segmendidlahedal (MkSegment s1 e1 p1) (MkSegment s2 e2 p2) =
+  punktidlahedal s1 s2 && punktidlahedal e1 e2 && leiaumbes p1 p2
 
 test2 : Bool
 test2 =
@@ -135,7 +135,7 @@ test2 =
       valjund = MkSegment (MkPoint 0 0) (MkPoint 50 0) 1.0
       (olek2, segmendid) = kaskudeList programm olek
   in case segmendid of
-      [s] =>  segmentsClose s valjund
+      [s] =>  segmendidlahedal s valjund
       _   => False
 
 test3 : Bool
@@ -153,9 +153,9 @@ test4 =
       segment1 = MkSegment (MkPoint 0 0) (MkPoint 50 0) 1.0
       segment2 = MkSegment (MkPoint 50 0) (MkPoint 50 (-50)) 1.0
   in case segmendid of
-       [s1, s2] => segmentsClose s1 segment1 && 
-                   segmentsClose s2 segment2 && 
-                   approxEqual (suund olek1) (-90) &&
+       [s1, s2] => segmendidlahedal s1 segment1 && 
+                   segmendidlahedal s2 segment2 && 
+                   leiaumbes (suund olek1) (-90) &&
                    pliiats olek1 == True
        _        => False
 
@@ -175,8 +175,8 @@ test6 =
       (olek1, segmendid) = kaskudeList programm olek
       (x, y) = asukoht olek1
   in length segmendid == 9 && 
-     approxEqual x 27 && 
-     approxEqual y 0
+     leiaumbes x 27 && 
+     leiaumbes y 0
 
 testid : IO ()
 testid = do 
@@ -187,12 +187,12 @@ testid = do
       let res5 = test5
       let res6 = test6
 
-      putStrLn ("Test1: " ++ show res1)
-      putStrLn ("Test2: " ++ show res2)
-      putStrLn ("Test3: " ++ show res3)
-      putStrLn ("Test4: " ++ show res4)
-      putStrLn ("Test5: " ++ show res5)
-      putStrLn ("Test6: " ++ show res6)
+      putStrLn ("Tühi programm: " ++ show res1)
+      putStrLn ("PenDown: " ++ show res2)
+      putStrLn ("PenUp: " ++ show res3)
+      putStrLn ("Turn and move: " ++ show res4)
+      putStrLn ("Repeat 0: " ++ show res5)
+      putStrLn ("Nested repeat: " ++ show res6)
 
 ruut100: Program
 ruut100 = [Repeat 4 [Forward 100, Turn (-90)]]
@@ -200,10 +200,10 @@ ruut100 = [Repeat 4 [Forward 100, Turn (-90)]]
 katkendlik : Program
 katkendlik = [Repeat 4 [Forward 33, PenUp, Forward 33, PenDown, Forward 33, Turn (-90)]]
 
-polygon : Nat -> Program
-polygon n = 
+polygon : Nat -> Double -> Program
+polygon n size = 
   let nurk = 360.0 / cast n
-  in [PenUp, Forward 30, PenDown, Repeat n [Forward 30, Turn (-nurk)]]
+  in [PenUp, Forward size, PenDown, Repeat n [Forward size, Turn (-nurk)]]
 
 minujoonis : Nat -> Double -> Program
 minujoonis Z _ = []
@@ -227,7 +227,7 @@ main = do
     Left err => putStrLn ("Viga: " ++ show err)
     Right () => putStrLn "Kirjutasin faili katkendlik.svg"
   
-  let programm = polygon 8
+  let programm = polygon 8 30
   let (_, segmendid) = kaskudeList programm kilpkonn
   let svgsisu = renderSvg segmendid "black" "2"
   result <- writeFile "polygon.svg" svgsisu
@@ -244,3 +244,4 @@ main = do
   case result of
     Left err => putStrLn ("Viga: " ++ show err)
     Right () => putStrLn "Kirjutasin faili minujoonis.svg"
+
