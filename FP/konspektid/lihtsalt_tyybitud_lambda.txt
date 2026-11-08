@@ -1,84 +1,116 @@
-tyybisysteem kooen3b 3st komponendist
-  tyypide hulk
-  programmide/termide hulk
-  tyypimisreeglid
+==================================================
+ TÜÜPISÜSTEEMI ALUSED (LIHTSALT TÜÜBITUD LAMBDA-ARVUTUS)
+==================================================
+Tüübisüsteem koosneb 3 peamisest komponendist:
+  1. Tüüpide hulk
+  2. Programmide/termide hulk
+  3. Tüüpimisreeglid
 
-lihtsad tyybid ehk lambda -> tyybid
-nende syntaks r ::= b (baastyybid)
-                | r1 -> r2 (func tyybid)
+--------------------------------------------------
+1. LIHTSAD TÜÜBID (LAMBDA-TÜÜBID)
+--------------------------------------------------
+Süntaks:
+  r ::= b            (baastüübid)
+      | r1 -> r2     (funktsiooni tüübid)
 
-tyybikonstruktor on parem assotsiativne
+Tüübikonstruktor on parem-assotsiatiivne:
 
-r1 -> r2 -> r3 = r1 -> (r2 -> r3)
+  r1 -> r2 -> r3  ===  r1 -> (r2 -> r3)
 
-* Tüüpidega \lambda-avaldiste esitamiseks on kaks peamist stiili.
+--------------------------------------------------
+2. TÜÜPIDEGA LAMBDA-AVALDISTE STIILID
+--------------------------------------------------
+Tüüpidega lambda-avaldiste esitamiseks on kaks peamist stiili:
 
-* Church'i stiil: funktsiooni parameetrite tüübid esitatakse ilmutatult \lambda-termis \lambda x : \tau. e.
-  * Näiteks: \lambda x : Int. add x x : Int -> Int.
-  * Igal termil on unikaalne tüüp.
+* Church'i stiil:
+  - Funktsiooni parameetrite tüübid esitatakse ilmutatult lambda-termis (lambda x : tau. e).
+  - Näide: lambda x : Int. add x x : Int -> Int.
+  - Igal termil on unikaalne tüüp.
 
-* Curry stiil: termid on tavalised (s.o. ilma tüüpideta) ja kasutatakse tüübikorrektsuse predikaati (tüübituletus).
-  * Näide: \lambda x. add x x : Int -> Int.
-  * Termidel on palju tüüpe (näit. \lambda x. x : Int -> Int, kuid ka \lambda x. x : Bool -> Bool).
+* Curry stiil:
+  - Termid on tavalised (ilma tüüpideta) ja kasutatakse tüübikorrektsuse predikaati (tüübituletus).
+  - Näide: lambda x. add x x : Int -> Int.
+  - Termidel võib olla mitu tüüpi (nt lambda x. x : Int -> Int, aga ka lambda x. x : Bool -> Bool).
 
-* Meie kasutame põhiliselt esimest stiili.
-
-Termi syntaks
-
-e ::= x (muutuja)
-    | c (konstant)
-    | e1 e2 (applikatsioon)
-    | \lambda x: T. e (abstraktsioon)
-
-samad syntaksilised konventsioonid nagu puhtas lambda arvutuses
-
-subduktsioon, reduktsioon jmt. on defineeritud analoogselt puhta lambda arvutusega, ignoreerides tyybiannotatsioone
-
-
-* Baasrelatsioon on kujul \Gamma \vdash e : \tau   (term e on tüüpi \tau kontekstis \Gamma)
-  * \Gamma on muutujast ja tüübist paaride hulk {x_1 : \tau_1, ..., x_n : \tau_n}.
-  * Korrektses tüüpimisrelatsioonis peab olema FV(e) \subseteq {x_1, ..., x_n}.
-
-* Lihtsalt tüübitud \lambda-arvutuse tüüpimisreeglid:
-
-  c on \tau tüüpi konstant
-  ------------------------ |-ui nocs c on tyypi tau ss c ongi tyypi tau)
-      \Gamma \vdash c : \tau
-
-  \Gamma, x : \sigma \vdash e : \tau
-  ------------------------------------ abs (kui termix on lambda x: sigma. e ss selle tyyp saab olla aind sigma -> tau, aga ainult ss kui x: sigma lisame konteksti, siis lambda keha tyyp tleb tau)
-  \Gamma \vdash \lambda x : \sigma. e : \sigma \to \tau
+* Märkus: Antud kursusel kasutatakse põhiliselt Church'i stiili.
+* Subduktsioon, reduktsioon jne on defineeritud analoogselt puhta lambda arvutusega, 
+  ignoreerides tüübiannotatsioone.
 
 
-  ----------------------- var
-  \Gamma, x : \tau \vdash x : \tau (kontekstis on x tyyp tau ss x tyyp ongi tau)
+--------------------------------------------------
+3. TERMI SÜNTAKS
+--------------------------------------------------
+
+e ::= x                  (muutuja)
+    | c                  (konstant)
+    | e1 e2              (applikatsioon ehk rakendus)
+    | lambda x : T. e    (abstraktsioon)
+
+Samad süntaksilised konventsioonid nagu puhtas lambda arvutuses.
 
 
-  \Gamma |- e_1 : \sigma -> \tau    \Gamma |- e_2 : \sigma
-  ----------------------------------------------------------------- app
-  \Gamma |- e_1 e_2 : \tau
+--------------------------------------------------
+4. TÜÜPIMISRELATSIOON JA KONTEKST
+--------------------------------------------------
 
-(app => kui termile e1 on rakendatud e2, ss e1 peab olema func type sigma -> tau ss e2 tyyp peab olema sigma, mis sinna argumendiks sobib ja tulemus peab olema rakenduse tulemus)
+Baasrelatsioon on kujul: 
+  Gamma |- e : tau  (termil e on tüüp tau kontekstis Gamma)
+
+* Kontekst Gamma on muutujast ja tüübist paaride hulk: 
+  Gamma = {x_1 : tau_1, ..., x_n : tau_n}
+* Korrektses tüüpimisrelatsioonis peab kehtima: 
+  FV(e) <= {x_1, ..., x_n}
+* Lisatingimus: x not in dom(Gamma) (muutuja ei tohi kontekstis mitu korda esineda).
 
 
-  kus x \notin dom(\Gamma).
-  (gammas ei tohi muutuja mitu korda esineda)
+--------------------------------------------------
+5. TÜÜPIMISREEGLID
+--------------------------------------------------
+Reegli struktuur: kriipsu peal on eeldused ja kriipsu all järeldus.
 
-Kriipsu all jareldus ja kriipsu peal eeldused
+1. Konstant (cons) - kui c on tau tüüpi konstant:
 
-* Programm (s.o. kinnine term) e on tüüpi \tau, kui tal on see tüüp tühjas kontekstis \vdash e : \tau.
+       ------------------
+       Gamma |- c : tau
+
+2. Muutuja (var) - kui muutuja x on kontekstis tüüpi tau:
+
+       ----------------------
+       Gamma, x : tau |- x : tau
+
+3. Abstraktsioon (abs) - lambda-termi tüüp:
+
+       Gamma, x : sigma |- e : tau
+       ------------------------------------
+       Gamma |- lambda x : sigma . e : sigma -> tau
+
+   (Selgitus: termi tüüp saab olla sigma -> tau eeldusel, et kui lisame 
+   konteksti muutuja x tüübiga sigma, siis lambda keha e tüüp on tau.)
+
+4. Applikatsioon (app) - funktsiooni rakendamine:
+
+       Gamma |- e1 : sigma -> tau     Gamma |- e2 : sigma
+       ---------------------------------------------------
+       Gamma |- e1 e2 : tau
+
+   (Selgitus: e1 peab olema funktsiooni tüüpi sigma -> tau, e2 peab olema 
+   tüüpi sigma ning tulemuseks on tüüp tau.)
+
+
+--------------------------------------------------
+6. PROGRAMM (KINNINE TERM)
+--------------------------------------------------
+
+Programm e on tüüpi tau, kui tal on see tüüp tühjas kontekstis:
+  |- e : tau
 
 Naited:
-
 {x:t, y:sigma} |- x : [t (c)]
 {x:t} |- lambda y:sigma.x : [sigma -> t(c)(b)]
 -----------------------------------------------
 |- lambda x: t, y:sigma.x : [t->sigma->t (b)(a)]
 
-
-
 Konstantidega tüüpimispuu
-
 ========================
                                                                                 f : Int -> Int^\alpha -> f : Int^\delta -> Int^\gamma         f : Int -> Int^\alpha -> 5 : Int^\delta
 --------------------------------------------------------- con                 ------------------------------------------------------------------------------------------------------------------ app
@@ -90,10 +122,8 @@ f : Int -> Int^\alpha \vdash add : Int^\gamma -> Int -> Int^\beta               
 
 * Tüübiohutus:
   Korrektselt tüübitud programmid "ei lähe valesti".
-
 * Hind:
   * Mõned mõistlikud programmid hüljatakse.
-
 * Koosneb kahest osast:
   * Progress: Korrektselt tüübitud ei ole tupikus (ta on kas väärtus või saab teha ühe väärtustusreeglitele vastava sammu).
   * Säilitamine: Kui korrektselt tüübitud term teeb ühe sammu, siis ka resultaat on korrektselt tüübitud.

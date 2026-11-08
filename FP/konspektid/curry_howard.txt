@@ -1,0 +1,123 @@
+See on matemaatiliste tõestuste ja programmide vaheline seos
+Vastavus tuleneb struktuursest sarnasusest formaalsete loogikate ja arvutusmudelite vahel.
+
+loomulik tuletus
+
+P1 P2 ... Pn
+-------------
+     P0
+
+Pi on otsused, millest P1 .. Pn on eeldused ja P0 on jareldus
+kui n = 0 ehk eeldused puuduvad ss on aksioom
+
+iga loogilise konnektiiviga (and, or, xor) on seotud 2 liiki reeglid
+
+Sissetoomise reegel - konnektiiv esineb jarelduses (P0)
+  - kuidas naidata vaite toesust
+
+Valja viimise reegel - konnektiiv esineb eelduses (Pi)
+  - kuidas kasutada konnektiiviga vaidet
+
+Gentzeni stiilis kasutatakse segventse: Gamma |- P
+P on valem
+Gamma on kontekst
+
+
+Sõltumata valemist kehtib hypoteesi aksioom
+
+----------------------
+Gamma1, P, Gamma2 |- P
+Kui kontekstis leidub P ss P kehtib ilma lisatingimusteta
+
+Valem P ::= A (lause) | P ⊃ (=>) P (implikatsioon) | P and P | P or P| T (tõesus)| ⊥ (väärus) | not P
+
+Implikatsiooni tuletusreeglid
+
+Sissetoomine
+
+Gamma, P1 |- P2
+-----------------
+Gamma |- P1 ⊃ P2
+
+Valja viimine
+
+Gamma, P1 |- P2  Gamma |- P1
+------------------------------
+Gamma |- P2
+
+Konjuktsiooni tuletusreeglid
+
+Gamma |- P1   Gamma |- P2
+--------------------------
+Gamma |- P1 and P2
+
+Valja viimine
+
+Gamma |- P1 and P2
+-------------------- 
+Gamma |- P1/P2
+
+Disjunktsiooni tuletusreeglid:
+
+• Sissetoomine:
+
+  Γ ⊢ P₁                Γ ⊢ P₂
+---------- ∨I_L       ---------- ∨I_R
+Γ ⊢ P₁ ∨ P₂           Γ ⊢ P₁ ∨ P₂
+
+• Väljaviimine:
+
+  Γ ⊢ P₁ ∨ P₂     Γ, P₁ ⊢ P₀     Γ, P₂ ⊢ P₀
+-------------------------------------------- ∨E
+                     Γ ⊢ P₀
+
+Tõeväärtuste tuletusreeglid:
+
+• Sissetoomine:
+
+  ------- ⊤I
+   Γ ⊢ ⊤
+
+• Väljaviimine:
+
+   Γ ⊢ ⊥
+  ------- ⊥E
+   Γ ⊢ P
+
+Eituse defineerimiseks kasutatakse tlgt syntax sugar not P = P -> False (bot)
+
+Esitatud reeglid annavad intuitsionistliku lausearvutuse IPC
+
+Klassikalise lausearvutuse saame lisades 2x eituse ellimineerimise
+
+ Gamma |- not not P
+ -------------------
+ Gamma |- P
+
+N1:
+
+-----------------     -------------------
+A and B |- A and B    A and B |- A and B
+-----------------------------------------------
+A and B |- B     A and B |- A
+-----------------------------------
+A and B |- B and A 
+-------------------------
+|- A and B => B and A
+
+• Loogikas pole "programm" (alati) ilmutatud kujul välja toodud, aga saame selle meile teadaoleva tõestuspuu järgi rekonstrueerida.
+
+• Erinevus: A ⊃ A ⊃ A vs. A → A → A
+  - Funktsioonis on tähtis, kumb parameeter tagastada. Loogikas pole sellel tähtsust.
+  - Saame täiendada loogikat siltidega, et jälgida, millisest implikatsioonist aksioom tuleneb.
+
+• Kokkuvõtteks paistab, et tüübisüsteemidel ja loogikatel pole sisulisi erinevusi. 
+  Saame leida lausearvutusele vastava arvutussüsteemi:
+
+  Loogika           Tüübisüsteem            Selgitus
+  -----------------------------------------------------------------------
+  ⊥            ≡    Void                    (mittetermineeruva arvutuse tüüp / absurd)
+  ⊤            ≡    Unit                    (triviaalne tüüp)
+  A ⊃ B        ≡    A → B                   (funktsioon)
+  A ∧ B        ≡    A × B                   (paaritüüp / product type)
+  A ∨ B        ≡    A + B                   (Idrise/Haskelli Either tüüp / sum type)
