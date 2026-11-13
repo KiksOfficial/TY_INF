@@ -7,3 +7,4 @@ modules = Konspektid.Cycles
         , Konspektid.Andmestruktuurid
         , Kodutood.K1
         , Konspektid.Andmestruktuurid2
+        , Konspekt.Soltuvad

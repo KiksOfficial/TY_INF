@@ -1,0 +1,169 @@
+Käsureast ja ajalugu
+
+Bash on käsurea interpretaator, mis tõlgendab käske ning toetab Doug McIlroy ja Unixi loojate põhimõtet ühendada tööriistu standardvoogude ja torude (|, <, >, >>) abil.
+
+Kasutajad ja grupid: Igal kasutajal ja grupil on unikaalne ID (UID ja GID). Juurkasutajal (root) on UID 0 ja täisõigused. Kasutajate vahetamiseks saab kasutada käske su või sudo. Olulised süsteemifailid asuvad kaustas /etc/ (nt /etc/passwd, /etc/shadow, /etc/sudoers).
+
+Failide õigused ja omand: Käsuga ls -l saab vaadata faili õigusi ja omanikku. Omanikku ja gruppi muudetakse käskudega chown ja chgrp. Õigusi saab seada chmod abil numbriliselt (nt 755, 644) või sümbolitega (u+x). Eriõigustest on kasutusel setuid, setgid ja sticky bit (nt /tmp kaustal).
+
+#####################
+
+Ajalugu
+
+1. Varajane ajalugu ja arvutite eelkäijad
+Mehhaanilised eelkäijad: Charles Babbage’i diferentsiaal- ja analüütiline masin ning Konrad Zuse Z1/Z3 panid aluse programmeeritavuse ja automaatse arvutuse ideele.
+Mällu salvestatud programm: 1940.–1950. aastatel asendusid käsitsi ühendatavad kaablid mällu laetavate programmidega, mis võimaldas käivitada korduvaid ülesandeid ilma riistvara ümber juhtmestamata.
+
+2. Pakktöötlus ja esimesed kompilaatorid
+Pakktöötlus (1950. aastad): Monitorid (nt GM-NAA I/O) hakkasid töid automaatselt ühest programmist teise viima, vähendades masina seisakuid.
+FORTRAN (1957): Kõrgkeele ja kompilaatori tulek vabastas programmeerijad masinakoodi käsitsi kirjutamisest.
+
+3. Ajajaotus, mitmekasutajalisus ja UNIX
+Ajajaotus (CTSS, Multics): Võimaldas ühel arvutil teenindada mitut kasutajat terminalide kaudu, tuues kaasa vajaduse protsesside eraldamise, mälukaitse ja turvaõiguste järele.
+UNIX ja C (1969–1973): Ken Thompson ja Dennis Ritchie arendasid Bell Labsis C-keeles kirjutatud kaasaskantava UNIX-i. Selle väiksed tööriistad, standardvood ja torud (|) lõid uue töökultuuri.
+
+4. Personaalarvutid ja graafiline liides (GUI)
+Mikroarvutite ajastu: CP/M (1974) ja hilisem MS-DOS (IBM PC, 1981) tõid turule ühe kasutaja lihtsamad operatsioonisüsteemid.
+Graafiline revolutsioon: Xerox Alto, Apple Macintosh (1984) ja varased Windowsi versioonid tõid arvutikasutusse aknad, ikoonid ja hiire.
+
+5. Tänapäevased operatsioonisüsteemid
+GNU ja Linux (1991): Richard Stallmani GNU vaba tarkvara liikumine ja Linus Torvaldsi loodud Linuxi tuum panid aluse võimsale avatud lähtekoodiga ökosüsteemile.
+Windows NT (1993): Microsofti poolt arendatud kaitstud ja stabiilne arhitektuur sai hiljem (alates Windows XP-st) kõigi tarbija- ja ärisüsteemide aluseks.
+
+############################ 
+
+Protsess ja lõim
+
+Programm: Käivitatav kood failis.
+Protsess: Üks programmi täitmise eksemplar, mis ühendab virtuaalse aadressiruumi (kood, andmed, kuhi, pinu), identiteedi (PID, õigused) ja ressursid.
+Lõim: Jagab sama protsessi aadressiruumi ja ressursse, kuid omab oma täitmise olekut (käsuloendur PC, registrid, pinu).
+
+Mälu struktuur
+Pinu (Stack): Salvestab funktsioonikutsete oleku ja kohalikud muutujad; töötab LIFO (viimane sisse, esimene välja) põhimõttel ja kasvab väiksemate aadresside poole.
+Kuhi (Heap): Dünaamiliselt loodud objektid, mis püsivad kuni vabastamiseni (nt malloc/free).
+
+Protsessi olekud ja elutsükkel
+Põhiolukorrad on: Uus (New), Valmis (Ready), Töötab (Running), Ootab (Waiting) ja Lõppenud (Terminated).
+Zombi: Protsess, mille täitmine on lõppenud, kuid mille lõpuinfo pole vanemal veel wait-kutsega vastu võetud.
+Konkurentsus ja vahendid
+Konkurentsus: Ülesannete edenemine kattuva ajavahemiku jooksul (ajaline jagamine / kontekstivahetus).
+Paralleelsus: Töö tegelik samaaegne täitmine mitmel CPU-l.
+Tööriistad nagu ps, top, htop ja lsof võimaldavad jälgida protsesside olekuid, CPU ja mälu kasutust ning avatud failidesriptoreid.
+
+1. Protsesside vaheline suhtlus (IPC — Inter-Process Communication)
+Vajadus: Kuna eraldi protsesside virtuaalsed aadressiruumid on kaitstud ja eraldatud (nt tavalise muutuja muutmine fork-i järel teises protsessis ei kajastu), on andmete vahetamiseks vaja teadlikke ühendusi.
+
+Peamised vahendid:
+Torud (Pipes): Ühesuunalised baidivood protsesside ahelas (nt käsureal |), kus puhvri täitumisel rakendub vastusurve (backpressure), mis aeglustab aeglast tarbijat.
+Jagatud mälu (Shared Memory): OS-i erand, mis lubab eri protsessidel pääseda ligi samale mälupiirkonnale, nõudes eraldi sünkroniseerimist.
+
+Soklid (Sockets): Kasutatavad nii kohapeal (UNIX-domain) kui ka võrgus (TCP/IP) klientide ja teenuste vahel.
+Sõnumijärjekorrad ja signaalid: Sõnumid säilitavad piirid, signaalid (nt SIGTERM, SIGKILL) toimivad sündmuste või juhtimisteadetena.
+
+2. Lõimed (Threads)
+Olemus ja ressursid: Lõim on protsessi sees eksisteeriv täitmisüksus. Lõimed jagavad sama protsessi aadressiruumi (kood, kuhi, globaalsed muutujad ja avatud failidesriptorid), kuid igal lõimel on oma täitmise olek: käsuloendur (PC), registrid ja pinu (stack).
+Ajastamine: Tuum ajastab käivitusvalmis lõime (kasutades TCB-d ja Linuxis task_struct-i), võimaldades konkurentsi või mitmel CPU-l paralleelset täitmist.
+
+#########################
+
+Failide struktuur ja metaandmed
+Sisu vs Metaandmed: Faili sisu on selle baidid, kuid metaandmed (omanik, õigused, viited) asuvad inode-is. Kataloog seob failinime vastava inode-i numbriga.
+
+Lingid: Kõva link (hard link) loob sama inode-iga uue nime, mis asub samas failisüsteemis. Sümboolne link (symlink) on eraldi objekt, mis salvestab sihtfaili teekonna.
+
+
+Failiõigused ja turvalisus
+Õigused: Jagunevad kolme klassi (omanik, rühm, teised) ning kasutavad lugemise (r), kirjutamise (w) ja käivitamise/läbimise (x) õiguseid.
+
+Umask ja eribitid: umask eemaldab uute objektide loomisel vaikimisi bitte. Eribittidest on kasutusel setuid, setgid ja sticky bit (nt /tmp kataloogil). Täiendavaid piiranguid saab seada ACL-ide ja failiatribuutide (chattr) abil.
+
+
+Failisüsteemi kihid ja salvestus
+Kihiline arhitektuur: Alates plokkseadmest ja partitsioonist kuni LVM-i ning failisüsteemini. Haakimine (mount) ühendab failisüsteemi olemasoleva kataloogipuuga.
+
+Püsivus: Edukas write() kirjutab andmed esmalt tuuma lehevahemällu; täiendavat sünkroniseerimist püsivale andmekandjale korraldab fsync().
+
+
+################################
+
+Salvestusseadmete tüübid ja eripärad
+HDD vs SSD: HDD kasutab pöörlevat magnetketast ja liikuvat pead, SSD põhineb NAND-välkmäul, kus andmeid loetakse ja programmeeritakse lehekülgedena, kuid kustutatakse suuremates plokkides.
+
+FTL ja TRIM: SSD sisemine kontroller (FTL) haldab kulumise ühtlustamist ja prügikoristust, kuna vanu andmeid ei saa samas kohas üle kirjutada. TRIM (discard) annab kontrollerile teada vabadest vahemikest.
+
+
+Partitsioonid ja haakimine
+Partitsioonitabelid: MBR toetab piiratud suurusega kettaid ja primaarseid kirjeid, samas kui GPT kasutab 64-bitiseid plokiaadresse ja varukoopiaid.
+
+Haakimine (mount): Ühendab failisüsteemi olemasoleva kataloogipuuga. Seadme püsivaks ühendamiseks kasutatakse /etc/fstab failis ja UUID-d.
+
+
+Köited, laiendamine ja liiasus
+LVM (Logical Volume Manager): Võimaldab paindlikult ühendada füüsilisi köiteid (PV) ja rühmi (VG), et luua loogilisi köiteid (LV), mille suurust saab dünaamiliselt muuta. Pärast LV suurendamist tuleb kasvatada ka failisüsteemi (nt resize2fs).
+
+RAID: Pakub ketaste liiasust ja jõudlust (nt RAID 0 vöötimiseks, RAID 1 peegeldamiseks ning RAID 5/6/10 paarsusega lahendused). RAID ei asenda siiski varukoopiat.
+
+
+######################################
+
+Virtuaalne aadressiruum ja isolatsioon
+Igal protsessil on oma virtuaalne aadressiruum (kood, globaalsed andmed, kuhi, pinu), mis tähendab, et sama virtuaalne aadress võib eri protsessides viidata täiesti erinevatele füüsilise mälu (RAM) asukohtadele.
+
+Riistvaraline MMU (Memory Management Unit) teisendab virtuaalsed aadressid jooksvalt füüsilisteks aadressideks ja kontrollib ligipääsuõigusi.
+
+
+Leheküljed ja kaadrid (Paging)
+Lehekülg (Page): Virtuaalse mälu fikseeritud suurusega plokk (nt 4 KiB).
+
+Kaader (Frame): Füüsilise RAM-i sama suurusega plokk.
+
+Leheküljetabel (Page Table): Seob virtuaalsed leheküljed füüsiliste kaadritega. Aadressi teisendamisel jääb lehesisene nihe (offset) samaks, kuid lehenumber asendatakse kaadri numbriga. See võimaldab paigutada protsessi järjestikused lehed füüsilises mälus hajutatult eri kohtadesse.
+
+
+Lõimed vs Protsessid mälus
+Sama protsessi eri lõimed jagavad ühist aadressiruumi (kood, kuhi, globaalsed muutujad), kuid igal lõimel on oma täitmiskontekst ja pinu (stack). Seetõttu ei kaasne tavalise lõimede vahelise kontekstivahetusega kogu mälu kopeerimist.
+
+
+##########################################
+
+TLB ja leheküljetabelid
+TLB (Translation Lookaside Buffer): Protsessori kiire vahemälu, mis hoiab hiljuti kasutatud virtuaalsete aadresside tõlkeid, säästes aega leheküljetabelite läbimisest.
+
+Mitmetasemelised tabelid: Aitavad säästa tabelimälu, joomata tekitamata tühju alamtabeleid piirkondadele, mida protsess ei kasuta.
+
+
+Leheküljevead (Page Faults)
+Leheküljeviga tekib siis, keď virtuaalne leht pole hetkel RAM-is (või on tegemist õiguste muutmisega, nt COW). OS laadib vajaliku sisu sisse (või määrab nullitud kaadri) ja jätkab programmi tööd.
+
+Minor fault ei nõua kettalt lugemist, major fault vajab I/O operatsiooni (nt failist või swap'ist laadimist).
+
+
+Copy-on-Write (COW) ja mälu jagamine
+fork käsu järel jagavad vanem ja laps alguses samu füüsilisi kaadreid kirjutuskaitstult. Alles esimesel kirjutamisel tekitab OS privaatse koopia (COW), säästes mälu.
+
+
+Mälusurve ja swap
+Kui RAM-ist hakkab puudus tulema, vabastab OS vähem kasutatud lehti (puhsad faililehed eemaldatakse, muudetud kirjutatakse faili või swap-i).
+
+Thrashing: Olukord, kus aktiivne nõudlus ületab RAM-i mahu ning süsteem kulutab suurema osa ajast lehtede pidevale kettale ja kettalt liigutamisele, aeglustades kasulikku tööd.
+
+
+##############################################################
+
+Seadme juhtimise kolm peamist mehhanismi
+Käsu andmine (Port I/O või MMIO): CPU suhtleb seadme registritega eraldi I/O-aadressiruumi (Port I/O) või mällu kaardistatud aadressiruumi (MMIO) kaudu, et saata käske ja kontrollida olekut.
+
+Andmete liigutamine (Programmeeritud I/O või DMA): Väiksemate andmete puhul kopeerib CPU need ise (PIO), kuid mahukamate andmete edastamiseks kasutatakse otsemälu juurdepääsu (DMA), kus seade liigutab andmed otse RAM-i ilma CPU pideva osaluseta.
+
+Lõpetamisest teritamine (Pollimine või katkestus): Seade võib oma valmidusest teada anda tarkvara korduva kontrolli (pollimine) abil või saata riistvaralise katkestuse (IRQ), mis peatab ajutiselt praeguse töö ja käivitab tuuma katkestuse käsitleja.
+
+
+Katkestused ja ootamine
+Kui protsess esitab I/O päringu (nt read), võib see jääda ootama (blokeeritud olekusse), võimaldades protsessoril vahepeal teisi lõime täita. Pärast DMA ülekannet ja seadme katkestust teeb tuum ootava lõime uuesti käivitatavaks.
+
+Siinid ja ühendused
+Tänapäevased seadmed on ühendatud kiirete siinide kaudu (nt punktist-punkti ühendusi ja radu kasutav PCI Express või USB hostkontrollerid). OS tuvastab seadmed ja seob nendega vastavad draiverid.
+
+
+Faililugemise teekond
+Kui andmed puuduvad lehevahemälust, valmistab tuum I/O päringu ette, draiver lisab selle järjekorda ja teavitab kontrollerit. Kontroller toob andmed DMA abil RAM-i, genereerib katkestuse, mis äratab ootava lõime ning andmed kopeeritakse rakenduse puhvrisse. Tabamuse korral lehevahemälust seadme poole eraldi pöörduma ei peagi.

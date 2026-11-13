@@ -1,0 +1,167 @@
+klaval on lylitid, mille vajutamisel tekib elektriline yhendus
+
+Võnkumiste summutamise ahel
+signaal kodeeritakse ascii koodiks ning edastatakse liidesele
+
+
+                                               -(andmed)->
+                     -(valid)->                <-(aadress)-
+[klava] -> [encoder] -(andmed)-> [kbdata, KIN] <-(R/(not W))- [CPU]
+                                               <-(master ready)- 
+                                               -(slave ready)->
+
+alguses liidesesse saadetakse andmed ss KIN active
+lopus KIN inactive
+
+1. Aadressi dekodeerimine ja A2 roll
+- Aadressi liinid A3 kuni A31 suunatakse aadressi dekooderisse, mille väljundiks on MyAddress (tuvastab, kas pöördutakse õige liidese poole).
+- Esimene informatiivne aadressibitt on A2, mis toimib MUX-i juhtsignaalina (selektorina):
+  * Kui A2 = 0, valitakse MUX-ist Data (andmed).
+  * Kui A2 = 1, valitakse MUX-ist Status (staatus).
+- A2 signaal inverteeritakse samuti inverteri abil ning suunatakse alumisse AND-väravasse (Read Data loogikasse).
+
+2. Siinid, puhvrid ja Master/Slave Ready
+- CPU andmesiinide (D0 kuni D7) ja liidese vahel on kolmeolekulised puhvrid (tri-state buffers), mis otsustavad, kas ühendus siiniga on aktiivne.
+- Aadressi dekooderi (MyAddress), R/W (lugemine/kirjutamine) ja Master-Ready signaalide vahel on AND-värav.
+- Puhvrit aktiveeritakse siis, kui on pöördutud konkreetse liidese poole (MyAddress = 1), lugemissignaal (R) on aktiivne ja Master-Ready on aktiivne.
+- Sellest AND-väravast edasi juhitakse Slave Ready signaali (läbi puhvri), mille vaikimisi olek (default) on loogiline 1.
+
+3. Klaviatuuri andmed, MUX ja staatus
+- Klaviatuuri andmed (Keyboard Data) saadetakse D-trigeritesse (D1 kuni D7), mida takteeritakse Valid signaaliga.
+- D-trigerite väljundid (Q) ühendatakse läbi MUX-i (0-sisend on Data, 1-sisend on Status) CPU andmesiini puhvritega.
+- MUX-i 1-sisendisse (Status) tuleb staatuse siin, kus üheks bitiks on KIN (Keyboard Input) olekubitt (ülejäänud on nullid).
+
+4. SR-latš ja juhtloogika (Valid / Read Data)
+- Valid signaal salvestab andmed D-trigeritesse ning seab samal ajal SR-latši (kaks ristseotud NOR-väravat), mis hoiab KIN staatusebitti aktiivsena.
+- Valid signaal läheb ka alumisse D-trigerisse (mille D-sisend on püsivalt 1). Selle trigeri väljund suunatakse läbi AND-värava (koos inverteeritud Master-Ready signaaliga) SR-latši Reset-sisendisse.
+- Alumises osas on AND-värav, mille sisenditeks on inverteeritud A2 ning esimese AND-värava väljund (aktiivne lugemispäring).
+- Selle alumise AND-värava väljundiks on Read Data signaal, mis suunatakse nii alumise D-trigeri asünkroonsesse nullimissisendisse (Clear/Reset) kui ka SR-latši Reset-ahelasse, et pärast andmete lugemist lipud nullida.
+
+monitori juhtiva d handshake signaalid ready ja newdata ylejaanud sama nagu kb lisaks monitori puhul liiguvad andmed ja NewData CPU-st monitori
+
+
+1. Aadressi dekodeerimine ja A2 roll
+
+- Aadressi liinid A3 kuni A31 suunatakse aadressi dekooderisse, mis tuvastab, kas pöördutakse selle konkreetse väljundliidese poole.
+- Aadressibitt A2 määrab ära, kas pöördutakse andmeregistri või staatusregistri poole:
+  * Kui A2 = 0 (inverteerituna 1), valitakse DATAOUT register (andmete saatmiseks väljundisse).
+  * Kui A2 = 1, valitakse DOUT staatuse lugemine (kontrollitakse, kas liides on uute andmete vastuvõtmiseks valmis).
+
+2. Slave ready signaali genereerimine
+- Vasakpoolne AND-värav võtab sisenditeks aadressi dekooderi väljundi ja Master ready signaali.
+- Selle AND-värava väljund juhib kolmeolekulist puhvrit (tri-state buffer), mille sisendis on loogiline 1.
+- Kui protsessor pöördub õige aadressi poole ja Master ready on aktiivne, saadab liides siinile Slave ready = 1 signaali (kinnitades andmevahetuse valmidust).
+
+3. Staatuse lugemine (DOUT bitt)
+- Keskmine, 4 sisendiga AND-värav vastutab staatuse (DOUT) lugemise eest CPU poolt.
+- Puhver avaneb ja edastab DOUT biti siinile D1 (esimene andmebitt), kui on korraga täidetud neli tingimust:
+  1. Aadressi dekooderi väljund on 1 (õige seade).
+  2. Master ready = 1.
+  3. R/W = 1 (CPU teostab lugemisoperatsiooni).
+  4. A2 = 1 (valitud on staatusregister).
+
+4. Andmete kirjutamine väljundregistrisse (DATAOUT)
+- Parempoolne, 4 sisendiga AND-värav juhib andmete salvestamist D-trigeritest koosnevasse DATAOUT registrisse (D0 kuni D7 -> Q0 kuni Q7).
+
+- DATAOUT registri taktsisend (clock) aktiveeritakse ja andmed salvestatakse, kui on täidetud neli tingimust:
+  1. Aadressi dekooderi väljund on 1 (õige seade).
+  2. Master ready = 1.
+  3. Inverteeritud R/W = 1, ehk R/W = 0 (CPU teostab kirjutamisoperatsiooni).
+  4. Inverteeritud A2 = 1, ehk A2 = 0 (valitud on andmeregister).
+
+5. Kätlusloogika (Handshake control)
+- Handshake control plokk koordineerib suhtlust protsessori ja välisseadme vahel.
+- Sisendid:
+  * Taktsignaal parempoolsest AND-väravast (annab märku, et CPU kirjutas uued andmed DATAOUT registrisse).
+  * Master ready signaal CPU-lt.
+  * Ready signaal välisseadmelt (näitab, kas välisseade on valmis andmeid vastu võtma).
+- Väljundid:
+  * DOUT – olekubitt, mis saadetakse läbi puhvri D1 liinile (näitab protsessorile, kas liides on vaba uute andmete vastuvõtmiseks).
+  * NewData – juhtsignaal välisseadmele, mis annab teada, et DATAOUT väljunditel (Q0 kuni Q7) on uued andmed lugemiseks valmis.
+
+Olekudiagrammi konspekt
+
+1. Üldised parameetrid
+Olekud: A, B, C
+Sisendid: WriteData, Ready
+Väljundid: NewData, Done
+
+
+2. Olekute üleminekud ja tsüklid (Sisend / Väljund)
+Olek A:
+Püsiv tsükkel (jääb olekusse A): sisend 01, väljund 01
+Üleminek olekust A olekusse B: sisend 11, väljund 01
+
+Olek B:
+Püsiv tsükkel (jääb olekusse B): sisend x1, väljund 10
+Üleminek olekust B olekusse C: sisend x0, väljund 10
+
+Olek C:
+Üleminek olekust C olekusse A: sisend 01, väljund 00
+
+Püsivad tsüklid (jääb olekusse C):
+sisend x0, väljund 00
+sisend 11, väljund 00
+
+1. Üldine ülesanne
+- Jadaliides (Serial interface) muundab protsessori paralleelsed andmed (D0 kuni D7) jadaandmeteks (väljundisse) ning välisseadmelt saabuvad jadaandmed paralleelseteks andmeteks (sisendisse).
+
+2. Sisendahel (Andmete vastuvõtmine)
+- Serial input (jadasisend): Bitt-haaval saabuvad andmed loetakse ülemisse nihkeregistrisse (shift register).
+- DATAIN register: Kui kogu bait (8 bitti) on nihkeregistrisse kohale jõudnud, laetakse see paralleelselt DATAIN registrisse.
+- Kolmeolekulised puhvrid (tri-state buffers): DATAIN registri ja protsessori andmesiini (D0 kuni D7) vahel asuvad puhvrid, mis avanevad siis, kui CPU annab lugemiskäsu (R/W = 1) ja pöördub andmeregistri poole.
+
+3. Väljundahel (Andmete saatmine)
+- DATAOUT register: Kui CPU kirjutab andmed siinile (D0 kuni D7), salvestatakse need paralleelselt DATAOUT registrisse.
+- Alumine nihkeregister: Andmed laetakse paralleelselt DATAOUT registrist alumisse nihkeregistrisse ning nihutatakse sealt bitt-haaval välja (Serial output).
+
+4. Aadressi dekooder ja juhtahelad
+- Sisenditeks on aadressisiinid A2 kuni A31, lugemise/kirjutamise signaal (R/W) ja Master ready.
+- Aadressi dekooder tuvastab, kas pöördutakse selle liidese poole, ning väljastab valmisoleku kinnituseks Slave ready signaali.
+- Juhtahelad määravad (näiteks A2 ja R/W abil), millise registri (DATAIN, DATAOUT või Staatus/juhtimine) poole parasjagu pöördutakse.
+
+5. Staatus ja juhtimine (Status and control)
+- Suhtleb kahesuunaliselt protsessori andmesiiniga (D0 kuni D7):
+  * Protsessor saab lugeda liidese olekubitte (nt kas DATAIN on täis või DATAOUT on tühi/valmis uute andmete jaoks).
+  * Protsessor saab kirjutada juhtimissätteid (nt katkestuste lubamine, edastuskiiruse või formaadi määramine).
+- Taktsignaalid (Clocks):
+  * Receiving clock – juhib bittide vastuvõtmist ja nihutamist ülemises nihkeregistris.
+  * Transmission clock – juhib bittide väljasaatmist ja nihutamist alumises nihkeregistris.
+
+• Topelt puhverdus
+• Nii sisendis kui väljundis
+• Vajalik sujuvama andmevoo saamiseks
+
+async jadayhendus
+
+tuleb overhead
+seisab olek1 seni kuni tuleb start bitt, mis 0 ning andmebitit (least significant -> most significant)
+1-2 stop bitti
+saatja ja vastuvotja kellad ple synced - lopus peavad olema
+
+Info sõna saabumise kohta on sõnas endas
+– start-bitt
+– stopp-bit(t/id) sõna lõpus
+– viimased aitavad kaasa, et uue sõna start-bitt õigeaegselt
+tuvastatakse
+
+generaatori sagedus nt. 16x taktsagedus
+
+start 1 0 0
+
+start biti ajal nullime taktigeneraatori ning generaator hakkab end 16ni lugema
+kui jouab 8ni ss lykatakse uuest 0 edasi laheb 16ni, sst ss signaali keskel 
+
+
+sync andmeedastus
+• Vajalik kiirema ühenduse jaoks
+• Saatjal-vastuvõtjal mõlemal kellad
+• Neid kooskõlastatakse 1-0 ja 0-1 üleminekute juures
+– neid peab olema piisavalt tihti
+– seda korraldatakse erinevate kodeerimisskeemidega
+• Kui kellad paigas, saab saata suuri andmeblokke
+
+nt.
+
+1111110010010011111
+andmed aind 01001001 ning see pooratakse tagurpidi

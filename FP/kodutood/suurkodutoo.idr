@@ -52,8 +52,8 @@ mutual
   kask PenUp (MkKilpkonnOlek (x,y) suund pliiats paksus) = (MkKilpkonnOlek (x,y) suund False paksus, [])
 
   kask (MuudaPaksus n) (MkKilpkonnOlek (x,y) suund pliiats paksus)  =
-    let uuspaksus = if paksus <= 0.0 then 0.1 else paksus
-    in (MkKilpkonnOlek (x,y) suund pliiats paksus, []) 
+    let uuspaksus = if paksus <= 0.0 then 0.1 else n
+    in (MkKilpkonnOlek (x,y) suund pliiats uuspaksus, []) 
 
   kask PenDown (MkKilpkonnOlek (x,y) suund pliiats paksus) = (MkKilpkonnOlek (x,y) suund True paksus, [])
 
@@ -105,6 +105,10 @@ diagonaalprogramm : Program
 diagonaalprogramm = 
   [ PenDown
   , Turn 45
+  , MuudaPaksus 5
+  , Forward 70
+  , Turn 45
+  , MuudaPaksus 2
   , Forward 70
   ]
 
@@ -244,4 +248,12 @@ main = do
   case result of
     Left err => putStrLn ("Viga: " ++ show err)
     Right () => putStrLn "Kirjutasin faili minujoonis.svg"
+
+  let (_, segmendid) = kaskudeList diagonaalprogramm kilpkonn
+  let svgsisu = renderSvg segmendid "black" "2"
+  result <- writeFile "diagonaal.svg" svgsisu
+
+  case result of
+    Left err => putStrLn ("Viga: " ++ show err)
+    Right () => putStrLn "Kirjutasin faili diagonaal.svg"
 

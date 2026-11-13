@@ -1,0 +1,228 @@
+
+seade                            CPU
+status [ |KIN | KIRQ]            PS          [           |IE]
+control [  | KIEN]               IPS         [           |IE]
+                                 IPENDING    [      ... | KIRQ|DIRQ|TIRQ|...]
+                                 IENABLE     [       ...|KEN|DEN|TEN|...]
+
+Kui KIEAN 1 ss katkestus lubatud
+IE - interrupt enable
+PS - status register
+
+Kui katkestus kaivitatakse ss CPU IE bit copytakse IPS-ssi ss PS IE on 0 kuni katkestust taidetakse kui katkestus hakkab lopetama kopyb IPS-st PS-sse ss katkestused lubatud
+
+IPENDING - siia registrisse korjatakse need, kes soovivad katkestust
+IENABLE -
+
+Selleks et katkestus olek lubatud peab CONTROL IENABLE ja PS olema lubatud
+
+
+Katkestuse vektor
+• Katkestust sooviv seade võib ennast ka otseselt protsessorile tutvustada,
+saates protsessorile siini vahendusel spetsiaalse koodi.
+• Selleks koodiks võib olla näiteks katkestuse teenindamise protseduuri
+aadress
+• … või osa sellest (4-8 bitti). Ülejäänu lisab protsessor ise.
+• Kui sellesse kohta panna tegelikule katkestuse- programmile viitav
+hargnemise aadress, siis anname programmeerijale täiendavalt veidi
+lisavõimalusi koodi kirjutamisel.
+• Oluline on, et protsessor oleks valmis seda katkestuse vektori infot vastu
+võtma
+
+
+Interrupt nesting
+• Eelnevalt soovitasime, et ühe katkestuse täitmisel peame
+teiste katkestuste täitmisele võtmise blokeerima
+• Alati pole see võimalik
+– näide reaalaja kellast
+• Vajalik paika panna prioriteedid
+– katkestuse soov kõrgema prioriteediga seadmelt tuleks
+aktsepteerida isegi siis, kui parasjagu mõne madalama
+prioriteediga seadme katkestust täidetakse
+
+
+Katkestuse prioriteedi muutmine
+MoveControl R1,PS
+MoveControl PS,R1
+
+
+Erandid
+Recovery from errors
+- nt. programm proovib 0-ga jagada
+
+Debugging
+- trace
+- breakpoint
+
+Priviledge Exception - programm proovib minna kohta kus oigused ple (segfault?)
+
+
+##############################
+Riistvaraline I/O
+
+Siinid
+CPU, memory ja I/O seadmed yhendatakse siinidega
+• Siini esmaseks ülesandeks on andmete edastamiseks vajaliku tee
+loomine
+• Bus protocol– reeglite kogum, mille alusel korraldatakse erinevate
+seadmete suhtlus siinil
+– millal saata infot siinile
+– siini kasutusjärjekorra jagamine
+– juhtsignaalidest arusaamine
+• Siini liinid jagatakse kolme gruppi:
+– andmed
+– aadress
+– juhtimine
+
+
+I/O interface [aadressi dekooder | juhtimisahelad | andme ja staatusregistrid]
+
+
+Juhtimisliinid
+• Juhtimisliini vahendusel tuleb seadmele öelda, kas
+täitmisele läheb lugemise või kirjutamise käsk
+– seda saaks korraldada ühe R/W liini abil, mis olles seisus 1 viitaks
+lugemisele ja seisus 0 kirjutamisele
+• Täpsustada on vaja andmete suurus (byte, word, long
+word jne)
+• Ajastusinfo – millal on õige aeg seadmel andmeid siinile
+saata ja millal on siinil kvaliteetsed andmed lugemiseks
+• Master– initsiaator
+• Slave– sihtmärk, target
+
+
+Synkroonne andmeedastus
+Koik seadmed saavad ajastusinfo taktsignaalist
+info aadressi - ja hutsignaalide kohta
+
+Ajavahemik t1-t0 peab olema piisavalt pikk, et info jõuaks siini teise otsa kohale ja et seade
+jõuaks aadressi dekodeerida
+• Slave ei tohiks enne ajahetke t1 ja Master enne ajahetke t2 toimetama hakata kuna andmed
+siinil pole veel usaldusväärsed!
+• Ajavahemik t2-t1 peab olema piisavalt pikk, et info jõuaks siini teise otsa kohale ja et puhver-
+register jõuaks andmed salvestada (Set-up time)
+
+
+• Arvuti siin töötab joonisel
+kujutatud sünkroonse
+protokolli alusel.
+– Maksimaalne viivis andmete liikumisel siinil on 4ns.
+– Siini-master’il kulub 1,5ns aadressi panekuks aadressiliinidele.
+– Slave-seade vajab aadressi dekodeerimiseks 3ns ja maksimaalselt
+5ns, et panna andmed andmesiinile.
+– Siini sisendregistrite minimaalne seade-aeg on 1ns.
+• Millise maksimaalse taktsagedusega see siin töötada
+suudab?
+
+Master to slave = 1.5 + 4 + 3
+Slave to master = 5 + 4 + 1
+
+t_aadress = 1.5 + 4 + 3 = 8.5ns
+t_andmed = 5 + 4 + 1 = 10ns
+
+kui taktsignaal asymmeetriline => f = 1/(t_address + t_data) = 1 /(18.5)ns = 54MHz
+kui taktsignaal symmeetriline => f = 1/(2*suurem yhik) = 1/20ns = 50MHz
+
+
+Sünkroonne andmeülekanne mitme
+taktitsükli jooksul
+• Eelmisel slaidil kujutet andmeedastus peab arvestama
+kõige aeglasema seadme vajadustega
+• Teisisõnu: kõik seadmed suhtlevad aeglaseima seadme
+kiirusega
+• Protsessor ei saa tagasisidet selle kohta, kas seade sai oma
+asjadega hakkama
+• Lisatakse täiendav tagasisidesignaal
+– nüüd saab master teada, kui slave on aadressist aru saanud ja
+valmis osalema andmeedastuses
+– lisandub võimalus kohandada andmeedastusele kuluvat aega, kui
+seade pole valmis
+
+
+Asünkroonne andmeedastus
+• Käepigistuse (handshake) kasutamine master ja slave
+seadme vahel
+• Taktisignaali asendab siin kaks juhtsignaali
+– master ready
+– slave ready
+• Master ready seatakse aktiivseks mõningase viivise järel
+peale andmete siiniletoomist
+• Põhjus: samast allikast pärit signaalid jõuavad erinevaid
+ahelaid läbides sihtkohta eri aegadel
+• Inglise keeles nimetatakse seda nähtust skew
+• Ajavahemik t1-t0 peab olema pikem kui pikim skew
+
+
+• Asünkroonse andmeedastuse eeliseks on
+– pole vaja kellasid sünkroniseerida
+– seega lihtsam ehitada
+• Asünkroonse andmeedastuse puudusteks on
+– topelt teekonnaga signaalid võtavad rohkem aega kui ühekordse
+kinnitusega signaalid
+– seega aeglasem kui sünkroonne andmeedastus
+
+
+ARBITREERIMINE
+
+Master 1 tahab midagi siinile ,saata, poordub barbiiteri ple, kui keegi teine ei taha saab Bus granted signaali, aga kui master 2 tahab ka siini kui siin hoivatud ss prioriteedide kysimus
+
+Olekudiagramm
+
+B       C        D
+1,x,x | 0,1,x | 0,0,1
+    A(0,0,0)
+
+BR 1,2,3
+BG 1,2,3
+
+Olekus B oleme seni kuni BR on 1 valja saame ss kui BR 1->0 (0,x,x)
+Olek C sailib soltumata esimesest ja kolmandast BR valjume ss kui 1-> 0 (x,0,x)
+Olek D sailib kuni x,x,1 -> x,x,0
+
+Kui seadmed eraldi CPU-ga yhendatud
+
+Kui katkestusesoovid saabuvad
+üheaegselt, aktsepteeritakse kõrgema
+prioriteediga katsektusesoovi
+
+Kui jadamisi
+Kui katkestusesoovid saabuvad
+üheaegselt, aktsepteeritakse
+eespool oleva seadme
+katkestusesoovi
+
+Kui mitu jadamisi, ss soltub jadade prioriteedist
+
+
+Bus arbitration
+• Bus master– seade, mis saab igal ajal algatada
+andmevahetuse
+• Need seadmed vahetuvad töö käigus
+• Centralized arbitration– üks seade (bus arbiter) otsustab,
+kes on järgmine bus master
+• Distributed arbitration– kõik seadmed osalevad uue bus
+master’i valimises
+
+Avatud neeluga katkestuse-siini ekvivalentskeem
+• Kui kõik lülitid on lahti, on siini olek kõrge
+(mitteaktiivne).
+• Nii kui ühe lülititest sulgeme, on siin olek
+madal (aktiivne).
+
+Nii kui takisti pingeallikas
+Kui takisti maaga yhendatud ss vastupidi
+
+N:
+• Olgu meil kaks seadet ID-numbritega 9 ja 10
+– s.t seade A saadab liinile info 1001
+– s.t seade B saadab liinile info 1010
+• Liinil paistab kõigile seadmetele nüüd signaal 1011
+• Mõlemad seadmed võrdlevad oma ID-numbrit signaaliga ja seavad
+esimesest mittekokkulangevusest alates bitid nulliks
+– s.t seade A parandab info 1001 → 1000
+– Siinil paistab nüüd signaal 1010, ehk teisisõnu, seade B võib toimetama
+hakata ☺
+– Ka seade B võib lühiajaliselt lülitada välja oma ARB0 liini draiveri (1010),
+aga nähes liinil ARB0 signaali 0 lülitab selle sisse tagasi
+• Selline detsentraliseeritud moodus on kõrge usaldusväärsusega, kuna
+ei sõltu ühestki konkreetsest seadmest

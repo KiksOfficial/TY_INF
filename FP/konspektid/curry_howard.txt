@@ -41,7 +41,7 @@ Gamma |- P1 ⊃ P2
 
 Valja viimine
 
-Gamma, P1 |- P2  Gamma |- P1
+Gamma, P1 |- P2 => Gamma |- P1
 ------------------------------
 Gamma |- P2
 
@@ -121,3 +121,9 @@ A and B |- B and A
   A ⊃ B        ≡    A → B                   (funktsioon)
   A ∧ B        ≡    A × B                   (paaritüüp / product type)
   A ∨ B        ≡    A + B                   (Idrise/Haskelli Either tüüp / sum type)
+
+väide → tüüp (või propositsioon)
+tõestus → programm (või term)
+implikatsioon → funktsiooni tüüp
+implikatsiooni tõestus → funktsioon
+konjunktsioon → korrutustüüp (või paar)
