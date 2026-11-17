@@ -1,0 +1,178 @@
+Kuidas jõuavad võrguandmed õige protsessini?
+
+Vorgukart NIC -DMA->Vastuvotu puhvrid RAM-is -CPU tootleb->draiver ja tuuma võrgupinu
+edasi saadetakse aadressid ja protokoll oigesse sokli Vastuvotujarjekorda nadmed ja aratus protsessi loimele (recv(fd, ...))
+
+deskriptor (fd = 3) - protsessi kohalik viit avatud soklile
+POrt (TCP 80) - koos IP ja protokolliga transpordiotspunkti aadressimine
+IP aadress (89.23.35.11) - paketi sihtkoha aadresseerunube eru vorkude vahel
+MAC aadress (x:x:x:x:x:x) - Etherneti kaadri sihtkoht prgusel lingil
+
+Sokkel on OS-i objekt. Deskriptor on rakenduse viit sellele; port ei ole
+deskriptor
+
+MAC aadress - seadme fyysiline aadress, IP - loogiline aadress
+
+
+TCP/IP virn ja kapseldamine
+
+Kihid
+Rakendus HTTP päring ja vastus
+Transport TCP; kliendi ja serveri pordid
+Internet IPv4; siht-IP ja marsruut
+Võrguliides Ethernet; kohaliku lingi MAC-id
+
+valimine yleval ja sisemine all
+Ethernet kaadeer
+IP pakett
+TCP segment
+Rakenduse andmded 
+
+Iga kiht lisab oma ülesande jaoks vajaliku päise.
+
+klient C
+kohalik ruuter R2
+naaberwork R2
+
+R2 ühendab kaht kohtvõrku. R1 ühendab sisevõrgu välise võrguga.
+Klient peab teadma järgmist sammu, mitte kogu Interneti teed.
+
+R2 EDASTAB OPERAATORVORKU JA SEALT EDASI SERVERISSE
+
+
+Ethernet viib kaadri jargmise naabrini
+klient C eth0 -> Etherneti lyliti -> Ruuter R2 lan0
+
+[siht MAC | lahte MAC | sisu: meie IP pakett]
+
+• Kaadri päises on saatva ja vastuvõtva liidese MAC-aadress.
+• Lüliti õpib lähte-MAC-ide järgi, millise pordi taga liides asub.
+• Teadaoleva siht-MAC-i korral edastab lüliti kaadri sobivale pordile.
+Kaugserveri IP-paketi esimene Etherneti siht võib olla ruuter.
+
+
+IPv4 aadress ja võrguprefiks
+
+192.168.11.66/26
+
+[26 bitti võrguprefix | 6 bitti hosti osa]
+
+• /26 määrab, mitu esimest bitti kuulub võrgu tähisesse.
+• Sama mask punktkujul: 255.255.255.192.
+• Meie liidese võrk: 192.168.11.64/26.
+
+Ainult aadressist ei piisa: võrgu piiri määrab prefiksi pikkus.
+
+
+Meie alamvõrk: 192.168.11.64/26
+6 bitti hostiosale
+Võrgu aadress 192.168.11.64
+Hostiaadressid .65 kuni .126
+Leviedastus 192.168.11.127
+R2 liides 192.168.11.65
+Klient C 192.168.11.66
+
+Selles alamvõrgus: 64 aadressi, neist 62 tavaliseks hostikasutuseks.
+Ruuteri liides kasutab üht neist 62 aadressist.
+
+.127 on broadcast aadress
+
+
+Marsruutimistabel valib järgmise sammu
+Ruuteri R2 lihtsustatud tabel
+
+192.168.11.64/26 - Otse samal lingil - lan0
+192.168.10.0/24 -  Otse samal lingil - uplink0
+0.0.0.0/0 - 192.168.10.1 -  uplink0
+
+• Valitakse sihtaadressiga sobiv kõige pikem prefiks.
+• 192.168.11.66 jaoks võidab /26 vaikemarsruudi /0.
+• 198.51.100.20 jaoks sobib siin ainult default ehk /0.
+Tabel näitab järgmist hüpet, mitte kogu Interneti teekonda.
+
+
+ARP leiab järgmise hüppe MAC-aadressi
+Klient C saadab kaugserverile, järgmine hüpe on R2.
+
+ARPi abil saab klient aru, milline MAC aadress yhendatud ip aadressiga
+
+• OS jätab IPv4 ja MAC-i vastavuse naabritabelisse.
+• Kehtiva kirje korral pole iga paketi jaoks uut ARP päringut vaja.
+• Kaugserveri MAC-i klient oma kohtvõrgust ei otsi.
+R2-LAN= 02:00:00:11:00:65; lihtsustatud skeemil pole lülitit näidatud.
+
+
+Sama võrk või kaugem siht?
+Saatja C: 192.168.11.66/26
+
+Naaber 192.168.11.70
+• Kuulub võrku 192.168.11.64/26.
+• Marsruut on otse liidese eth0 kaudu.
+• ARP otsib naabri MAC-i
+
+Server 198.51.100.20
+• Ei kuulu meie kohalikku võrku.
+• Vaikemarsruut viib R2-ni 192.168.11.65.
+• ARP otsib R2 kohaliku liidese MAC-i.
+
+Kaugsiht: IP-paketi siht on server, kaadri siht on järgmine ruuter.
+
+
+Igal ruuteril uus Etherneti kaader
+
+C saadab midagi R2, R2 saadab selle R1 valikmarssruut valitakse R1 kaudu
+R2 valib marsruudi, vähendab TTL-i ja loob väljundlingi kaadri.
+
+
+Vastusel peab olema tagasitee
+R1 peab teadma, kuidas jõuda kliendi võrku.
+
+R1 marsruuditabelisse lisatav kirje meie õppemudelis:
+ip route add 192.168.11.64/26 via 192.168.10.2 dev lan0
+ehk R1 on kattesaadav R2 tabelis
+
+• R1 on otse ühendatud võrku 192.168.10.0/24.
+• Kliendi võrk 192.168.11.64/26 asub R2 taga.
+Kliendi vaikemarsruut ei seadista teiste ruuterite tagasiteed.
+
+
+Marsruuditabel ja edastamise lubamine
+Marsruuditabel - Millise liidese ja järgmise hüppe kaudu pakett saata?
+IP-edastus  - Kas arvuti edastab ka teiste arvutite pakette?
+Tulemüür  - Kas selle paketi läbimine on reeglitega lubatud?
+
+Linuxi IPv4-edastuse seadistuse vaatamine:
+sysctl net.ipv4.ip_forward
+net.ipv4.ip_forward = 1
+R1 ja R2 peavad olema seadistatud pakette edastama.
+
+
+Privaataadress ja avalik aadress
+IPv4 privaataadressiruumid
+• 10.0.0.0/8
+• 172.16.0.0/12
+• 192.168.0.0/16
+Neid võib kasutada eri organisatsioonide
+sisevõrkudes korduvalt.
+
+Meie piiriruuter R1
+• Sisevõrgus on privaataadressid.
+• Välisühendusel on avaliku aadressi
+rollis 203.0.113.2.
+• NAT muudab paketi aadressi; PAT
+võib muuta ka porti.
+
+Privaatvõrk võib sisaldada nii kliente kui ka servereid.
+NAT tõlgib aadresse. Tulemüür otsustab, milline liiklus on lubatud.
+
+
+NAT/PAT: üks päring ja selle vastus
+
+R1 hoiab tõlke seost: 192.168.11.66:49152 ↔ 203.0.113.2:62001
+
+ruuter on yhendatud su public aadressiga
+esimene paring on lahte aadress ja sihtaadress
+paring parast tolget asendab mu lahteaadressi public aadressiga
+
+Tõlgitud vastuse saadab R1 marsruudi järgi R2 kaudu kliendile.
+Tõlke seos võimaldab vastuse õige sisemise ühendusega siduda.

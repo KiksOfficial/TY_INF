@@ -211,7 +211,7 @@ polygon n size =
 
 minujoonis : Nat -> Double -> Program
 minujoonis Z _ = []
-minujoonis (S k) sirge = [Forward sirge, Turn 45] ++ minujoonis k (sirge + 2)
+minujoonis (S k) sirge = [MuudaPaksus 20, Forward sirge, Turn 45] ++ minujoonis k (sirge + 2)
 
 main : IO ()
 main = do

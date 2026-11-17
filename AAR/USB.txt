@@ -1,0 +1,145 @@
+USB - universal serial bus
+
+Lähteülesanded standardi väljatöötamisel
+▪ Sama liides paljude erinevate seadmete jaoks
+▪ Ühel arvutil mitu porti
+▪ Kuumühendatav (Hot pluggable)
+▪ Automaatne konfigureerimine / seadistusi kasutaja poolt pole vaja
+▪ Alati ei pea ühendatav seade omama eraldi toidet
+▪ Mugavad ja kompaktsed kaablid
+▪ Võimalik ka juhtmevaba ühendus
+▪ Mitmed ühenduskiirused
+▪ Usaldusväärne ühendus
+
+EI OLE USB C ON USB ANDME EDASTUS JA C LIIDES KORREKTNE USB YLE TYPE C
+
+
+USB-IF (USB Implementers Forum) usb.org
+▪ Mittetulunduslik organisatsioon asutatud USB standardi loojate
+poolt
+▪ Ülesanneteks on toetada seadmete tootjaid dokumentatsiooni,
+koolituste, arendus ja testvahenditega ning koordineerida tulevasi
+USB arenguid
+▪ Haldab ja jagab Vendor-ID’sid
+▪ Liikmeks saavad astuda kõik soovijad
+▪ Aastane liikmetasu on $4000
+▪ Täna on liikmeid üle 1000
+
+
+USB puudused
+▪ Ei toeta peer-to-peer ühendusi
+– Ei ole võimalikud host-to-host ühendused
+– Ei ole võimalikud device-to-device ühendused
+– Sellest osaliselt üle saamiseks on olemas USB On-The-Go (OTG)
+OTG seade on võimeline olema nii seade, kui ka piiratud funktsionaalsusega host
+▪ Ei toeta broadcast’ingut
+– Ei saa saata infot korraga mitmele seadmele
+▪ Ei tööta kauge vahemaa taha
+
+
+Vendor-ID ja Product-ID
+▪ Iga USB seade peab omama Vendor-ID’d ja Product-ID’d
+▪ Vendor-ID kasutusõiguse saamiseks on mitu võimalust
+– Liituda USB-IF’ga
+– Osta USB-IF non-member logo litsents
+– Osta ühekordse tasu eest Vendor-ID
+▪ Esimesed kaks võimalust on püsitasuga, viimane on ühekordse tasu eest,
+aga ei anna õigust USB logo kasutamiseks
+▪ Vendor-ID omanik jagab ise oma seadmetele Product-ID
+▪ Osad USB seadmete kiibitootjad (näiteks Microchip) võimaldavad kasutada
+ka enda Vendor-ID’d ja valida Product-ID kindlast vahemikust
+
+
+USB töörežiimid ja andmeedastuskiirused
+▪ Low speed- 1.5 Mbps (alates USB 1.0)
+▪ Full speed– 12 Mbps (alates USB 1.0)
+▪ High-speed– 480 Mbps (alates USB 2.0)
+▪ SuperSpeed (Gen1 x 1)– 5 Gbps (alates USB 3.0)
+▪ SuperSpeedPlus (Gen2 x 1)– 10 Gbps (alates USB 3.1)
+▪ SuperSpeedPlus (Gen1 x 2)– 10 Gbps (alates USB 3.2 ainult Type-C)
+▪ SuperSpeedPlus x 2 (Gen2 x 2)– 20 Gbps (alates USB 3.2 ainult Type-C)
+▪ USB4 20 (Gen3 x 1)– 20 Gbps (alates USB4 v1.0)
+▪ USB4 40 (Gen3 x 2)– 40 Gbps (alates USB4 v1.0 ainult Type-C)
+▪ USB4 80 (Gen4) symmetric– 80Gbps (alates USB4 v2.0 ainult Type-C)
+▪ USB4 120 (Gen4) asymmetric– 120Gbps / 40Gbps (alates USB4 v2.0 ainult Type-C)
+
+
+USB 1.x
+▪ USB 1.0 (Universal Serial Bus Specification Revision 1.0)
+– Avaldatud jaanuaris 1996
+– Loojateks Compaq, DEC, IBM, Intel, Microsoft, NEC ja Notrhern Telecom
+– Operatsioonisüsteemidest toetas esimesena Windows 95 Service Release 2
+tugi oli piiratud ja bugine (nii esimesed seadmed kui OS tugi)
+– Alates Windows 98’st (juuni 1998) on tugi korralik ja ka seadmetootjad olid
+„lastehaigustest“ üle saanud
+▪ USB 1.1
+– Avaldatud septembris 1998
+– Asendab USB 1.0 standardi
+– Loojateks Compaq, HP, Intel, Philips, Lucent Technologies, Microsoft ja NEC
+
+
+
+USB 2.0
+▪ Avaldatud aprillis 2000
+▪ Lisandus high-speed režiim andmeedastuskiirusega 480Mbps
+▪ Tänu suuremale kiirusele võeti kasutusele oluliselt suurema hulga erinevate lisaseadmete juures
+▪ Windowsile lisasid USB 2.0 toe Windows XP SP1 ja Windows 2000 SP4
+▪ Asendab USB 1.1 standardi ja on tagasiühilduv
+▪ Loojateks Compaq, HP, Intel, Philips, Lucent Technologies, Microsoft, NEC, STEricsson
+ja Texas Instruments
+▪ Kaks korda aastas annab USB-IF välja USB spetsifikatsiooni lisasid ECN (Engineering
+Change Notices)
+– Näiteks täiendused kaablite ja pistikute kohta, täiendused toite kohta jne.
+▪ Lisad ei muuda põhispetsifikatsiooni
+
+
+USB 2.1
+▪ Ei ole päris iseseisev USB standardi versioon
+▪ USB 2.0 Link Power Management lisa ja USB 3.1 spetsifikatsioon
+defineerivad, kuna seade peab ennast tutvustama kui USB 2.1 seade
+▪ Ehk siis
+– Low-
+, full- või high-speed seade, mis toetab BOS (Binary Object Store)
+deskriptorit on USB 2.1 seade
+– SuperSpeed ja SuperSpeedPlus seade, mis toetab ka üht või mitut USB 2.0
+kiirust peab ennast tutvustama kui USB 2.1 seade, kui see parasjagu töötab USB
+2.0 kiirustel
+
+
+USB 3.0
+▪ Avaldatud novembris 2008
+▪ Täiesti uus arhitektuur, kus kaks füüsilist siini toimivad korraga. Üks siini kaudu edastatakse USB 2.0 liiklust ja teine USB 3.0 liiklust
+▪ SuperSpeed on võimeline edastama andmeid mõlemas suunas korraga, sest kasutusel on kummagi suuna jaoks oma juhtmepaar
+▪ Seadmed võivad tarbida rohkem energiat ja kasutada nö. Agressiivsemalt energiasäästurežiime
+▪ USB 3.0 on USB 2.0 tagasiühilduv
+▪ Erinevalt USB 2.0 standardist, mis asendas USB 1.1 standardi, USB 3.0 standard täiendab USB 2.0 standardit
+▪ Loojateks HP, Intel, Microsoft, NEC, STEricsson, Texas Instruments
+
+
+USB 3.1
+▪ Avaldatud juulis 2013
+▪ Täiendab USB 3.0 standardit SuperSpeedPlus kiirusega (10 Gbps)
+▪ Lisab uued energiasäästufunktsioonid
+▪ Lisatäiendused, mis käivad nii SuperSpeed kui SuperSpeedPlus kohta
+▪ Toodetel kasutatakse ka lisaks SuperSpeedPlus tähisele SuperSpeed USB 10Gbps
+▪ Asendab USB 3.0 standardi (kuid mitte USB 2.0)
+– Ehk siis lisaks SuperSpeedPlus seadmetele peavad ka kõik uued seadmed, mis töötavad kuni
+SuperSpeed kiirusel vastama USB 3.2 standardile
+▪ USB 3.1 kaablid sisaldavad küll sama arvu ühendusi, aga nõuded kaablile on rangemad
+▪ USB 3.1 defineerib ka uued terminid
+– Gen 1, mis on SuperSpeed ehk 5 Gbps
+– Gen 2, mis on SuperSpeedPlus ehk 10 Gbps
+– Enhanced SuperSpeed USB on koondnimetaja Gen 1 ja Gen 2 ehk siis USB 3.x kohta
+NB! Enhanced SuperSpeed != SuperSpeedPlus
+
+
+USB 3.2
+▪ Avaldatud septembris 2017
+▪ Andmeedastuskiirus üle Type-C ühenduse ja kaabli 20 Gbps
+▪ Kaks paralleelset SuperSpeedPlus kanalit
+▪ Asendab USB 3.1 standardi (kuid mitte USB 2.0)
+▪ Loojateks Apple, HP, Intel, Microsoft, Renesas, STMicroelectronics ja
+Texas Instruments
+
+
+

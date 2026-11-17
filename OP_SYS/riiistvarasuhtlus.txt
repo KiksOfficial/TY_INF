@@ -259,7 +259,7 @@ Rohkem radu aitab ainult siis, kui kogu andmetee seda toetab.
 
 USB: hostkontroller ja seadmeklassid
 
-USB ja host kontroller <-> USN jaotur <-> (klaviatuur HID klass)/(valine ketas massmaluklass)
+USB ja host kontroller <-> USB jaotur <-> (klaviatuur HID klass)/(valine ketas massmaluklass)
 
 • OS tuvastab ühendatud seadme ja selle liidesed.
 • Standardne seadmeklass võimaldab kasutada ühist klassidraiverit.
@@ -279,3 +279,62 @@ Plokkseade Näiteks /dev/nvme0n1
 Sisendseade Näiteks /dev/input/event0
 Seadme omadused  /sys: tuuma avaldatud seadmemudel
 Seadme tuvastamine ja töötava draiveri olemasolu on eri asjad.
+
+
+Linuxis: seade yhendus ja draiver
+lspci -k - PCI/PCIe seadmed ja kasutatav tuumadraiver
+lspci -t - PCI siinide, sildade ja seadmete puu
+lsusb -t - USB seadmete puu ja liideste draiverid
+
+Lühendatud näidisväljund: seadme nimi ja aadress sõltuvad arvutist.
+01:00.0 Non-Volatile memory controller: ...
+Kernel driver in use: nvme
+Kontrolli nii seadme olemasolu kui ka aktiivset draiverit.
+
+
+Linuxis: katkestused ja tuuma teated
+cat /proc/interrupts
+sudo dmesg --follow
+
+Katkestuste loenduri lihtsustatud näide (osa veerge välja jäetud):
+
+     CPU0 CPU1 Allikas
+126: 50   220  nvme0q1
+
+• Loendurid näitavad teenindatud katkestusi CPU-de kaupa.
+• Üks katkestus võib teatada mitme I/O päringu lõpetamisest.
+• dmesg näitab näiteks seadme algseadistuse ja vigade teateid.
+
+
+Faililugemine: päringu esitamine
+
+Lõim A -syscall-> Tuuma I/O tee ja draiver -MMIO teavitus-> NVME kontroller ja SSD ->lehevahemalu puhver RAM-s -> 3. CPU koopia prst loime jatkamist 
+
+
+1. Tuum valmistab lehevahemälu puhvri ja I/O päringu ette.
+2. Draiver lisab päringu järjekorda ning teavitab kontrollerit MMIO kaudu.
+3. Meie näites jääb lõim A ootama; CPU saab käivitada lõime B.
+
+
+Faililugemine: andmed ja lõpetamine
+1. Kontroller toob andmed DMA abil lehevahemälu puhvrisse.
+2. Lõpetamise käsitlemine teeb lõime A käivitatavaks.
+3. Kui A jätkab, kopeerib tuum andmed buf-i ja read() tagastab.
+
+
+Sama lugemine lehevahemälu tabamusega
+Kui soovitud sisu on juba kehtivana lehevahemälus:
+
+Lehevahemälu puhver RAM-is --CPU koopia--> rakenduse buf RAM-is
+
+• Selle sisu saamiseks pole vaja uut SSD päringut.
+• Pole vaja oodata selle lugemise seadmeülekannet ega lõpetamise IRQ-d.
+• Süsteemikutse ja andmete kopeerimine on endiselt vajalikud.
+read() ei tähenda alati seadme poole pöördumist.
+
+
+MMIO voimaldab seadme registrile ligi paaseda
+DMA - viib andmeid malu ja seadme vahel
+
+OS korraldab käsud, puhvrid, ootamise ja ligipääsu; riistvara teeb talle
+antud töö.
