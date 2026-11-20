@@ -85,9 +85,7 @@ Tõeväärtuste tuletusreeglid:
    Γ ⊢ P
 
 Eituse defineerimiseks kasutatakse tlgt syntax sugar not P = P -> False (bot)
-
 Esitatud reeglid annavad intuitsionistliku lausearvutuse IPC
-
 Klassikalise lausearvutuse saame lisades 2x eituse ellimineerimise
 
  Gamma |- not not P
@@ -127,3 +125,6 @@ tõestus → programm (või term)
 implikatsioon → funktsiooni tüüp
 implikatsiooni tõestus → funktsioon
 konjunktsioon → korrutustüüp (või paar)
+
+igal toesel vaitel on normaalkujuline toestus
+

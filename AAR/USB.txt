@@ -142,4 +142,188 @@ USB 3.2
 Texas Instruments
 
 
+USB4 v1.0
+▪ Avaldatud augustis 2019
+▪ Eesmärk kasutada paremini ära Type-C ühendust ja vähendada
+segadust.
+▪ Andmeedastuskiirus üle Type-C ühenduse ja kaabli 40 Gbps
+▪ Võimaldab ühenduste tunneldamise abil kombineerida erinevad
+andmesideprotokollid (näiteks USB3, DisplayPort, PCIe) ühte
+füüsilisse sidekanalisse
+▪ Üle Type-C ühenduse asendab USB 3.2 standardi (kuid mitte USB 2.0)
+▪ Loojateks Apple, HP, Intel, Microsoft, Renesas, STMicroelectronics ja
+Texas Instruments
+
+
+USB4 v2.0
+▪ Avaldatud oktoobris 2022
+▪ Andmeedastuskiirus üle Type-C
+ühenduse ja kaabli
+– 80 Gbps sümmeetrilises moodis
+– 120 Gbps / 40 Gbps asümmeetrilises
+moodis
+▪ DisplayPort 2.1 ja PCI Express 4
+seotud täiendused
+▪ Uued (varasemast selgemad)
+liitmike ning kaablite tähistused
+ja logod
+
+
+USB ühilduvus – vol.1
+▪ USB 2.0 seade (device), väljaarvatud jaotur (hub), võib toetada low- full- ja high
+speed režiime
+▪ High-speed seade võib toetada full-speed režiimi, kui on ühendatud USB 1.1 porti
+▪ USB 2.0 jaotur peab toetama kõiki kolme USB 2.0 töörežiimi
+▪ High-speed seadmed peavad olema markeeritud tähisega Hi-Speed USB
+▪ High-speed seadet saab maksimaalse kiirusega kasutada USB 2.0, USB 3.x hosti
+või jaoturi küljes
+▪ USB 2.0 ja USB 3.x hosti ja jaoturi küljes saab kasutada ka USB 1.1 seadmeid
+▪ USB 2.0 ja USB 3.x hostid ja jaoturid toetavad kõiki madalamaid ühendskiiruseid
+
+
+USB ühilduvus – vol.2
+▪ Kõik SuperSpeedPlus seadmed peavad toetama ka SuperSpeed
+kiirust
+▪ Kõik seadmed, mis toetavad SuperSpeed kiirust peavad toetama ka
+vähemalt üht USB 2.0 kiirust
+▪ USB 3.x seade ei pea täielikult toetama USB 2.0 kiiruseid, aga host
+peab olema võimeline seadet tuvastama ja kasutajat teavitama, et
+seade tuleks ühendada USB 3.x liidesesse
+▪ Suurem energiatarve on lubatud ainult USB 3.x seadmetele. USB 2.0
+seadmel on lubatud USB 3.x võimekusega pesas tarbida jätkuvalt
+kuni 500 mA
+
+
+USB Embedded Host ja On-The-Go (OTG)
+▪ Embedded Host ja On-The-Go on USB 2.0 ja USB 3.x standardite
+täiendused, mis kirjeldavad ära piiratud funktsionaalsusega hosti
+▪ Selline piiratud funktsionaalsusega host võib olla näiteks
+mobiiltelefon või tahvelarvuti, mille külge saab ühendada mälupulga
+või fotoaparaadi.
+▪ Ehk siis tegemist on USB seadmega (device), millel on osaline hosti
+võimekus teiste seadmetega (devices) suhtlemiseks
+
+
+USB host, jaotur ja seade
+▪ USB host on arvuti (computer) või mõni manussüsteem (embedded
+system), mis sisaldab USB host kontrollerit ja juurjaoturit (root hub)
+▪ Host kontroller vormindab andmed siinile saatmiseks ja teisendab vastu võetud andmed operatsioonisüsteemile arusaadavaks
+▪ Host kontroller ka koordineerib siinil toimuvat
+▪ Juurjaotur omab üht või mitut ühendusliidest USB seadmete (device)
+ühendamiseks
+▪ Lisaks juurjaoturile võib olla samale siinile ühendatud üks või mitu välist
+jaoturit (external hub)
+▪ Järjestikku saab ühendada kuni 5 välimist jaoturit
+▪ Kokku saab olla kuni 127 jaoturit ja seadet (juurjaotur kaasaarvatud)
+
+
+USB funktsioon, seade ja port
+▪ USB funktsioon (function) on ühe või mitme seotud liidese (interface) kooslus, mis defineerib
+mingi võimekuse (capability)
+▪ Näiteks funktsiooniks võib olla hiir, kõlar või jaotur jne.
+▪ Üks füüsiline seade (device) võib sisaldada mitut funktsiooni, näiteks printer ja skanner
+▪ Mitut funktsiooni omavat seadet nimetatakse liitseade (composite device)
+▪ Seade (device) on loogiline või füüsiline olem, mis täidab üht või mitut funktsiooni
+▪ Seadet, mis sisaldab korraga nii jaoturit kui ka mitut seadet, nimetatakse ühendseade (compound
+device)
+▪ Host näeb ühendseadmes sisalduvaid seadmeid eraldi seadmetena, mis saavad iseseisva aadressi
+▪ Liitseade omab ühte aadressi, aga täidab mitut funktsiooni
+▪ Port on füüsiline adresseeritav liides, kuhu on võimalik teisi riistvarakomponente ühendada
+– Portide tüübid on allavoolu port (Downstream Facing Port (DFP)) ja ülesvoolu port (Upstream Facing Port (UFP))
+
+
+USB arh - on host siinid ja klient siinid, mille vahel jaotur
+iga host seade sisaldab root jaoturit
+mitu USB porti voivad ahtuda erinevatest root jaoturitest
+
+Radiaaltopoloogia
+esimene kiht juurjaotur
+selle kylge saab panna nii jaoturi kui kanseadme
+kokku max 5 layerit
+
+USB pikenduskaabel lowk lih minecradt repeater (1 pordine jaotur)
+
+USB 2 ja 3 tulevad oma traatide pealt aka pole yhendatud (fyysiliselt ple midagi yhist)
+
+Gen 1x2 tahendab, et max 10 Gib a labi 2 siini ehk 5+5
+Gen 1x1 tahendab, et max 10 Gib a labi 1 siini
+
+USB 4 USB kaudu ytleb arvutile, kes ta on ning arvuti annab vastava signaali 
+USB 4 pmst lih tunneldamise protokoll kuhu saab panna PCIe, display jne
+
+USB4 host sees on USB ruuter, mis yhendatud MUX-ga, mis omakorda fyysilise pordiga
+aka MUX vajadusel suunab USB 3 Enhanced SuperSpeed Host kylge
+USB 4 ruuteri kyljes PCIe ja display port
+jaoturi ylesvooluport yhendatud MUX-ga, mis yhendatud seadme ruuteriga, mille kyljes net display out ja PCIe out
+
+Seadmel ka oma ruuter, kus ka USB 4 port display (out) port
+
+USB 2 igalt poolt isoleeritud siin
+
+
+Silmus (loop) ja täispuu (spanning tree)
+▪ Kontrollpaketid saavad liikuda
+ainult nende ühenduste kaudu,
+mis on täispuus
+▪ Tunneldatud liiklus ei ole
+piiratud
+
+
+USB 3.2 kaablid ja liitmikud
+▪ On defineeritud eraldi spetsifikatsioonidena
+– USB 3.1 Legacy Cable and Connector specification
+– USB Type-C Cable and Connector specification
+– USB 3.2 spetsifikatsioon ise sisaldab ainult kokkuvõtet, milliseid kaableid ja liitmikuid on lubatud USB 3.2 juures kasutada
+▪ Kõikidel USB seadmetel on ülesvoolu (upstream) liitmik
+▪ Hostidel ja jaoturitel on üks või mitu allavoolu (downstream) liitmik(ut)
+▪ Ülesvoolu ja allavoolu liitmikud on mehaaniliselt erinevad, et vältida silmustus (loopback) ühendusi
+▪ Type-C puhul seadistatakse ülesvoolu ja allavoolu käitumine
+
+
+USB 3.1 Legacy Cable
+▪ USB 3.1 kaabel sisaldab 8 põhiviiku
+– 3 keerupaari ja 1 toitepaar
+▪ 2 keerupaari kasutatakse SuperSpeed andmeühenduseks
+– üks paar andmete saatmiseks ja teine paar andmete vastuvõtmiseks
+▪ 1 keerupaari kasutatakse USB 2.0 andmeühendusteks
+
+USB 3.1 Standard-A liitmik
+▪ On mõeldud kasutamiseks hosti liitmikuna.
+▪ On füüsiliselt sobiv USB 2.0 Standard-A liitmikuga, aga kasutab
+lisaviike
+
+USB 3.1 Standard-A liitmiku värvikood
+▪ Sinine (Pantone 300C)
+Punane - USB 3.2 ja uuem
+Kollane - Soltub arvutitootjast (Lenovo nt annab suurema vooluga toite)
+
+
+USB 3.1 Standard-B liitmik
+▪ On mõeldud suuremõõduliste statsionaarsete seadmete jaoks
+▪ Näiteks printerid, skannerid, välised kõvakettad jne.
+▪ On osaliselt sobilik USB 2.0 Standard-B liitmikuga
+– USB 2.0 Standard-B pistiku saab ühendada USB 3.1 Standard-B pesaga,
+vastupidi mitte
+
+
+USB 3.1 Micro-B liitmik
+▪ On mõeldud väiksemõõduliste seadmete jaoks
+▪ Näiteks mobiiltelefonid, fotoaparaadid jne.
+▪ On osaliselt sobilik USB 2.0 Micro-B liitmikuga
+– USB 2.0 Micro-B pistiku saab ühendada USB 3.1 Micro-B pesaga, vastupidi mitte
+– Micro-AB pistiku Micro-B pistikusse ühendada ei saa
+
+
+USB 3.1 Micro-AB ja Micro-A liitmik
+▪ On mõeldud väiksemõõduliste seadmete jaoks
+▪ Micro-AB pesa võib kasutada ainult OTG seadmete küljes
+
+
+USB kaabli pikkused
+▪ USB 2.0 (480 Mbps) – kuni 5 m (30m koos 5 jaoturiga)
+▪ USB 3.0 (5 Gbps) – kuni 2m (10m koos 5 jaoturiga)
+▪ USB 3.1 (10 Gbps) – kuni 1m (5m koos 5 jaoturiga)
+▪ USB 3.2 (20 Gbps) – kuni 1m (5m koos 5 jaoturiga)
+
+
 

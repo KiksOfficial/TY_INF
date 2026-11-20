@@ -1,0 +1,257 @@
+Pakett, marsruut ja privaataadress
+
+kapseldamine - andmed pakitatakse kihtidega
+marsruudi valik - voidab koige pikem sobiv prefix, tabeli kuvatud ridade jarjekord ei otsusta
+privaataadress - sisevorgus marsruuditav - seda voivad kasutada nii kliendid kui ka serverid
+
+NAT taastab vastuse sihtaadressi. Marsruut määrab tee selle sihini.
+Privaatne aadress ega NAT üksi ei määra tulemüüri lubasid.
+
+
+DHCP annab võrguseadistuse
+
+Server võib anda:
+• IP-aadressi ja maski;
+• vaikimisi lüüsi;
+• DNS-serveri aadressi;
+• aadressi rendiaja.
+
+Client discovers dchp serveer, server offers to client, client requests to server, server acks to client
+
+DHCP annab seadistuse; pakette suunavad endiselt marsruudid
+
+
+Rakenduse nimelahendus
+
+Nimi: www.example.test −→ näites IP: 198.51.100.20
+
+• OS-i nimelahendus võib kasutada /etc/hosts-faili, vahemälu ja DNS-i.
+• Allikate valik sõltub süsteemi seadistusest, näiteks /etc/nsswitch.conf.
+• Ubuntu 127.0.0.53 võib olla kohalik DNS-vahendaja, mitte väline server.
+
+getent ahosts www.example.test
+resolvectl status
+
+Esimene kontrollib süsteemi nimelahendust; teine näitab system
+Nimelahendus leiab aadressi; marsruuditabel leiab tee.
+
+
+ICMP ja paketitee kontroll
+ping - ICMP Echo Request / Reply: päring ja vastukaja
+traceroute - Erineva TTL-iga proovid; hüpetest võivad tulla ICMP Time Exceeded vastused. (naitab kui palju ruutereid pakett labib)
+ICMP veateade - Näiteks sihtkoha kättesaamatus.
+
+ping -c 3 192.168.11.65
+traceroute -n 198.51.100.20
+
+Laborimudeli käsud. Ruuter vähendab IPv4 TTL-i; nulli jõudnud paketti edasi ei saadeta.
+Ping-vastus ei tõenda veebiteenuse töötamist.
+
+
+Aadress, marsruut ja naaber
+
+Kliendi C lühendatud näidisväljund.
+$ ip -br addr
+eth0 UP 192.168.11.66/26
+$ ip route
+default via 192.168.11.65 dev eth0
+192.168.11.64/26 dev eth0 scope link src 192.168.11.66
+$ ip neigh
+192.168.11.65 dev eth0 lladdr 02:00:00:11:00:65 REACHABLE
+• addr: minu liidese aadress ja prefiks.
+• route: sihtvõrk, väljundliides ja järgmine hüpe.
+• neigh: kohaliku järgmise hüppe IP–MAC vastavus.
+
+
+Harjutus: vastuse tagasitee
+
+R1 on NAT-i tagasitõlke juba teinud: vastuse siht on 192.168.11.66. Edastamine ja
+tulemüür lubavad paketi läbi.
+
+R1 marsruuditabel:
+192.168.10.0/24 dev lan0
+203.0.113.0/24 dev wan0
+default via 203.0.113.1 dev wan0
+
+• Klient C asub võrgus 192.168.11.64/26.
+• Selle võrgu ruuter R2 on R1 poolt nähtav aadressil 192.168.10.2.
+• Millise olemasoleva tee R1 valib? Milline kirje on puudu?
+
+Eralda tõlke tulemus ja sellele järgnev marsruudiotsus.
+
+
+UDP ja TCP teenus rakendusele
+
+UDP {
+    andmeyhik eraldi - datagrammid
+    yhenduse loomine -tcp kaepigistust ple
+    kadu ja jarjekord - pole garanteeritud
+  }
+
+TCP {
+    Jarjestatud baidi voog
+    yhenduse loomine enne tavalist andmevahetust
+    Järjestamine, kinnitused ja kordussaatmine
+  }
+
+UDP säilitab datagrammi piiri; TCP sõnumipiiri määrab rakendus.
+TCP ei taga lõputut edu: ühendus võib ka veaga katkeda.
+
+
+TCP ühenduse loomine
+Klient C: 192.168.11.66; server S: 198.51.100.20:80. Otspunktide skeem, NAT-i näitamata.
+
+1. SYN: yhenduse algatamine
+2. SYN + ACK: serveri vastus
+3. ACK: Kliendi kinnitus
+
+Mõlemal poolel tekib selle ühenduse TCP olek.
+
+Käepigistus kooskõlastab ühenduse; see ei krüpteeri andmeid.
+
+
+TCP baidivoog ja rakenduse sõnumid
+
+Näide: kaks edukat send()-kutset annavad kokku 600 baiti. Üks võimalik vastuvõtt:
+
+Saatmine - send: 300 baiti | send: 300 baiti
+Baidivoog - 600 baiti samas järjekorras
+Vastuvõtt - recv: 200 | recv: 400
+
+• Ühe recv() tagastus ei pea vastama ühele send()-kutsele.
+• Rakendus määrab sõnumipiiri: näiteks pikkuseväli või eraldaja.
+Loe tagastatud baitide arvu ning kogu vajadusel sõnum osadest.
+
+
+Järjenumber, ACK ja kordussaatmine
+
+Loodud ühenduse andmevoog: SEQ on esimese baidi number; ACK on järgmine järjest
+oodatud bait.
+
+1 SEQ=1000, 500 baiti: 1000--1499 jõuavad kohale | ACK=1500
+2 SEQ=1500, 500 baiti kaovad teel | Uusi baite pole kinnitada
+3 Taimer aegub; saatja kordab baite 1500--1999. Kohale jõudes ACK=2000
+
+ACK kinnitab kõik sellele eelnevad baidid selles voos.
+ACK kinnitab TCP vastuvõttu, mitte rakenduse tehtud tööd.
+
+
+Vookontroll ja ummikukontroll
+
+                Vookontroll        |  Ummikukontroll
+Mida kaitseb?| Vastuvõtja puhvrit  |  Võrguteed ülekoormuse eest
+Piirang      | Vastuvõtja teatatud aken rwnd | Saatja hoitav ummikuaken cwnd
+Millele reageerib? | Vabale vastuvõturuumile | Võrgust saadavale tagasisidele
+
+Kinnitamata andmeid piirab väiksem aken: rwnd või cwnd.
+
+
+Sokkel, deskriptor ja otspunkt
+
+Protsess fd=7 --(kohalik viit)->OS-i sokliobjekt olek ja phvrid--(TCP yhendus)->Vastaspoole otspunkt 198.51.100.20:80
+
+• Sokkel: OS-i hallatav suhtluse otspunkt.
+• Failideskriptor: protsessi tabelis olev täisarvuline viit.
+• IP ja port: võrgu otspunkti aadress TCP kontekstis.
+Näites on deskriptor 7 juba eraldatud; selle number ei määra TCP porti.
+Rakendus annab süsteemikutsele FD; tuum leiab selle kaudu sokli.
+
+
+Kliendi ja serveri süsteemikutsed
+
+Server: kohalik port 80
+lfd = socket(...);
+bind(lfd, ...);
+listen(lfd, 16);
+cfd = accept(lfd, ...);
+recv(cfd, ...);
+send(cfd, ...);
+close(cfd);
+
+Klient: ühendus serveriga
+fd = socket(...);
+connect(fd, ...);
+send(fd, ...);
+close(fd);
+
+Kliendi kohaliku aadressi ja ajutise pordi võib valida OS.
+accept() annab ühendusele uue FD; kuulav sokkel jääb alles.
+
+
+Üks kuulav port, mitu ühendust
+
+Serveri vaade: R1 PAT-i taga on kaks klienti, välispordid 62001 ja 62002.
+
+
+FD | Sokli roll |Kohalik Port | Vastaspoole port
+7 - Kuulav - 198.51.100.20:80 - Kindel vastaspool puudub
+8 - Ühendus A - 198.51.100.20:80 - 203.0.113.2:62001
+9 - Ühendus B - 198.51.100.20:80 - 203.0.113.2:62002
+
+• TCP ühenduse eristab aadresside nelik: mõlema poole IP ja port.
+• Üks protsess võib hallata mitut ühendatud soklit.
+Port 80 võib olla ühine; vastaspoole aadressipaar eristab ühendusi.
+
+
+Saatmis- ja vastuvõtupuhvrid
+                                                        <-(TCP ACK)--
+kliendi rakendus --(send())-> kliendi tuumsaatmispuhver --(TCP ja paketitee)-> Serveri tuum ja vastuvotmisbuffer --(recv())-> Serverirakendus
+
+• send() tagastab kohaliku saatmise jaoks vastu võetud baitide arvu.
+• TCP ACK kinnitab vastaspoole TCP vastuvõttu, mitte rakenduse tööd.
+• recv() toob olemasolevad voobaidid rakenduse puhvrisse.
+Saatmiskutse edu ei tõenda, et serveri rakendus andmed juba töötles.
+
+
+Blokeerumine ja äratamine
+n = recv(fd, buf, 4096, 0); // TCP, blokeeriv sokkel
+
+• Kui andmeid veel pole ja voog jätkub, võib lõim jääda ootama.
+• Andmete saabumine võib muuta lõime käivitatavaks.
+• Ajastaja annab CPU aja; kutse saab jätkata ja tagastada.
+
+n > 0 - nii mitu baiti on kopeeritud buffrisse
+n == 0 - EOF: vastaspool lõpetas saatmise, varasemad baidid on loetud.
+n == -1 - Viga või katkestus; täpsem põhjus on errno-s.
+
+
+Soklite vaatamine käsuga ss
+
+Serveri lühendatud näidisväljund; protsessiinfo ja järjekorraveerud on siin välja jäetud.
+
+$ ss -ltn
+State  Local Address:Port  Peer Address:Port
+LISTEN 198.51.100.20:80    0.0.0.0:*
+$ ss -tnp
+ESTAB 198.51.100.20:80 203.0.113.2:62001
+ESTAB 198.51.100.20:80 203.0.113.2:62002
+
+• -l: kuulavad; -t: TCP; -n: numbrilised aadressid ja pordid.
+• -p: seotud protsessid, kui õigused lubavad nende infot näha.
+• LISTEN: ootab ühendusi. ESTAB: TCP ühendus on loodud.
+
+ESTAB ei kinnita veel HTTP päringu edukat täitmist.
+
+
+DNS kirjed ja vahemälu
+
+DNS-päringu näide
+dig +short A www.example.test
+198.51.100.20
+
+Kirje Tähendus
+
+A - Nime IPv4-aadress
+AAAA - Nime IPv6-aadress
+CNAME - Nime alias teisele nimele
+MX - Domeeni meiliserver
+NS - Tsooni autoriteetne nimeserver
+TXT - Tekstiline info
+
+Kirje TTL: kui kaua võib vastust vahemälus kasutada.
+DNS-i TTL mõõdab aega; IP TTL piirab hüppeid.
+
+dig küsib DNS-i; getent kasutab süsteemi nimeallikaid.
+
+
+

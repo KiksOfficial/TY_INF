@@ -1,0 +1,36 @@
+1. Funcs
+
+func - igale y-le vastab aind 1 x
+liitfunc - (g◦f)(x) = g(f(x))
+
+paarisfunc f(-x) = f(x)
+paritufunc f(-x) = -f(x)
+
+func on tokestatud kui koik punktid funcis on vaiksemad/suuremad kui pingi punkt
+
+yksyhesus - igale punktile vastab aind 1 vaartus
+
+func on pooratav kui vahetad x ja y ning saad aind 1 vastuse
+
+f(x + a) - nihkub vasakule
+f(ax) - surutakse kokku horisont (0 suunas?)
+f(x/a) - venitatakse horisont
+f(-x) - flipped y telje suhtes
+
+f(x) + a - nihkub yles
+af(x) - venitatakse vertikaal
+f(x)/a - surutakse kokku vertikaal
+-f(x) - flipped x telje suhtes
+|f(x)| - 0-st all olev peegeldatakse
+
+2. Piirvaartus
+
+func on pidev kui vasak piirvaartus = parem piirvaartus = punkt nende vahel
+kui funcid f ja g pidevad punktis ss f+-g fg f/g ka pidevad punktis
+f on pidevl hulgas kui pidev igas punktis
+
+koik elementaarfuncid maaramispiirkonnas pidevad
+
+tõkestatud func x 0-le lahenev func piirvaartus = 0
+
+maaramatuse tyybid inf/inf, 0/0, inf - inf, 0 * inf, 0**0, 1**inf, inf**0
