@@ -1,0 +1,17 @@
+Varasem koodnimi 3GIO
+on jadayhendus
+pohiomadused {
+    On draiveri tasemel PCI tagasiyhilduv
+    Maksimaalne andeedastus minimaalsete yhendustega
+    Hot plug/swap
+    Voimaldab mitutyheaegset kommunikatsiooni
+    Quality of Service - boimalik siini peal teatud andmeyhendusi prioriteetsemaks seada
+    Vaike latency
+    Veakindlus
+  }
+
+PCIe sys topoloogiasse lisatut kommutaator (switch)
+
+laienduskaartide jaoks X1 X2 X4 X8 X16 X32
+Kasutatakse ka tugikiibistiku komponentide vahelisek yhenduseks
+Mobiilsete seadmete jaoks ka ExpressCard

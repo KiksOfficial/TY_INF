@@ -1,4 +1,4 @@
-punkt2d : Type
+{-punkt2d : Type
 punkt2d = (Double, Double)
 
 punkt : Nat -> Type
@@ -100,5 +100,23 @@ flip_shape (NodeShape l r) = (NodeShape (flip_shape r) (flip_shape l))
 flip_tree : Tree shape a -> Tree (flip_shape shape) a
 flip_tree Leaf = Leaf
 flip_tree (Node left this right) = Node (flip_tree right) this (flip_tree left)
+-}
 
 
+punkt : Nat -> Type
+punkt Z     = Unit
+punkt (S Z) = Double
+punkt (S n) = (Double, punkt n)
+
+nullpunkt : (d : Nat) -> punkt d
+nullpunkt 0 = ()
+nullpunkt (S (S k)) = (0.0, (nullpunkt (S k)))
+nullpunkt (S Z) = 0.0
+
+add: (d:Nat) -> punkt d -> punkt d -> punkt d
+add 0 x y = ()
+add (S Z) x y = x + y
+add (S(S k)) (x1, xs) (y1, ys) = (x1+ y1, add (S k) xs ys)
+
+sum : (d : nat) -> list (punkt d) -> punkt d
+sum dim xs = foldr (add dim) (nullpunkt dim) xs
